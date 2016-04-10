@@ -45,7 +45,7 @@ RSpec.describe TTY::Command do
     uuid = nil
     command = TTY::Command.new(output: output)
 
-    command.execute(:exit, '1') do |cmd|
+    command.execute("echo 'nooo'; exit 1") do |cmd|
       uuid = cmd.uuid
     end
     output.rewind
@@ -53,7 +53,8 @@ RSpec.describe TTY::Command do
     lines = output.readlines
     lines.last.gsub!(/\d+\.\d+/, 'x')
     expect(lines).to eq([
-      "[\e[32m#{uuid}\e[0m] Running \e[33;1mexit 1\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] Running \e[33;1mecho 'nooo'; exit 1\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] \t\e[32mnooo\e[0m\n",
       "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n"
     ])
   end
@@ -63,7 +64,7 @@ RSpec.describe TTY::Command do
     command = TTY::Command.new(output: output)
 
     expect {
-      command.execute!(:exit, '1')
-    }.to raise_error(TTY::Command::FailedError, /Invoking `exit 1` failed with status/)
+      command.execute!("echo 'nooo'; exit 1")
+    }.to raise_error(TTY::Command::FailedError, /Invoking `echo 'nooo'; exit 1` failed with status/)
   end
 end
