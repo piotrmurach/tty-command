@@ -128,7 +128,7 @@ module TTY
       # @api private
       def sanitize(value)
         cmd = value.to_s.dup
-        lines = cmd.lines
+        lines = cmd.lines.to_a
         lines.each_with_index.reduce('') do |acc, (line, index)|
           acc << line.strip
           acc << '; ' if (index + 1) != lines.size
