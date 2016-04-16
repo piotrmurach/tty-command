@@ -18,6 +18,8 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
+    - rvm: jruby
+    - rvm: jruby-9000
   fast_finish: true
 branches:
   only: master
