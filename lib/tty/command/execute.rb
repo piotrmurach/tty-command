@@ -35,8 +35,7 @@ module TTY
           :err => err_wr, err_rd => :close
         }).merge(@process_options)
 
-        # puts "PROCES OPS>>> #{opts}"
-        pid = Process.spawn(cmd.to_command, opts)
+        pid = _spawn(cmd.to_command, opts)
 
         # close in parent process
         [out_wr, err_wr].each { |fd| fd.close if fd }
@@ -55,6 +54,14 @@ module TTY
       end
 
       private
+
+      def jruby?
+        RUBY_PLATFORM =~ /java/
+      end
+
+      def _spawn(cmd, opts)
+        Process.spawn(cmd, jruby? ? {} : opts)
+      end
 
       def normalize_redirect_options(options)
         options.reduce({}) do |opts, (key, value)|
