@@ -35,7 +35,7 @@ module TTY
           :err => err_wr, err_rd => :close
         }).merge(@process_options)
 
-        pid = Process.spanw(cmd.to_command, opts)
+        pid = Process.spawn(cmd.to_command, opts)
 
         # close in parent process
         [out_wr, err_wr].each { |fd| fd.close if fd }
