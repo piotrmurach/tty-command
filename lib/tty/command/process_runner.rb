@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require 'tty/command/execute'
-require 'tty/command/printer'
 require 'tty/command/result'
 
 module TTY

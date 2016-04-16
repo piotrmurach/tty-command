@@ -4,6 +4,7 @@ require 'thread'
 require 'tty/command/version'
 require 'tty/command/cmd'
 require 'tty/command/process_runner'
+require 'tty/command/printers/pretty'
 
 module TTY
   class Command
@@ -26,7 +27,7 @@ module TTY
       @output = options.fetch(:output) { $stdout }
       color   = options.fetch(:color) { true }
 
-      @printer = Printer.new(@output, color: color)
+      @printer = Printers::Pretty.new(@output, color: color)
       @runner  = ProcessRunner.new(@printer)
     end
 

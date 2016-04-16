@@ -1,11 +1,11 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Command::Printer do
+RSpec.describe TTY::Command::Printers::Pretty do
   let(:output) { StringIO.new }
   let(:uuid) { 'aaaaaa' }
 
   it "prints command start in color" do
-    printer = TTY::Command::Printer.new(output)
+    printer = TTY::Command::Printers::Pretty.new(output)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
 
     allow(cmd).to receive(:uuid).and_return(uuid)
@@ -17,7 +17,7 @@ RSpec.describe TTY::Command::Printer do
   end
 
   it "prints command start without color" do
-    printer = TTY::Command::Printer.new(output, color: false)
+    printer = TTY::Command::Printers::Pretty.new(output, color: false)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
 
     allow(cmd).to receive(:uuid).and_return(uuid)
@@ -28,7 +28,7 @@ RSpec.describe TTY::Command::Printer do
   end
 
   it "prints command stdout data" do
-    printer = TTY::Command::Printer.new(output)
+    printer = TTY::Command::Printers::Pretty.new(output)
 
     printer.print_command_out_data(uuid, 'hello', 'world')
     output.rewind
@@ -38,7 +38,7 @@ RSpec.describe TTY::Command::Printer do
   end
 
   it "prints command stderr data" do
-    printer = TTY::Command::Printer.new(output)
+    printer = TTY::Command::Printers::Pretty.new(output)
 
     printer.print_command_err_data(uuid, 'hello', 'world')
     output.rewind
@@ -48,7 +48,7 @@ RSpec.describe TTY::Command::Printer do
   end
 
   it "prints successful command exit in color" do
-    printer = TTY::Command::Printer.new(output)
+    printer = TTY::Command::Printers::Pretty.new(output)
 
     printer.print_command_exit(uuid, 0, 5.321)
     output.rewind
@@ -57,7 +57,7 @@ RSpec.describe TTY::Command::Printer do
   end
 
   it "prints failure command exit in color" do
-    printer = TTY::Command::Printer.new(output)
+    printer = TTY::Command::Printers::Pretty.new(output)
 
     printer.print_command_exit(uuid, 1, 5.321)
     output.rewind
@@ -66,7 +66,7 @@ RSpec.describe TTY::Command::Printer do
   end
 
   it "prints command exit without exit status in color" do
-    printer = TTY::Command::Printer.new(output)
+    printer = TTY::Command::Printers::Pretty.new(output)
 
     printer.print_command_exit(uuid, nil, 5.321)
     output.rewind
