@@ -24,9 +24,9 @@ module TTY
     # @api public
     def initialize(options = {})
       @output = options.fetch(:output) { $stdout }
-      @color  = options.fetch(:color) { true }
+      color   = options.fetch(:color) { true }
 
-      @printer = Printer.new(@output)
+      @printer = Printer.new(@output, color: color)
       @runner  = ProcessRunner.new(@printer)
     end
 

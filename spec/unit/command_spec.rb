@@ -40,6 +40,25 @@ RSpec.describe TTY::Command do
     ])
   end
 
+  it 'executes command successfully with logging without color' do
+    output = StringIO.new
+    uuid = nil
+    command = TTY::Command.new(output: output, color: false)
+
+    command.execute(:echo, 'hello') do |cmd|
+      uuid = cmd.uuid
+    end
+    output.rewind
+
+    lines = output.readlines
+    lines.last.gsub!(/\d+\.\d+/, 'x')
+    expect(lines).to eq([
+      "[#{uuid}] Running echo hello\n",
+      "[#{uuid}] \thello\n",
+      "[#{uuid}] Finished in x seconds with exit status 0 (successful)\n"
+    ])
+  end
+
   it "executes command and fails with logging" do
     output = StringIO.new
     uuid = nil

@@ -15,9 +15,10 @@ module TTY
       #   the printer output
       #
       # @api public
-      def initialize(output)
+      def initialize(output, options = {})
         @output = output
-        @color  = ::Pastel.new(output: output)
+        enabled = options.fetch(:color) { true }
+        @color  = ::Pastel.new(output: output, enabled: enabled)
       end
 
       def print_command_start(cmd)

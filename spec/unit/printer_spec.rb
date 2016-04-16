@@ -16,6 +16,17 @@ RSpec.describe TTY::Command::Printer do
       to eq("[\e[32maaaaaa\e[0m] Running \e[33;1mecho hello\e[0m\n")
   end
 
+  it "prints command start without color" do
+    printer = TTY::Command::Printer.new(output, color: false)
+    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+
+    allow(cmd).to receive(:uuid).and_return(uuid)
+    printer.print_command_start(cmd)
+    output.rewind
+
+    expect(output.string).to eq("[aaaaaa] Running echo hello\n")
+  end
+
   it "prints command stdout data" do
     printer = TTY::Command::Printer.new(output)
 
