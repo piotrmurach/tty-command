@@ -15,6 +15,8 @@ module TTY
 
     FailedError = Class.new(RuntimeError)
 
+    attr_reader :printer
+
     # Initialize a Command object
     #
     # @param [Hash] options
@@ -27,8 +29,9 @@ module TTY
     def initialize(options = {})
       @output = options.fetch(:output) { $stdout }
       color   = options.fetch(:color) { true }
+      name    = options.fetch(:printer) { :pretty }
 
-      @printer = Printers::Pretty.new(@output, color: color)
+      @printer = use_printer(name).new(@output, color: color)
       @runner  = ProcessRunner.new(@printer)
     end
 
@@ -79,6 +82,30 @@ module TTY
         raise FailedError,
               "Invoking `#{name}` failed with status #{result.exit_status}"
       end
+    end
+
+    private
+
+    # @api private
+    def use_printer(class_or_name, *args)
+      if class_or_name.is_a?(Class)
+        class_or_name
+      else
+        find_printer_class(class_or_name)
+      end
+    end
+
+    # Find printer class or fail
+    #
+    # @raise [ArgumentError]
+    #
+    # @api private
+    def find_printer_class(name)
+      const_name = name.to_s.capitalize.to_sym
+      unless TTY::Command::Printers.const_defined?(const_name)
+        fail ArgumentError, %Q{Unknown printer type "#{name}"}
+      end
+      TTY::Command::Printers.const_get(const_name)
     end
   end # Command
 end # TTY
