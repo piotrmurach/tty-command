@@ -19,8 +19,8 @@ RSpec.describe TTY::Command::Printers::Pretty do
   it "prints command start without color" do
     printer = TTY::Command::Printers::Pretty.new(output, color: false)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
-
     allow(cmd).to receive(:uuid).and_return(uuid)
+
     printer.print_command_start(cmd)
     output.rewind
 
@@ -29,8 +29,10 @@ RSpec.describe TTY::Command::Printers::Pretty do
 
   it "prints command stdout data" do
     printer = TTY::Command::Printers::Pretty.new(output)
+    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+    allow(cmd).to receive(:uuid).and_return(uuid)
 
-    printer.print_command_out_data(uuid, 'hello', 'world')
+    printer.print_command_out_data(cmd, 'hello', 'world')
     output.rewind
 
     expect(output.string).
@@ -39,8 +41,10 @@ RSpec.describe TTY::Command::Printers::Pretty do
 
   it "prints command stderr data" do
     printer = TTY::Command::Printers::Pretty.new(output)
+    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+    allow(cmd).to receive(:uuid).and_return(uuid)
 
-    printer.print_command_err_data(uuid, 'hello', 'world')
+    printer.print_command_err_data(cmd, 'hello', 'world')
     output.rewind
 
     expect(output.string).
@@ -49,8 +53,10 @@ RSpec.describe TTY::Command::Printers::Pretty do
 
   it "prints successful command exit in color" do
     printer = TTY::Command::Printers::Pretty.new(output)
+    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+    allow(cmd).to receive(:uuid).and_return(uuid)
 
-    printer.print_command_exit(uuid, 0, 5.321)
+    printer.print_command_exit(cmd, 0, 5.321)
     output.rewind
 
     expect(output.string).to eq("[\e[32maaaaaa\e[0m] Finished in 5.321 seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n")
@@ -58,8 +64,10 @@ RSpec.describe TTY::Command::Printers::Pretty do
 
   it "prints failure command exit in color" do
     printer = TTY::Command::Printers::Pretty.new(output)
+    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+    allow(cmd).to receive(:uuid).and_return(uuid)
 
-    printer.print_command_exit(uuid, 1, 5.321)
+    printer.print_command_exit(cmd, 1, 5.321)
     output.rewind
 
     expect(output.string).to eq("[\e[32maaaaaa\e[0m] Finished in 5.321 seconds with exit status 1 (\e[31;1mfailed\e[0m)\n")
@@ -67,8 +75,10 @@ RSpec.describe TTY::Command::Printers::Pretty do
 
   it "prints command exit without exit status in color" do
     printer = TTY::Command::Printers::Pretty.new(output)
+    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+    allow(cmd).to receive(:uuid).and_return(uuid)
 
-    printer.print_command_exit(uuid, nil, 5.321)
+    printer.print_command_exit(cmd, nil, 5.321)
     output.rewind
 
     expect(output.string).to eq("[\e[32maaaaaa\e[0m] Finished in 5.321 seconds (\e[31;1mfailed\e[0m)\n")

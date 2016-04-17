@@ -32,7 +32,7 @@ module TTY
           handle_timeout(timeout, runtime, pid)
           status = waitpid(pid)
 
-          @printer.print_command_exit(cmd.uuid, status, runtime)
+          @printer.print_command_exit(cmd, status, runtime)
 
           Result.new(status, stdout_data, stderr_data)
         end
@@ -60,7 +60,7 @@ module TTY
           begin
             while (line = stdout.gets)
               stdout_data << line
-              @printer.print_command_out_data(cmd.uuid, line)
+              @printer.print_command_out_data(cmd, line)
             end
           rescue TimeoutExceeded
             stdout.close
@@ -71,7 +71,7 @@ module TTY
           begin
             while (line = stderr.gets)
               stderr_data << line
-              @printer.print_command_err_data(cmd.uuid, line)
+              @printer.print_command_err_data(cmd, line)
             end
           rescue TimeoutExceeded
             stderr.close

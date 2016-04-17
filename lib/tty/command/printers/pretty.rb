@@ -14,22 +14,22 @@ module TTY
           write(message, cmd.uuid)
         end
 
-        def print_command_out_data(uuid, *args)
+        def print_command_out_data(cmd, *args)
           message = args.map(&:chomp).join(' ')
-          write("\t" + decorate(message, :green), uuid)
+          write("\t" + decorate(message, :green), cmd.uuid)
         end
 
-        def print_command_err_data(uuid, *args)
+        def print_command_err_data(cmd, *args)
           message = args.map(&:chomp).join(' ')
-          write("\t" + decorate(message, :red), uuid)
+          write("\t" + decorate(message, :red), cmd.uuid)
         end
 
-        def print_command_exit(uuid, status, runtime)
+        def print_command_exit(cmd, status, runtime)
           runtime = "%5.3f %s" % [runtime, pluralize(runtime, 'second')]
           message = "Finished in #{runtime}"
           message << " with exit status #{status}" if status
           message << " (#{success_or_failure(status)})"
-          write(message, uuid)
+          write(message, cmd.uuid)
         end
 
         # Write message out to output
@@ -58,7 +58,7 @@ module TTY
             decorate('failed', :red, :bold)
           end
         end
-      end # Abstract
+      end # Pretty
     end # Printers
   end # Command
 end # TTY
