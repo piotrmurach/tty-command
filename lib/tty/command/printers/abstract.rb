@@ -10,6 +10,8 @@ module TTY
 
         def_delegators :@color, :decorate
 
+        attr_reader :output
+
         # Initialize a Printer object
         #
         # @param [IO] output
@@ -34,8 +36,8 @@ module TTY
           write(args.join)
         end
 
-        def print_command_exit(cmd, status, runtime)
-          write(status, runtime)
+        def print_command_exit(cmd, *args)
+          write(args.join)
         end
 
         def write(message)

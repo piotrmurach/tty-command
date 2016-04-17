@@ -7,8 +7,6 @@ module TTY
   class Command
     module Printers
       class Pretty < Abstract
-        extend Forwardable
-
         def print_command_start(cmd)
           message = "Running #{decorate(cmd.to_command, :yellow, :bold)}"
           write(message, cmd.uuid)
@@ -24,7 +22,7 @@ module TTY
           write("\t" + decorate(message, :red), cmd.uuid)
         end
 
-        def print_command_exit(cmd, status, runtime)
+        def print_command_exit(cmd, status, runtime, *args)
           runtime = "%5.3f %s" % [runtime, pluralize(runtime, 'second')]
           message = "Finished in #{runtime}"
           message << " with exit status #{status}" if status
@@ -38,7 +36,7 @@ module TTY
         def write(message, uuid = nil)
           out = uuid.nil? ? '' : "[#{decorate(uuid, :green)}] "
           out << "#{message}"
-          @output.puts(out)
+          output.puts(out)
         end
 
         private
