@@ -111,7 +111,7 @@ RSpec.describe TTY::Command::Cmd do
 
   it "provides unique identifier" do
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
-    expect(cmd.uuid).to match(/^\d+-\w{8}$/)
+    expect(cmd.uuid).to match(/^\w{8}$/)
   end
 
   it "converts command to hash" do

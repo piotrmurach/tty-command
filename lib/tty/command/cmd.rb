@@ -52,7 +52,7 @@ module TTY
       #
       # @api public
       def uuid
-        @uuid ||= "%d-%s" % [$$, SecureRandom.uuid.split('-')[0]]
+        @uuid ||= SecureRandom.uuid.split('-')[0]
       end
 
       # The shell environment variables
