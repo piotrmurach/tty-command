@@ -5,6 +5,7 @@ require 'tty/command/version'
 require 'tty/command/cmd'
 require 'tty/command/process_runner'
 require 'tty/command/printers/pretty'
+require 'tty/command/printers/progress'
 
 module TTY
   class Command
