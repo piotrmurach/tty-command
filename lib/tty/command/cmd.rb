@@ -42,7 +42,7 @@ module TTY
           else
             @command = sanitize(command)
           end
-          @argv = args.map(&:to_s)
+          @argv = args.map { |i| shell_escape(i) }
         end
         @env ||= {}
         @options = opts
@@ -134,6 +134,18 @@ module TTY
           acc << '; ' if (index + 1) != lines.size
           acc
         end
+      end
+
+      # Enclose s in quotes if it contains characters that require escaping
+      # 
+      # @api private 
+      def shell_escape(s)
+        s = s.to_s
+        if s !~ /^[0-9A-Za-z+,.\/:=@_-]+$/
+          s = s.gsub("'", "'\\''")
+          s = "'#{s}'"
+        end
+        s
       end
     end # Cmd
   end # Command

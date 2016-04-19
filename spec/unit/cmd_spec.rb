@@ -121,4 +121,12 @@ RSpec.describe TTY::Command::Cmd do
       argv: ['hello']
     })
   end
+
+  it "escapes arguments that need escaping" do
+    cmd = TTY::Command::Cmd.new(:echo, 'hello world')
+    expect(cmd.to_hash).to include({
+      command: 'echo',
+      argv: ["'hello world'"]
+    })
+  end
 end
