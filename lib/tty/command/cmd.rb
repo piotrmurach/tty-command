@@ -137,15 +137,16 @@ module TTY
       end
 
       # Enclose s in quotes if it contains characters that require escaping
-      # 
-      # @api private 
-      def shell_escape(s)
-        s = s.to_s
-        if s !~ /^[0-9A-Za-z+,.\/:=@_-]+$/
-          s = s.gsub("'", "'\\''")
-          s = "'#{s}'"
-        end
-        s
+      #
+      # @param [String] arg
+      #   the argument to escape
+      #
+      # @api private
+      def shell_escape(arg)
+        str = arg.to_s.dup
+        return str if str =~ /^[0-9A-Za-z+,.\/:=@_-]+$/
+        str.gsub!("'", "'\\''")
+        "'#{str}'"
       end
     end # Cmd
   end # Command
