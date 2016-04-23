@@ -32,7 +32,7 @@ module TTY
       uuid    = options.fetch(:uuid) { true }
       name    = options.fetch(:printer) { :pretty }
 
-      @printer = use_printer(name).new(@output, color: color, uuid: uuid)
+      @printer = use_printer(name, color: color, uuid: uuid)
       @runner  = ProcessRunner.new(@printer)
     end
 
@@ -88,12 +88,16 @@ module TTY
     private
 
     # @api private
-    def use_printer(class_or_name, *args)
+    def use_printer(class_or_name, options)
+      if class_or_name.is_a?(TTY::Command::Printers::Abstract)
+        return class_or_name
+      end
+
       if class_or_name.is_a?(Class)
         class_or_name
       else
         find_printer_class(class_or_name)
-      end
+      end.new(@output, options)
     end
 
     # Find printer class or fail
