@@ -29,9 +29,10 @@ module TTY
     def initialize(options = {})
       @output = options.fetch(:output) { $stdout }
       color   = options.fetch(:color) { true }
+      uuid    = options.fetch(:uuid) { true }
       name    = options.fetch(:printer) { :pretty }
 
-      @printer = use_printer(name).new(@output, color: color)
+      @printer = use_printer(name).new(@output, color: color, uuid: uuid)
       @runner  = ProcessRunner.new(@printer)
     end
 

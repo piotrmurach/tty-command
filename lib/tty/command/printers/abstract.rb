@@ -10,7 +10,7 @@ module TTY
 
         def_delegators :@color, :decorate
 
-        attr_reader :output
+        attr_reader :output, :options
 
         # Initialize a Printer object
         #
@@ -19,9 +19,10 @@ module TTY
         #
         # @api public
         def initialize(output, options = {})
-          @output = output
-          enabled = options.fetch(:color) { true }
-          @color  = ::Pastel.new(output: output, enabled: enabled)
+          @output  = output
+          @options = options
+          enabled  = options.fetch(:color) { true }
+          @color   = ::Pastel.new(output: output, enabled: enabled)
         end
 
         def print_command_start(cmd)

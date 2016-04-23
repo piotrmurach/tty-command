@@ -59,6 +59,22 @@ RSpec.describe TTY::Command do
     ])
   end
 
+  it 'executes command successfully with logging without uuid' do
+    output = StringIO.new
+    command = TTY::Command.new(output: output, uuid: false)
+
+    command.execute(:echo, 'hello')
+    output.rewind
+
+    lines = output.readlines
+    lines.last.gsub!(/\d+\.\d+/, 'x')
+    expect(lines).to eq([
+      "Running \e[33;1mecho hello\e[0m\n",
+      "\t\e[32mhello\e[0m\n",
+      "Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
+    ])
+  end
+
   it "executes command and fails with logging" do
     output = StringIO.new
     uuid = nil

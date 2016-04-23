@@ -34,7 +34,11 @@ module TTY
         #
         # @api private
         def write(message, uuid = nil)
-          out = uuid.nil? ? '' : "[#{decorate(uuid, :green)}] "
+          uuid_needed = options.fetch(:uuid) { true }
+          out = ''
+          if uuid_needed
+            out << "[#{decorate(uuid, :green)}] " unless uuid.nil?
+          end
           out << "#{message}"
           output.puts(out)
         end
