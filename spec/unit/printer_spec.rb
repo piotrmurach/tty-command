@@ -11,4 +11,11 @@ RSpec.describe TTY::Command do
     cmd = TTY::Command.new(printer: :progress)
     expect(cmd.printer).to be_an_instance_of(TTY::Command::Printers::Progress)
   end
+
+  it "uses printer based on class name" do
+    output = StringIO.new
+    printer = TTY::Command::Printers::Pretty
+    cmd = TTY::Command.new(output: output, printer: printer)
+    expect(cmd.printer).to be_an_instance_of(TTY::Command::Printers::Pretty)
+  end
 end
