@@ -3,6 +3,7 @@
 require 'thread'
 require 'tty/command/version'
 require 'tty/command/cmd'
+require 'tty/command/exit_error'
 require 'tty/command/process_runner'
 require 'tty/command/printers/pretty'
 require 'tty/command/printers/progress'
@@ -12,8 +13,6 @@ module TTY
     ExecuteError = Class.new(StandardError)
 
     TimeoutExceeded = Class.new(StandardError)
-
-    FailedError = Class.new(RuntimeError)
 
     attr_reader :printer
 
@@ -70,18 +69,17 @@ module TTY
     # @example
     #   cmd.execute!(command, [argv1, ..., argvN], [options])
     #
-    # @raise [FailedError]
+    # @raise [ExitError]
     #   raised when command exits with non-zero code
     #
     # @api public
     def execute!(*args)
-      name = nil
+      cmd_name = nil
       result = execute(*args) do |cmd|
-        name = cmd.to_command
+        cmd_name = cmd.to_command
       end
       if result && result.failure?
-        raise FailedError,
-              "Invoking `#{name}` failed with status #{result.exit_status}"
+        raise ExitError.new(cmd_name, result)
       end
     end
 

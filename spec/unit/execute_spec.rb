@@ -94,22 +94,26 @@ RSpec.describe TTY::Command, '#execute' do
     ])
   end
 
-  it "raises exception on command failure" do
+  it "raises ExitError on command failure" do
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
     expect {
       command.execute!("echo 'nooo'; exit 1")
-    }.to raise_error(TTY::Command::FailedError, /Invoking `echo 'nooo'; exit 1` failed with status/)
+    }.to raise_error(TTY::Command::ExitError,
+      ["Executing `echo 'nooo'; exit 1` failed with",
+       "  exit status: 1",
+       "  stdout: nooo",
+       "  stderr: Nothing written\n"].join("\n")
+    )
   end
 
-  it "redirects STDOUT to :err stream" do
+  it "redirects STDOUT stream" do
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
-    out, err = command.execute('echo hello', STDOUT => :err)
+    out, _ = command.execute('echo hello', STDOUT => '/dev/null')
 
     expect(out).to eq("")
-    expect(err).to eq("")
   end
 end
