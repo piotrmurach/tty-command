@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Command do
+RSpec.describe TTY::Command, '#execute' do
   it 'executes command and prints to stdout' do
     output = StringIO.new
     command = TTY::Command.new(output: output)
@@ -101,5 +101,15 @@ RSpec.describe TTY::Command do
     expect {
       command.execute!("echo 'nooo'; exit 1")
     }.to raise_error(TTY::Command::FailedError, /Invoking `echo 'nooo'; exit 1` failed with status/)
+  end
+
+  it "redirects STDOUT to :err stream" do
+    output = StringIO.new
+    command = TTY::Command.new(output: output)
+
+    out, err = command.execute('echo hello', STDOUT => :err)
+
+    expect(out).to eq("")
+    expect(err).to eq("")
   end
 end

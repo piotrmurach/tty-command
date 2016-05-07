@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Command::Cmd do
+RSpec.describe TTY::Command::Cmd, '::new' do
   it "requires at least command argument" do
     expect {
       TTY::Command::Cmd.new({})
