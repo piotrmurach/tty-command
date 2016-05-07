@@ -38,7 +38,7 @@ module TTY
         else
           if command.respond_to?(:to_ary)
             @command = sanitize(command[0])
-            args.unshift(command[1..-1])
+            args.unshift(*command[1..-1])
           else
             @command = sanitize(command)
           end

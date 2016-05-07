@@ -32,14 +32,21 @@ RSpec.describe TTY::Command::Cmd do
     expect(cmd.to_command).to eq(%{if [[ $? -eq 0]]; then; echo \"Bash it!\"; fi})
   end
 
-  it "accepts command with arguments" do
+  it "accepts command as [cmdname, arg1, ...]" do
     cmd = TTY::Command::Cmd.new(:echo, '-n', 'hello')
     expect(cmd.command).to eq('echo')
     expect(cmd.argv).to eq(['-n', 'hello'])
     expect(cmd.to_command).to eq('echo -n hello')
   end
 
-  it "accepts command with environment" do
+  it "accepts command as [[cmdname, argv0], arg1, ...]" do
+    cmd = TTY::Command::Cmd.new([:echo, '-n'], 'hello')
+    expect(cmd.command).to eq('echo')
+    expect(cmd.argv).to eq(['-n', 'hello'])
+    expect(cmd.to_command).to eq('echo -n hello')
+  end
+
+  it "accepts command with environment as [cmdname, arg1, ..., opts]" do
     cmd = TTY::Command::Cmd.new(:echo, 'hello', env: {foo: 'bar'})
     expect(cmd.to_command).to eq(%{( export FOO=\"bar\" ; echo hello )})
   end
