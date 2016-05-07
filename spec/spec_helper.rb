@@ -1,6 +1,3 @@
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'tty-command'
-
 if RUBY_VERSION > '1.9' and (ENV['COVERAGE'] || ENV['TRAVIS'])
   require 'simplecov'
   require 'coveralls'
@@ -15,6 +12,8 @@ if RUBY_VERSION > '1.9' and (ENV['COVERAGE'] || ENV['TRAVIS'])
     add_filter 'spec'
   end
 end
+
+require 'tty-command'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
