@@ -50,6 +50,9 @@ Or install it yourself as:
     * [2.6.1 success?](#261-success)
     * [2.6.2 failure?](#262-failure)
     * [2.6.3 exited?](#263-exited)
+  * [2.7 Output Logging](#27-output-logging)
+    * [2.7.1 color]()
+    * [2.7.2 custom]()
 * [3. Settings](#3-settings)
   * [3.1 Output](#31-output)
 
@@ -101,12 +104,21 @@ cmd.execute(:cat, 'file')
 
 ### 2.2 Execute!
 
-You can also use `execute!` to run a command and raise an exception `TTY::Command::FailedError` when the command fails:
+You can also use `execute!` to run a command that will raise an error `TTY::Command::ExitError` when the command exits with non-zero exit code: 
 
 ```ruby
 cmd.execute!(:cat, 'file')
-# => raises TTY::Command::FailedError
+# => raises TTY::Command::ExitError
+# Executing `cat file` failed with
+#  exit status: 1
+#  ...
 ```
+
+The `ExitError` message will include:
+  * the name of command executed
+  * the exit status
+  * stdout bytes
+  * stderr bytes
 
 ### 2.3 Environment variables
 
