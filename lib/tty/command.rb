@@ -51,39 +51,50 @@ module TTY
     #
     # @option options [String] :chdir
     #   The current directory.
+    #
     # @option options [Integer] :timeout
     #   Maximum number of seconds to allow the process
     #   to execute before aborting with a TimeoutExceeded
     #   exception.
     #
-    # @api public
-    def execute(*args)
-      cmd = Cmd.new(*args)
-      yield(cmd) if block_given?
-      mutex = Mutex.new
-      mutex.synchronize { @runner.run(cmd) }
-    end
-
-    # Throw exception when failed
-    #
-    # @example
-    #   cmd.execute!(command, [argv1, ..., argvN], [options])
-    #
     # @raise [ExitError]
     #   raised when command exits with non-zero code
     #
     # @api public
-    def execute!(*args)
-      cmd_name = nil
-      result = execute(*args) do |cmd|
-        cmd_name = cmd.to_command
-      end
+    def execute(*args)
+      cmd = command(*args)
+      yield(cmd) if block_given?
+      result = execute_command(cmd)
       if result && result.failure?
-        raise ExitError.new(cmd_name, result)
+        raise ExitError.new(cmd.to_command, result)
       end
+      result
+    end
+
+    # Start external executable without raising ExitError
+    #
+    # @example
+    #   cmd.execute!(command, [argv1, ..., argvN], [options])
+    #
+    # @api public
+    def execute!(*args)
+      cmd = command(*args)
+      yield(cmd) if block_given?
+      execute_command(cmd)
     end
 
     private
+
+    # @api private
+    def command(*args)
+      Cmd.new(*args)
+    end
+
+    # @api private
+    def execute_command(cmd)
+      mutex = Mutex.new
+      mutex.synchronize { @runner.run(cmd) }
+    end
 
     # @api private
     def use_printer(class_or_name, options)
@@ -106,7 +117,7 @@ module TTY
     def find_printer_class(name)
       const_name = name.to_s.capitalize.to_sym
       unless TTY::Command::Printers.const_defined?(const_name)
-        fail ArgumentError, %Q{Unknown printer type "#{name}"}
+        fail ArgumentError, %(Unknown printer type "#{name}")
       end
       TTY::Command::Printers.const_get(const_name)
     end

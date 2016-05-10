@@ -80,7 +80,7 @@ RSpec.describe TTY::Command, '#execute' do
     uuid = nil
     command = TTY::Command.new(output: output)
 
-    command.execute("echo 'nooo'; exit 1") do |cmd|
+    command.execute!("echo 'nooo'; exit 1") do |cmd|
       uuid = cmd.uuid
     end
     output.rewind
@@ -99,7 +99,7 @@ RSpec.describe TTY::Command, '#execute' do
     command = TTY::Command.new(output: output)
 
     expect {
-      command.execute!("echo 'nooo'; exit 1")
+      command.execute("echo 'nooo'; exit 1")
     }.to raise_error(TTY::Command::ExitError,
       ["Executing `echo 'nooo'; exit 1` failed with",
        "  exit status: 1",
