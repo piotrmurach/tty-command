@@ -53,8 +53,7 @@ Or install it yourself as:
   * [2.7 Output Logging](#27-output-logging)
     * [2.7.1 color]()
     * [2.7.2 custom]()
-* [3. Settings](#3-settings)
-  * [3.1 Output](#31-output)
+* [3. Example](#3-example)
 
 ## 1. Usage
 
@@ -264,6 +263,31 @@ To check if command run to complition use `exited?` or `complete?`:
 result = cmd.execute(:echo, 'Hello')
 result.exited?    # => true
 result.complete?  # => true
+```
+
+## 3. Example
+
+Here's a slightly more elaborate example to illustrate how tty-command can improve on plain old shell scripts. This example installs a new version of Ruby on an Ubuntu machine.
+
+```ruby
+cmd = TTY::Command.new
+
+# dependencies
+cmd.execute "apt-get -y install build-essential checkinstall"
+
+# fetch ruby if necessary
+if !File.exists?("ruby-2.3.0.tar.gz")
+  puts "Downloading..."
+  cmd.execute "wget http://ftp.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.gz"
+  cmd.execute "tar xvzf ruby-2.3.0.tar.gz"
+end
+
+# now install
+Dir.chdir("ruby-2.3.0") do
+  puts "Building..."
+  cmd.execute "./configure --prefix=/usr/local"
+  cmd.execute "make"
+end
 ```
 
 ## Development
