@@ -52,8 +52,7 @@ Or install it yourself as:
     * [2.6.2 failure?](#262-failure)
     * [2.6.3 exited?](#263-exited)
   * [2.7 Output Logging](#27-output-logging)
-    * [2.7.1 color]()
-    * [2.7.2 custom]()
+    * [2.7.1 Custom Printer](#271-custom-printer)
 * [3. Example](#3-example)
 
 ## 1. Usage
@@ -276,6 +275,49 @@ To check if command run to complition use `exited?` or `complete?`:
 result = cmd.execute(:echo, 'Hello')
 result.exited?    # => true
 result.complete?  # => true
+```
+
+### 2.7 Output Logging
+
+By default when command is executed, the command itself with all arguments as well as command's output are printed to `stdout` using the `:pretty` printer. If you wish to change printer you can do so by passing `:printer` option out of
+
+* `:pretty` - colorful output,
+* `:progress` - minimal output with green dot for success and F for failure
+* `:null` - no output
+
+to command like so:
+
+```ruby
+cmd = TTY::Command.new(printer: :progress)
+```
+
+By default the printers log to `stdout` but this can be changed by passing object that responds to `<<` message:
+
+```ruby
+logger = Logger.new('dev.log')
+cmd = TTY::Command.new(output: output)
+```
+
+You can force printer to always in print in color by passing `:color` option:
+
+```ruby
+cmd = TTY::Command.new(color: true)
+```
+
+#### 2.7.1 Custom printer
+
+If the built-in printers do not meet your requirements you can create your own. Add the very minimum you need to specify the `write` method that will be called during the lifecycle of command execution:
+
+```ruby
+CustomPrinter < TTY::Command::Printers::Abstract
+  def write(message)
+    puts message
+  end
+end
+
+printer = CustomPrinter
+
+cmd = TTY::Command.new(printer: printer)
 ```
 
 ## 3. Example
