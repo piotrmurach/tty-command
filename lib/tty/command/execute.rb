@@ -30,9 +30,9 @@ module TTY
 
         # redirect fds
         opts = ({
-          :in  => in_rd,  in_wr  => :close,
-          :out => out_wr, out_rd => :close,
-          :err => err_wr, err_rd => :close
+          :in  => in_rd, # in_wr  => :close,
+          :out => out_wr,# out_rd => :close,
+          :err => err_wr,# err_rd => :close
         }).merge(@process_options)
 
         pid = Process.spawn(cmd.to_command, opts)
