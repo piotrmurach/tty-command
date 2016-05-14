@@ -1,17 +1,18 @@
-# TTY::Command
+# TTY::Command [![Gitter](https://badges.gitter.im/Join%20Chat.svg)][gitter]
 [![Gem Version](https://badge.fury.io/rb/tty-command.svg)][gem]
 [![Build Status](https://secure.travis-ci.org/piotrmurach/tty-command.svg?branch=master)][travis]
 [![Code Climate](https://codeclimate.com/github/piotrmurach/tty-command/badges/gpa.svg)][codeclimate]
 [![Coverage Status](https://coveralls.io/repos/github/piotrmurach/tty-command/badge.svg)][coverage]
 [![Inline docs](http://inch-ci.org/github/piotrmurach/tty-command.svg?branch=master)][inchpages]
 
+[gitter]: https://gitter.im/piotrmurach/tty
 [gem]: http://badge.fury.io/rb/tty-command
 [travis]: http://travis-ci.org/piotrmurach/tty-command
 [codeclimate]: https://codeclimate.com/github/piotrmurach/tty-command
 [coverage]: https://coveralls.io/github/piotrmurach/tty-command
 [inchpages]: http://inch-ci.org/github/piotrmurach/tty-command
 
-> Execute shell commands with pretty output logging and capture their stdout, stderr and exit status. Redirect stdin, stdout and stderr of each command to a file or a string.
+> Execute external commands with pretty output logging and capture their stdout, stderr and exit status. Redirect stdin, stdout and stderr of each command to a file or a string.
 
 **TTY::Command** provides independent command execution component for [TTY](https://github.com/piotrmurach/tty) toolkit.
 
@@ -66,17 +67,15 @@ cmd = TTY::Command.new
 And then, to run command and capture its stadout and stderr use `execute`:
 
 ```ruby
-stdout, stderr = cmd.execute(:ls, '-la')
-stdout, stderr = cmd.execute(:echo, 'hello')
+out, err = cmd.execute('ls -la')
+out, err = cmd.execute('echo Hello!')
 ```
 
-You can check command status by calling `success?`, `failure?` or `exit_status` on a result:
+You can also split command into arguments like so:
 
 ```ruby
-result = cmd.execute(:echo, 'hello')
-result.success?  # => true
-result.failure?  # => false
-result.exit_status # => 0
+out, err = cmd.execute(:ls, '-la')
+out, err = cmd.execite(:echo, 'Hello!')
 ```
 
 You can also provide custom redirections:
@@ -89,16 +88,30 @@ cmd.execute(:echo, 'Hello!', :out => 'file.txt')
 
 ### 2.1 Execute
 
+Execute starts the specified command and waits for it to complete.
+
 The argument signature for `execute` is as follows:
 
 `execute([env], command, [argv1, ...], [options])`
 
-The env, command and options arguments are described in the following sections.
+The `env`, `command` and `options` arguments are described in the following sections.
+
+The command executes successfully and returns result, if the command exits with a zero exit status, and has no problems handling stdin, stdout, and stderr.
+
+If the command fails to execute or doesn't complete successfully, an `TTY::Command::ExitError` is raised.
 
 For example, to display file contents:
 
 ```ruby
-cmd.execute(:cat, 'file')
+cmd.execute('cat file.txt')
+```
+
+When command is run without raising `TTY::Command::ExitError`, a `TTY::Command::Result` is returned that records stdout and stderr:
+
+```ruby
+out, err = cmd.execute('date')
+puts "The date is #{out}"
+# => "The date is Tue 10 May 2016 22:30:15 BST\n"
 ```
 
 ### 2.2 Execute!
@@ -106,7 +119,7 @@ cmd.execute(:cat, 'file')
 You can also use `execute!` to run a command that will raise an error `TTY::Command::ExitError` when the command exits with non-zero exit code: 
 
 ```ruby
-cmd.execute!(:cat, 'file')
+cmd.execute!('cat file')
 # => raises TTY::Command::ExitError
 # Executing `cat file` failed with
 #  exit status: 1
