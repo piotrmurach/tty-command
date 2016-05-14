@@ -83,6 +83,13 @@ module TTY
       execute_command(cmd)
     end
 
+    # Execute shell test command
+    #
+    # @api public
+    def test(*args)
+      execute!(:test, *args).success?
+    end
+
     private
 
     # @api private
