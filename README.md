@@ -12,7 +12,7 @@
 [coverage]: https://coveralls.io/github/piotrmurach/tty-command
 [inchpages]: http://inch-ci.org/github/piotrmurach/tty-command
 
-> Execute external commands with pretty output logging and capture their stdout, stderr and exit status. Redirect stdin, stdout and stderr of each command to a file or a string.
+> Execute external commands with pretty output logging and capture stdout, stderr and exit status. Redirect stdin, stdout and stderr of each command to a file or a string.
 
 **TTY::Command** provides independent command execution component for [TTY](https://github.com/piotrmurach/tty) toolkit.
 
