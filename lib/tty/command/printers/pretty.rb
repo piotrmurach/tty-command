@@ -39,8 +39,8 @@ module TTY
           if uuid_needed
             out << "[#{decorate(uuid, :green)}] " unless uuid.nil?
           end
-          out << "#{message}"
-          output.puts(out)
+          out << "#{message}\n"
+          output << out
         end
 
         private
