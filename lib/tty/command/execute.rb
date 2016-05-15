@@ -35,7 +35,9 @@ module TTY
           :err => err_wr,# err_rd => :close
         }).merge(@process_options)
 
-        pid = Process.spawn(cmd.to_command, opts)
+        cmd_to_spawn = cmd.to_command
+        cmd_to_spawn = "echo '(dryrun)'" if dryrun?
+        pid = Process.spawn(cmd_to_spawn, opts)
 
         # close in parent process
         [out_wr, err_wr].each { |fd| fd.close if fd }

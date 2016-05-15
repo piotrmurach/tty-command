@@ -8,13 +8,16 @@ module TTY
     class ProcessRunner
       include Execute
 
+      attr_reader :options
+
       # Initialize a Runner object
       #
       # @param [Printer] printer
       #   the printer to use for logging
       #
       # @api private
-      def initialize(printer)
+      def initialize(options, printer)
+        @options = options
         @printer = printer
       end
 
@@ -94,6 +97,11 @@ module TTY
         $?.exitstatus
       rescue Errno::ECHILD
         # In JRuby, waiting on a finished pid raises.
+      end
+
+      # Returns true if we are in dryrun mode
+      def dryrun?
+        !!options[:dryrun]
       end
     end # ProcessRunner
   end # Command

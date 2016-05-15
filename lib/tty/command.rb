@@ -32,7 +32,8 @@ module TTY
       name    = options.fetch(:printer) { :pretty }
 
       @printer = use_printer(name, color: color, uuid: uuid)
-      @runner  = ProcessRunner.new(@printer)
+
+      @runner  = ProcessRunner.new(options, @printer)
     end
 
     # Start external executable in a child process
