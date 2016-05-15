@@ -27,7 +27,7 @@ RSpec.describe TTY::Command::Printers::Progress do
     printer = TTY::Command::Printers::Progress.new(output)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
 
-    printer.print_command_exit(cmd, 0)
+    printer.print_command_exit(cmd, 0, 5.321)
     output.rewind
 
     expect(output.string).to eq("\e[32m.\e[0m")
@@ -37,7 +37,7 @@ RSpec.describe TTY::Command::Printers::Progress do
     printer = TTY::Command::Printers::Progress.new(output)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
 
-    printer.print_command_exit(cmd, 1)
+    printer.print_command_exit(cmd, 1, 5.321)
     output.rewind
 
     expect(output.string).to eq("\e[31mF\e[0m")
