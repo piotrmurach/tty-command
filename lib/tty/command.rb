@@ -7,6 +7,7 @@ require 'tty/command/exit_error'
 require 'tty/command/process_runner'
 require 'tty/command/printers/pretty'
 require 'tty/command/printers/progress'
+require 'tty/command/printers/quiet'
 
 module TTY
   class Command
