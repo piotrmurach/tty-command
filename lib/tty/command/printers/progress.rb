@@ -8,7 +8,7 @@ module TTY
     module Printers
       class Progress < Abstract
 
-        def print_command_exit(cmd, status)
+        def print_command_exit(cmd, status, runtime, *args)
           output.print(success_or_failure(status))
         end
 
