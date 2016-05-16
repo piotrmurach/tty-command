@@ -7,6 +7,11 @@ RSpec.describe TTY::Command, ':printer' do
     }.to raise_error(ArgumentError, /Unknown printer type "unknown"/)
   end
 
+  it "detects null printer" do
+    cmd = TTY::Command.new(printer: :null)
+    expect(cmd.printer).to be_an_instance_of(TTY::Command::Printers::Null)
+  end
+
   it "detects printer based on name" do
     cmd = TTY::Command.new(printer: :progress)
     expect(cmd.printer).to be_an_instance_of(TTY::Command::Printers::Progress)

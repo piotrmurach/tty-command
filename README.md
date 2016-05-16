@@ -281,9 +281,10 @@ result.complete?  # => true
 
 By default when command is executed, the command itself with all arguments as well as command's output are printed to `stdout` using the `:pretty` printer. If you wish to change printer you can do so by passing `:printer` option out of
 
+* `:null` - no output
 * `:pretty` - colorful output,
 * `:progress` - minimal output with green dot for success and F for failure
-* `:null` - no output
+* `:quiet` - only output actual command stdout and stderr
 
 to command like so:
 
