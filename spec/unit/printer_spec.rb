@@ -1,6 +1,12 @@
 # encoding: utf-8
 
 RSpec.describe TTY::Command, ':printer' do
+  it "fails to find printer for nil" do
+    expect {
+      TTY::Command.new(printer: nil)
+    }.to raise_error(ArgumentError, /Unknown printer type ""/)
+  end
+
   it "fails to find printer based on name" do
     expect {
       TTY::Command.new(printer: :unknown)

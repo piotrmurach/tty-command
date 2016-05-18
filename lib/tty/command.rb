@@ -4,6 +4,7 @@ require 'thread'
 require 'tty/command/version'
 require 'tty/command/cmd'
 require 'tty/command/exit_error'
+require 'tty/command/dry_runner'
 require 'tty/command/process_runner'
 require 'tty/command/printers/null'
 require 'tty/command/printers/pretty'
@@ -24,17 +25,18 @@ module TTY
     # @option options [IO] :output
     #   the stream to which printer prints, defaults to stdout
     # @option options [Symbol] :printer
-    #   :text, :logger
+    #   the printer to use for output logging, defaults to :pretty
+    # @option options [Symbol] :dry_run
+    #   the mode for executing command
     #
     # @api public
     def initialize(options = {})
       @output = options.fetch(:output) { $stdout }
-      color   = options.fetch(:color) { true }
-      uuid    = options.fetch(:uuid) { true }
-      name    = options.fetch(:printer) { :pretty }
-
-      @printer = use_printer(name, color: color, uuid: uuid)
-      @runner  = ProcessRunner.new(@printer)
+      @color   = options.fetch(:color) { true }
+      @uuid    = options.fetch(:uuid) { true }
+      @printer_name = options.fetch(:printer) { :pretty }
+      @dry_run = options.fetch(:dry_run) { false }
+      @printer = use_printer(@printer_name, color: @color, uuid: @uuid)
     end
 
     # Start external executable in a child process
@@ -92,6 +94,14 @@ module TTY
       execute!(:test, *args).success?
     end
 
+    def dry_run?
+      @dryrun
+    end
+
+    def printer
+      use_printer(@printer_name, color: @color, uuid: @uuid)
+    end
+
     private
 
     # @api private
@@ -102,6 +112,8 @@ module TTY
     # @api private
     def execute_command(cmd)
       mutex = Mutex.new
+      dry_run = @dry_run || cmd.options[:dry_run] || false
+      @runner = select_runner(@printer, dry_run)
       mutex.synchronize { @runner.run(cmd) }
     end
 
@@ -125,10 +137,19 @@ module TTY
     # @api private
     def find_printer_class(name)
       const_name = name.to_s.capitalize.to_sym
-      unless TTY::Command::Printers.const_defined?(const_name)
+      if const_name.empty? || !TTY::Command::Printers.const_defined?(const_name)
         fail ArgumentError, %(Unknown printer type "#{name}")
       end
       TTY::Command::Printers.const_get(const_name)
+    end
+
+    # @api private
+    def select_runner(printer, dry_run)
+      if dry_run
+        DryRunner.new(printer)
+      else
+        ProcessRunner.new(printer)
+      end
     end
   end # Command
 end # TTY
