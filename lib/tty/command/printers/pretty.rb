@@ -7,8 +7,9 @@ module TTY
   class Command
     module Printers
       class Pretty < Abstract
-        def print_command_start(cmd)
+        def print_command_start(cmd, *args)
           message = "Running #{decorate(cmd.to_command, :yellow, :bold)}"
+          message << args.map(&:chomp).join(' ') unless args.empty?
           write(message, cmd.uuid)
         end
 

@@ -25,8 +25,8 @@ module TTY
           @color   = ::Pastel.new(output: output, enabled: enabled)
         end
 
-        def print_command_start(cmd)
-          write(cmd.to_command)
+        def print_command_start(cmd, *args)
+          write(cmd.to_command + "#{args.join}")
         end
 
         def print_command_out_data(cmd, *args)
