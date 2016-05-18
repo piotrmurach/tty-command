@@ -47,6 +47,7 @@ Or install it yourself as:
     * [2.5.4 User](#254-user)
     * [2.5.5 Group](#255-group)
     * [2.5.6 Umask](#256-umask)
+    * [2.5.7 Dry run](#257-dry-run)
   * [2.6 Result](#26-result)
     * [2.6.1 success?](#261-success)
     * [2.6.2 failure?](#262-failure)
@@ -153,7 +154,7 @@ cmd.execute(:echo, 'hello', env: {foo: 'bar', baz: nil})
 
 ### 2.4 Command
 
-To actually run a command, you need to provie the command name and one or more arguments to execute:
+To actually run a command, you need to provide the command name and one or more arguments to execute:
 
 ```ruby
 cmd.execute(:echo, 'hello', 'world')
@@ -230,6 +231,16 @@ To execute command with umask do:
 
 ```ruby
 cmd.execute(:echo, 'hello', umask: '007')
+```
+
+#### 2.5.7 Dry run
+
+To simulate execution of the command use the `:dry_run` option:
+
+```ruby
+cmd = TTY::Command.new(dry_run: true)
+cmd.execute(:echo, 'hello world')
+# => [123abc] (dry run) echo hello world
 ```
 
 ### 2.6 Result
