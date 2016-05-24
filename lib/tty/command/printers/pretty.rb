@@ -15,7 +15,7 @@ module TTY
 
         def print_command_out_data(cmd, *args)
           message = args.map(&:chomp).join(' ')
-          write("\t" + decorate(message, :green), cmd.uuid)
+          write("\t#{message}", cmd.uuid)
         end
 
         def print_command_err_data(cmd, *args)

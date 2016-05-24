@@ -35,7 +35,7 @@ RSpec.describe TTY::Command, '#execute' do
     lines.last.gsub!(/\d+\.\d+/, 'x')
     expect(lines).to eq([
       "[\e[32m#{uuid}\e[0m] Running \e[33;1mecho hello\e[0m\n",
-      "[\e[32m#{uuid}\e[0m] \t\e[32mhello\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] \thello\n",
       "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
     ])
   end
@@ -70,7 +70,7 @@ RSpec.describe TTY::Command, '#execute' do
     lines.last.gsub!(/\d+\.\d+/, 'x')
     expect(lines).to eq([
       "Running \e[33;1mecho hello\e[0m\n",
-      "\t\e[32mhello\e[0m\n",
+      "\thello\n",
       "Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
     ])
   end
@@ -89,7 +89,7 @@ RSpec.describe TTY::Command, '#execute' do
     lines.last.gsub!(/\d+\.\d+/, 'x')
     expect(lines).to eq([
       "[\e[32m#{uuid}\e[0m] Running \e[33;1mecho 'nooo'; exit 1\e[0m\n",
-      "[\e[32m#{uuid}\e[0m] \t\e[32mnooo\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] \tnooo\n",
       "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n"
     ])
   end

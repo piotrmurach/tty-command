@@ -46,8 +46,7 @@ RSpec.describe TTY::Command::Printers::Pretty do
     printer.print_command_out_data(cmd, 'hello', 'world')
     output.rewind
 
-    expect(output.string).
-      to eq("[\e[32maaaaaa\e[0m] \t\e[32mhello world\e[0m\n")
+    expect(output.string).to eq("[\e[32maaaaaa\e[0m] \thello world\n")
   end
 
   it "prints command stderr data" do
