@@ -16,6 +16,14 @@
 
 **TTY::Command** provides independent command execution component for [TTY](https://github.com/piotrmurach/tty) toolkit.
 
+## Motivation
+
+Complex software projects aren't just a single app. These projects usually spawn dozens or hundreds of supplementary standalone scripts which are just as important as the app itself. Examples include - data validation, deployment, monitoring, database maintenance, backup & restore, configuration management, crawling, ETL, analytics, log file processing, custom reports, etc. One of the contributors to **TTY::Command** counted 222 scripts in the `bin` directory for his startup.
+
+Why should we be handcuffed to `sh` or `bash` for these scripts when we could be using Ruby? Ruby is easier to write and more fun, and we gain a lot by using a better language. It's nice for everyone to just use Ruby everywhere.
+
+**TTY::Command** tries to add value in other ways. It'll halt automatically if a command fails. It's easy to get verbose or quiet output as appropriate, or even capture output and parse it with Ruby. Escaping arguments is a breeze. These are all areas where traditional shell scripts tend to fall flat.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -82,16 +90,6 @@ FileUtils.touch(path)
 cmd.execute("sum #{path}")  # this will fail due to bad escaping
 cmd.execute("sum", path)    # this gets escaped automatically
 ```
-
-## Motivation
-
-One of the contributors to TTY::Command counted 222 scripts in the `bin` directory for his startup.
-
-Complex software projects aren't just a single app. These projects usually spawn dozens or hundreds of supplementary standalone scripts which are just as important as the app itself. Examples include - data validation, deployment, monitoring, database maintenance, backup & restore, configuration management, crawling, ETL, analytics, log file processing, custom reports, etc. 
-
-Why should we be handcuffed to `sh` or `bash` for these scripts when we could be using Ruby? Ruby is easier to write and more fun, and we gain a lot by using a better language. It's nice for everyone to just use Ruby everywhere.
-
-TTY::Command tries to add value in other ways. It'll halt automatically if a command fails. It's easy to get verbose or quiet output as appropriate, or even capture output and parse it with Ruby. Escaping arguments is a breeze. These are all areas where traditional shell scripts tend to fall flat.
 
 ## 2. Interface
 
