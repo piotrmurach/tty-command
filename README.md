@@ -58,30 +58,29 @@ Or install it yourself as:
 
 ## 1. Usage
 
-Create command instance:
+Create a command instance and then execute some commands:
 
 ```ruby
 cmd = TTY::Command.new
+cmd.execute('ls -la')
+cmd.execute('echo Hello!')
 ```
 
-And then, to run command and capture its stadout and stderr use `execute`:
+Note that `execute` will throw an exception if the command fails. This is already an improvement over ordinary shell scripts, which just keep on going when things go bad. That usually makes things worse.
+
+You can use the return value to capture stdout and stderr:
 
 ```ruby
-out, err = cmd.execute('ls -la')
-out, err = cmd.execute('echo Hello!')
+out, err = cmd.execute('cat ~/.bashrc | grep alias')
 ```
 
-You can also split command into arguments like so:
+Instead of using a plain old string, you can break up the arguments and they'll get escaped if necessary:
 
 ```ruby
-out, err = cmd.execute(:ls, '-la')
-out, err = cmd.execite(:echo, 'Hello!')
-```
-
-You can also provide custom redirections:
-
-```ruby
-cmd.execute(:echo, 'Hello!', :out => 'file.txt')
+path = "hello world"
+FileUtils.touch(path)
+cmd.execute("sum #{path}")  # this will fail due to bad escaping
+cmd.execute("sum", path)    # this gets escaped automatically
 ```
 
 ## 2. Interface
