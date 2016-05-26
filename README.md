@@ -12,7 +12,7 @@
 [coverage]: https://coveralls.io/github/piotrmurach/tty-command
 [inchpages]: http://inch-ci.org/github/piotrmurach/tty-command
 
-> Execute external commands with pretty output logging and capture stdout, stderr and exit status. Redirect stdin, stdout and stderr of each command to a file or a string.
+> Run external commands with pretty output logging and capture stdout, stderr and exit status. Redirect stdin, stdout and stderr of each command to a file or a string.
 
 **TTY::Command** provides independent command execution component for [TTY](https://github.com/piotrmurach/tty) toolkit.
 
@@ -44,8 +44,8 @@ Or install it yourself as:
 
 * [1. Usage](#1-usage)
 * [2. Interface](#2-interface)
-  * [2.1 Execute](#21-run)
-  * [2.2 Execute!](#22-run)
+  * [2.1 Run](#21-run)
+  * [2.2 Run!](#22-run)
   * [2.3 Environment variables](#23-environment-variables)
   * [2.3 Command](#24-command)
   * [2.5 Options](#25-options)
@@ -93,17 +93,17 @@ cmd.run("sum", path)    # this gets escaped automatically
 
 ## 2. Interface
 
-### 2.1 Execute
+### 2.1 Run
 
-Execute starts the specified command and waits for it to complete.
+Run starts the specified command and waits for it to complete.
 
-The argument signature for `run` is as follows:
+The argument signature of `run` is as follows:
 
 `run([env], command, [argv1, ...], [options])`
 
 The `env`, `command` and `options` arguments are described in the following sections.
 
-The command runs successfully and returns result, if the command exits with a zero exit status, and has no problems handling stdin, stdout, and stderr.
+The result is returned if the command runs successfully, has no problems handling stdin, stdout, and stderr and exits with a zero exit status.
 
 If the command fails to run or doesn't complete successfully, an `TTY::Command::ExitError` is raised.
 
@@ -121,14 +121,12 @@ puts "The date is #{out}"
 # => "The date is Tue 10 May 2016 22:30:15 BST\n"
 ```
 
-### 2.2 Execute!
-
-You can also use `run!` to run a command that will raise an error `TTY::Command::ExitError` when the command exits with non-zero exit code: 
+otherwise an error is raised:
 
 ```ruby
-cmd.run!('cat file')
+cmd.run('cat file')
 # => raises TTY::Command::ExitError
-# Executing `cat file` failed with
+# Running `cat file` failed with
 #  exit status: 1
 #  ...
 ```
@@ -138,6 +136,16 @@ The `ExitError` message will include:
   * the exit status
   * stdout bytes
   * stderr bytes
+
+### 2.2 Run!
+
+You can also use `run!` version to run a command that will never raise an error regardless whether it exits with non-zero exit code or not. It's down to you to verify the status:
+
+```ruby
+if cmd.run!('cat file').failure?
+  raise "Sorry couldn't display file contents"
+end
+```
 
 ### 2.3 Environment variables
 
