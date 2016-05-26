@@ -4,4 +4,4 @@ require 'tty-command'
 
 cmd = TTY::Command.new
 
-cmd.execute(:ls, :out => 'ls_sample')
+cmd.run(:ls, :out => 'ls_sample')

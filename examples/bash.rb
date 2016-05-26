@@ -8,5 +8,5 @@ f = 'file'
 if cmd.test("[ -f #{f} ]")
   puts "#{f} already exists!"
 else
-  execute :touch, f
+  cmd.run :touch, f
 end
