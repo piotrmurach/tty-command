@@ -1,12 +1,12 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Command, '#execute' do
+RSpec.describe TTY::Command, 'dry run' do
   let(:output) { StringIO.new }
 
-  it "executes command in dry run mode" do
+  it "runs command in dry run mode" do
     command = TTY::Command.new(output: output, dry_run: true)
     uuid = nil
-    command.execute(:echo, 'hello', 'world') do |cmd|
+    command.run(:echo, 'hello', 'world') do |cmd|
       uuid = cmd.uuid
     end
     output.rewind
@@ -15,10 +15,10 @@ RSpec.describe TTY::Command, '#execute' do
       "[\e[32m#{uuid}\e[0m] \e[34m(dry run)\e[0m \e[33;1mecho hello world\e[0m\n")
   end
 
-  it "allows to execute command in dry mode" do
+  it "allows to run command in dry mode" do
     command = TTY::Command.new(output: output)
     uuid = nil
-    command.execute(:echo, 'hello', 'world', dry_run: true) do |cmd|
+    command.run(:echo, 'hello', 'world', dry_run: true) do |cmd|
       uuid = cmd.uuid
     end
     output.rewind
@@ -29,7 +29,7 @@ RSpec.describe TTY::Command, '#execute' do
 
   it "doesn't collect printout to stdin or stderr" do
     cmd = TTY::Command.new(output: output, dry_run: true)
-    out, err = cmd.execute(:echo, 'hello', 'world')
+    out, err = cmd.run(:echo, 'hello', 'world')
 
     expect(out).to be_empty
     expect(err).to be_empty

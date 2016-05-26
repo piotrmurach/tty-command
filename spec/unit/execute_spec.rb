@@ -1,32 +1,32 @@
 # encoding: utf-8
 
-RSpec.describe TTY::Command, '#execute' do
-  it 'executes command and prints to stdout' do
+RSpec.describe TTY::Command, '#run' do
+  it 'runs command and prints to stdout' do
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
-    out, err = command.execute(:echo, 'hello')
+    out, err = command.run(:echo, 'hello')
 
     expect(out).to eq("hello\n")
     expect(err).to eq("")
   end
 
-  it 'executes command and prints to stderr' do
+  it 'runs command and prints to stderr' do
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
-    out, err = command.execute("echo 'hello' 1>& 2")
+    out, err = command.run("echo 'hello' 1>& 2")
 
     expect(out).to eq("")
     expect(err).to eq("hello\n")
   end
 
-  it 'executes command successfully with logging' do
+  it 'runs command successfully with logging' do
     output = StringIO.new
     uuid = nil
     command = TTY::Command.new(output: output)
 
-    command.execute(:echo, 'hello') do |cmd|
+    command.run(:echo, 'hello') do |cmd|
       uuid = cmd.uuid
     end
     output.rewind
@@ -40,12 +40,12 @@ RSpec.describe TTY::Command, '#execute' do
     ])
   end
 
-  it 'executes command successfully with logging without color' do
+  it 'runs command successfully with logging without color' do
     output = StringIO.new
     uuid = nil
     command = TTY::Command.new(output: output, color: false)
 
-    command.execute(:echo, 'hello') do |cmd|
+    command.run(:echo, 'hello') do |cmd|
       uuid = cmd.uuid
     end
     output.rewind
@@ -59,11 +59,11 @@ RSpec.describe TTY::Command, '#execute' do
     ])
   end
 
-  it 'executes command successfully with logging without uuid' do
+  it 'runs command successfully with logging without uuid' do
     output = StringIO.new
     command = TTY::Command.new(output: output, uuid: false)
 
-    command.execute(:echo, 'hello')
+    command.run(:echo, 'hello')
     output.rewind
 
     lines = output.readlines
@@ -75,12 +75,12 @@ RSpec.describe TTY::Command, '#execute' do
     ])
   end
 
-  it "executes command and fails with logging" do
+  it "runs command and fails with logging" do
     output = StringIO.new
     uuid = nil
     command = TTY::Command.new(output: output)
 
-    command.execute!("echo 'nooo'; exit 1") do |cmd|
+    command.run!("echo 'nooo'; exit 1") do |cmd|
       uuid = cmd.uuid
     end
     output.rewind
@@ -99,7 +99,7 @@ RSpec.describe TTY::Command, '#execute' do
     command = TTY::Command.new(output: output)
 
     expect {
-      command.execute("echo 'nooo'; exit 1")
+      command.run("echo 'nooo'; exit 1")
     }.to raise_error(TTY::Command::ExitError,
       ["Executing `echo 'nooo'; exit 1` failed with",
        "  exit status: 1",
@@ -112,7 +112,7 @@ RSpec.describe TTY::Command, '#execute' do
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
-    out, _ = command.execute('echo hello', STDOUT => '/dev/null')
+    out, _ = command.run('echo hello', STDOUT => '/dev/null')
 
     expect(out).to eq("")
   end

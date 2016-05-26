@@ -42,10 +42,10 @@ module TTY
     # Start external executable in a child process
     #
     # @example
-    #   cmd.execute(command, [argv1, ..., argvN], [options])
+    #   cmd.run(command, [argv1, ..., argvN], [options])
     #
     # @param [String] command
-    #   the command to execute
+    #   the command to run
     #
     # @param [Array[String]] argv
     #   an array of string arguments
@@ -58,14 +58,14 @@ module TTY
     #
     # @option options [Integer] :timeout
     #   Maximum number of seconds to allow the process
-    #   to execute before aborting with a TimeoutExceeded
+    #   to run before aborting with a TimeoutExceeded
     #   exception.
     #
     # @raise [ExitError]
     #   raised when command exits with non-zero code
     #
     # @api public
-    def execute(*args)
+    def run(*args)
       cmd = command(*args)
       yield(cmd) if block_given?
       result = execute_command(cmd)
@@ -78,10 +78,10 @@ module TTY
     # Start external executable without raising ExitError
     #
     # @example
-    #   cmd.execute!(command, [argv1, ..., argvN], [options])
+    #   cmd.run!(command, [argv1, ..., argvN], [options])
     #
     # @api public
-    def execute!(*args)
+    def run!(*args)
       cmd = command(*args)
       yield(cmd) if block_given?
       execute_command(cmd)
@@ -91,7 +91,7 @@ module TTY
     #
     # @api public
     def test(*args)
-      execute!(:test, *args).success?
+      run!(:test, *args).success?
     end
 
     def dry_run?
