@@ -44,8 +44,8 @@ Or install it yourself as:
 
 * [1. Usage](#1-usage)
 * [2. Interface](#2-interface)
-  * [2.1 Execute](#21-execute)
-  * [2.2 Execute!](#22-execute)
+  * [2.1 Execute](#21-run)
+  * [2.2 Execute!](#22-run)
   * [2.3 Environment variables](#23-environment-variables)
   * [2.3 Command](#24-command)
   * [2.5 Options](#25-options)
@@ -66,20 +66,20 @@ Or install it yourself as:
 
 ## 1. Usage
 
-Create a command instance and then execute some commands:
+Create a command instance and then run some commands:
 
 ```ruby
 cmd = TTY::Command.new
-cmd.execute('ls -la')
-cmd.execute('echo Hello!')
+cmd.run('ls -la')
+cmd.run('echo Hello!')
 ```
 
-Note that `execute` will throw an exception if the command fails. This is already an improvement over ordinary shell scripts, which just keep on going when things go bad. That usually makes things worse.
+Note that `run` will throw an exception if the command fails. This is already an improvement over ordinary shell scripts, which just keep on going when things go bad. That usually makes things worse.
 
 You can use the return value to capture stdout and stderr:
 
 ```ruby
-out, err = cmd.execute('cat ~/.bashrc | grep alias')
+out, err = cmd.run('cat ~/.bashrc | grep alias')
 ```
 
 Instead of using a plain old string, you can break up the arguments and they'll get escaped if necessary:
@@ -87,8 +87,8 @@ Instead of using a plain old string, you can break up the arguments and they'll 
 ```ruby
 path = "hello world"
 FileUtils.touch(path)
-cmd.execute("sum #{path}")  # this will fail due to bad escaping
-cmd.execute("sum", path)    # this gets escaped automatically
+cmd.run("sum #{path}")  # this will fail due to bad escaping
+cmd.run("sum", path)    # this gets escaped automatically
 ```
 
 ## 2. Interface
@@ -97,36 +97,36 @@ cmd.execute("sum", path)    # this gets escaped automatically
 
 Execute starts the specified command and waits for it to complete.
 
-The argument signature for `execute` is as follows:
+The argument signature for `run` is as follows:
 
-`execute([env], command, [argv1, ...], [options])`
+`run([env], command, [argv1, ...], [options])`
 
 The `env`, `command` and `options` arguments are described in the following sections.
 
-The command executes successfully and returns result, if the command exits with a zero exit status, and has no problems handling stdin, stdout, and stderr.
+The command runs successfully and returns result, if the command exits with a zero exit status, and has no problems handling stdin, stdout, and stderr.
 
-If the command fails to execute or doesn't complete successfully, an `TTY::Command::ExitError` is raised.
+If the command fails to run or doesn't complete successfully, an `TTY::Command::ExitError` is raised.
 
 For example, to display file contents:
 
 ```ruby
-cmd.execute('cat file.txt')
+cmd.run('cat file.txt')
 ```
 
 When command is run without raising `TTY::Command::ExitError`, a `TTY::Command::Result` is returned that records stdout and stderr:
 
 ```ruby
-out, err = cmd.execute('date')
+out, err = cmd.run('date')
 puts "The date is #{out}"
 # => "The date is Tue 10 May 2016 22:30:15 BST\n"
 ```
 
 ### 2.2 Execute!
 
-You can also use `execute!` to run a command that will raise an error `TTY::Command::ExitError` when the command exits with non-zero exit code: 
+You can also use `run!` to run a command that will raise an error `TTY::Command::ExitError` when the command exits with non-zero exit code: 
 
 ```ruby
-cmd.execute!('cat file')
+cmd.run!('cat file')
 # => raises TTY::Command::ExitError
 # Executing `cat file` failed with
 #  exit status: 1
@@ -144,27 +144,27 @@ The `ExitError` message will include:
 The environment variables need to be provided as hash entries, that can be set directly as a first argument:
 
 ```ruby
-cmd.execute({'RAILS_ENV' => 'PRODUCTION'}, :rails, 'server')
+cmd.run({'RAILS_ENV' => 'PRODUCTION'}, :rails, 'server')
 ```
 
 or as an option with `:env` key:
 
 ```ruby
-cmd.execute(:rails, 'server', env: {rails_env: :production})
+cmd.run(:rails, 'server', env: {rails_env: :production})
 ```
 
 When a value in env is nil, the variable is unset in the child process:
 
 ```ruby
-cmd.execute(:echo, 'hello', env: {foo: 'bar', baz: nil})
+cmd.run(:echo, 'hello', env: {foo: 'bar', baz: nil})
 ```
 
 ### 2.4 Command
 
-To actually run a command, you need to provide the command name and one or more arguments to execute:
+To actually run a command, you need to provide the command name and one or more arguments to run:
 
 ```ruby
-cmd.execute(:echo, 'hello', 'world')
+cmd.run(:echo, 'hello', 'world')
 ```
 
 ### 2.5 Options
@@ -176,7 +176,7 @@ When a hash is given in the last argument (options), it allows to specify a curr
 To change directory in which the command is run pass the `:chidir` option:
 
 ```ruby
-cmd.execute(:echo, 'hello', chdir: '/var/tmp')
+cmd.run(:echo, 'hello', chdir: '/var/tmp')
 ```
 
 #### 2.5.2 Redirection
@@ -186,24 +186,24 @@ The streams can be redirected using hash keys `:in`, `:out`, `:err`, a fixnum, a
 You can specify a filename for redirection as a hash value:
 
 ```ruby
-cmd.execute(:ls, :in => "/dev/null")   # read mode
-cmd.execute(:ls, :out => "/dev/null")  # write mode
-cmd.execute(:ls, :err => "log")        # write mode
-cmd.execute(:ls, [:out, :err] => "/dev/null") # write mode
-cmd.execute(:ls, 3 => "/dev/null")     # read mode
+cmd.run(:ls, :in => "/dev/null")   # read mode
+cmd.run(:ls, :out => "/dev/null")  # write mode
+cmd.run(:ls, :err => "log")        # write mode
+cmd.run(:ls, [:out, :err] => "/dev/null") # write mode
+cmd.run(:ls, 3 => "/dev/null")     # read mode
 ```
 
 You can also provide actual file descriptor for redirection:
 
 ```ruby
-cmd.execute(:cat, :in => open('/etc/passwd'))
+cmd.run(:cat, :in => open('/etc/passwd'))
 ```
 
 For example, to merge stderr into stdout you would do:
 
 ```ruby
-cmd.execute(:ls, '-la', :stderr => :stdout)
-cmd.execute(:ls, '-la', 2 => 1)
+cmd.run(:ls, '-la', :stderr => :stdout)
+cmd.run(:ls, '-la', 2 => 1)
 ```
 
 #### 2.5.3 Timeout
@@ -211,33 +211,33 @@ cmd.execute(:ls, '-la', 2 => 1)
 You can timeout command execuation by providing the `:timeout` option in seconds:
 
 ```ruby
-cmd.execute("while test 1; sleep 1; done", timeout: 5)
+cmd.run("while test 1; sleep 1; done", timeout: 5)
 ```
 
 Please run `examples/timeout.rb` to see timeout in action.
 
 #### 2.5.4 User
 
-To execute command as a given user do:
+To run command as a given user do:
 
 ```ruby
-cmd.execute(:echo, 'hello', user: 'piotr')
+cmd.run(:echo, 'hello', user: 'piotr')
 ```
 
 #### 2.5.5 Group
 
-To execute command as part of group do:
+To run command as part of group do:
 
 ```ruby
-cmd.execute(:echo, 'hello', group: 'devs')
+cmd.run(:echo, 'hello', group: 'devs')
 ```
 
 #### 2.5.6 Umask
 
-To execute command with umask do:
+To run command with umask do:
 
 ```ruby
-cmd.execute(:echo, 'hello', umask: '007')
+cmd.run(:echo, 'hello', umask: '007')
 ```
 
 #### 2.5.7 Dry run
@@ -246,22 +246,22 @@ To simulate execution of the command use the `:dry_run` option:
 
 ```ruby
 cmd = TTY::Command.new(dry_run: true)
-cmd.execute(:echo, 'hello world')
+cmd.run(:echo, 'hello world')
 # => [123abc] (dry run) echo hello world
 ```
 
 ### 2.6 Result
 
-Each time you execute command the stdout and stderro are captured and return as result. The result can be examined directly by casting it to tuple:
+Each time you run command the stdout and stderro are captured and return as result. The result can be examined directly by casting it to tuple:
 
 ```ruby
-out, err = cmd.execute(:echo, 'Hello')
+out, err = cmd.run(:echo, 'Hello')
 ```
 
 However, if you want to you can defer reading:
 
 ```ruby
-result = cmd.execute(:echo, 'Hello')
+result = cmd.run(:echo, 'Hello')
 result.out
 result.err
 ```
@@ -271,7 +271,7 @@ result.err
 To check if command exited successfully use `success?`:
 
 ```ruby
-result = cmd.execute(:echo, 'Hello')
+result = cmd.run(:echo, 'Hello')
 result.success? # => true
 ```
 
@@ -280,7 +280,7 @@ result.success? # => true
 To check if command exited unsuccessfully use `failure?` or `failed?`:
 
 ```ruby
-result = cmd.execute(:echo, 'Hello')
+result = cmd.run(:echo, 'Hello')
 result.failure?  # => false
 result.failed?   # => false
 ```
@@ -290,7 +290,7 @@ result.failed?   # => false
 To check if command run to complition use `exited?` or `complete?`:
 
 ```ruby
-result = cmd.execute(:echo, 'Hello')
+result = cmd.run(:echo, 'Hello')
 result.exited?    # => true
 result.complete?  # => true
 ```
@@ -347,20 +347,20 @@ Here's a slightly more elaborate example to illustrate how tty-command can impro
 cmd = TTY::Command.new
 
 # dependencies
-cmd.execute "apt-get -y install build-essential checkinstall"
+cmd.run "apt-get -y install build-essential checkinstall"
 
 # fetch ruby if necessary
 if !File.exists?("ruby-2.3.0.tar.gz")
   puts "Downloading..."
-  cmd.execute "wget http://ftp.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.gz"
-  cmd.execute "tar xvzf ruby-2.3.0.tar.gz"
+  cmd.run "wget http://ftp.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.gz"
+  cmd.run "tar xvzf ruby-2.3.0.tar.gz"
 end
 
 # now install
 Dir.chdir("ruby-2.3.0") do
   puts "Building..."
-  cmd.execute "./configure --prefix=/usr/local"
-  cmd.execute "make"
+  cmd.run "./configure --prefix=/usr/local"
+  cmd.run "make"
 end
 ```
 
