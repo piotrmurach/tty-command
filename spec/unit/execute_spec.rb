@@ -101,7 +101,7 @@ RSpec.describe TTY::Command, '#run' do
     expect {
       command.run("echo 'nooo'; exit 1")
     }.to raise_error(TTY::Command::ExitError,
-      ["Executing `echo 'nooo'; exit 1` failed with",
+      ["Running `echo 'nooo'; exit 1` failed with",
        "  exit status: 1",
        "  stdout: nooo",
        "  stderr: Nothing written\n"].join("\n")
