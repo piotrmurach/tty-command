@@ -44,25 +44,25 @@ Or install it yourself as:
 
 * [1. Usage](#1-usage)
 * [2. Interface](#2-interface)
-  * [2.1 Run](#21-run)
-  * [2.2 Run!](#22-run)
-  * [2.3 Environment variables](#23-environment-variables)
-  * [2.3 Command](#24-command)
-  * [2.5 Options](#25-options)
-    * [2.5.1 Current directory](#251-current-directory)
-    * [2.5.2 Redirection](#252-redirection)
-    * [2.5.3 Timeout](#253-timeout)
-    * [2.5.4 User](#254-user)
-    * [2.5.5 Group](#255-group)
-    * [2.5.6 Umask](#256-umask)
-    * [2.5.7 Dry run](#257-dry-run)
-  * [2.6 Result](#26-result)
-    * [2.6.1 success?](#261-success)
-    * [2.6.2 failure?](#262-failure)
-    * [2.6.3 exited?](#263-exited)
-  * [2.7 Output Logging](#27-output-logging)
-    * [2.7.1 Custom Printer](#271-custom-printer)
-* [3. Example](#3-example)
+  * [2.1. Run](#21-run)
+  * [2.2. Run!](#22-run)
+  * [2.3. Logging](#23-logging)
+  * [2.4. Dry run](#24-dry-run)
+* [3. Advanced Interface](#3-advanced-interface)
+  * [3.1. Environment variables](#31-environment-variables)
+  * [3.2. Options](#32-options)
+    * [3.2.1. Current directory](#321-current-directory)
+    * [3.2.2. Redirection](#322-redirection)
+    * [3.2.3. Timeout](#323-timeout)
+    * [3.2.4. User](#324-user)
+    * [3.2.5. Group](#325-group)
+    * [3.2.6. Umask](#326-umask)
+  * [3.3. Result](#33-result)
+    * [3.3.1. success?](#331-success)
+    * [3.3.2. failure?](#332-failure)
+    * [3.3.3. exited?](#333-exited)
+  * [3.4. Custom printer](#34-custom-printer)
+* [4. Example](#4-example)
 
 ## 1. Usage
 
@@ -103,17 +103,13 @@ The argument signature of `run` is as follows:
 
 The `env`, `command` and `options` arguments are described in the following sections.
 
-The result is returned if the command runs successfully, has no problems handling stdin, stdout, and stderr and exits with a zero exit status.
-
-If the command fails to run or doesn't complete successfully, an `TTY::Command::ExitError` is raised.
-
 For example, to display file contents:
 
 ```ruby
 cmd.run('cat file.txt')
 ```
 
-When command is run without raising `TTY::Command::ExitError`, a `TTY::Command::Result` is returned that records stdout and stderr:
+If the command succeeds, a `TTY::Command::Result` is returned that records stdout and stderr:
 
 ```ruby
 out, err = cmd.run('date')
@@ -121,17 +117,8 @@ puts "The date is #{out}"
 # => "The date is Tue 10 May 2016 22:30:15 BST\n"
 ```
 
-otherwise an error is raised:
+If the command fails (with a non-zero exit code), a `TTY::Command::ExitError` is raised. The `ExitError` message will include:
 
-```ruby
-cmd.run('cat file')
-# => raises TTY::Command::ExitError
-# Running `cat file` failed with
-#  exit status: 1
-#  ...
-```
-
-The `ExitError` message will include:
   * the name of command executed
   * the exit status
   * stdout bytes
@@ -139,15 +126,55 @@ The `ExitError` message will include:
 
 ### 2.2 Run!
 
-You can also use `run!` version to run a command that will never raise an error regardless whether it exits with non-zero exit code or not. It's down to you to verify the status:
+If you expect a command to fail occasionally, use `run!` instead. Then you can detect failures and respond appropriately. For example:
 
 ```ruby
-if cmd.run!('cat file').failure?
-  raise "Sorry couldn't display file contents"
+if cmd.run!('which xyzzy').failure?
+  cmd.run('brew install xyzzy')
 end
 ```
 
-### 2.3 Environment variables
+### 2.3 Logging
+
+By default, when a command is run, the command and the output are printed to `stdout` using the `:pretty` printer. If you wish to change printer you can do so by passing a `:printer` option:
+
+* `:null` - no output
+* `:pretty` - colorful output
+* `:progress` - minimal output with green dot for success and F for failure
+* `:quiet` - only output actual command stdout and stderr
+
+like so:
+
+```ruby
+cmd = TTY::Command.new(printer: :progress)
+```
+
+By default the printers log to `stdout` but this can be changed by passing an object that responds to `<<` message:
+
+```ruby
+logger = Logger.new('dev.log')
+cmd = TTY::Command.new(output: output)
+```
+
+You can force the printer to always in print in color by passing the `:color` option:
+
+```ruby
+cmd = TTY::Command.new(color: true)
+```
+
+### 2.4 Dry run
+
+Sometimes it can be useful to put your script into a "dry run" mode that prints commands without actually running them. To simulate execution of the command use the `:dry_run` option:
+
+```ruby
+cmd = TTY::Command.new(dry_run: true)
+cmd.run(:rm, 'all_my_files')
+# => [123abc] (dry run) rm all_my_files
+```
+
+## 3. Advanced Interface
+
+### 3.1 Environment variables
 
 The environment variables need to be provided as hash entries, that can be set directly as a first argument:
 
@@ -167,19 +194,11 @@ When a value in env is nil, the variable is unset in the child process:
 cmd.run(:echo, 'hello', env: {foo: 'bar', baz: nil})
 ```
 
-### 2.4 Command
-
-To actually run a command, you need to provide the command name and one or more arguments to run:
-
-```ruby
-cmd.run(:echo, 'hello', 'world')
-```
-
-### 2.5 Options
+### 3.2 Options
 
 When a hash is given in the last argument (options), it allows to specify a current directory, umask, user, group and and zero or more fd redirects for the child process.
 
-#### 2.5.1 Current directory
+#### 3.2.1 Current directory
 
 To change directory in which the command is run pass the `:chidir` option:
 
@@ -187,7 +206,7 @@ To change directory in which the command is run pass the `:chidir` option:
 cmd.run(:echo, 'hello', chdir: '/var/tmp')
 ```
 
-#### 2.5.2 Redirection
+#### 3.2.2 Redirection
 
 The streams can be redirected using hash keys `:in`, `:out`, `:err`, a fixnum, an IO and array. The keys specify a given file descriptor for the child process.
 
@@ -214,7 +233,7 @@ cmd.run(:ls, '-la', :stderr => :stdout)
 cmd.run(:ls, '-la', 2 => 1)
 ```
 
-#### 2.5.3 Timeout
+#### 3.2.3 Timeout
 
 You can timeout command execuation by providing the `:timeout` option in seconds:
 
@@ -224,7 +243,7 @@ cmd.run("while test 1; sleep 1; done", timeout: 5)
 
 Please run `examples/timeout.rb` to see timeout in action.
 
-#### 2.5.4 User
+#### 3.2.4 User
 
 To run command as a given user do:
 
@@ -232,7 +251,7 @@ To run command as a given user do:
 cmd.run(:echo, 'hello', user: 'piotr')
 ```
 
-#### 2.5.5 Group
+#### 3.2.5 Group
 
 To run command as part of group do:
 
@@ -240,7 +259,7 @@ To run command as part of group do:
 cmd.run(:echo, 'hello', group: 'devs')
 ```
 
-#### 2.5.6 Umask
+#### 3.2.6 Umask
 
 To run command with umask do:
 
@@ -248,19 +267,9 @@ To run command with umask do:
 cmd.run(:echo, 'hello', umask: '007')
 ```
 
-#### 2.5.7 Dry run
+### 3.3 Result
 
-To simulate execution of the command use the `:dry_run` option:
-
-```ruby
-cmd = TTY::Command.new(dry_run: true)
-cmd.run(:echo, 'hello world')
-# => [123abc] (dry run) echo hello world
-```
-
-### 2.6 Result
-
-Each time you run command the stdout and stderro are captured and return as result. The result can be examined directly by casting it to tuple:
+Each time you run command the stdout and stderr are captured and return as result. The result can be examined directly by casting it to tuple:
 
 ```ruby
 out, err = cmd.run(:echo, 'Hello')
@@ -274,7 +283,7 @@ result.out
 result.err
 ```
 
-#### 2.6.1 success?
+#### 3.3.1 success?
 
 To check if command exited successfully use `success?`:
 
@@ -283,7 +292,7 @@ result = cmd.run(:echo, 'Hello')
 result.success? # => true
 ```
 
-#### 2.6.2 failure?
+#### 3.3.2 failure?
 
 To check if command exited unsuccessfully use `failure?` or `failed?`:
 
@@ -293,7 +302,7 @@ result.failure?  # => false
 result.failed?   # => false
 ```
 
-#### 2.6.3 exited?
+#### 3.3.3 exited?
 
 To check if command run to complition use `exited?` or `complete?`:
 
@@ -303,37 +312,9 @@ result.exited?    # => true
 result.complete?  # => true
 ```
 
-### 2.7 Output Logging
+### 3.4 Custom printer
 
-By default when command is executed, the command itself with all arguments as well as command's output are printed to `stdout` using the `:pretty` printer. If you wish to change printer you can do so by passing `:printer` option out of
-
-* `:null` - no output
-* `:pretty` - colorful output,
-* `:progress` - minimal output with green dot for success and F for failure
-* `:quiet` - only output actual command stdout and stderr
-
-to command like so:
-
-```ruby
-cmd = TTY::Command.new(printer: :progress)
-```
-
-By default the printers log to `stdout` but this can be changed by passing object that responds to `<<` message:
-
-```ruby
-logger = Logger.new('dev.log')
-cmd = TTY::Command.new(output: output)
-```
-
-You can force printer to always in print in color by passing `:color` option:
-
-```ruby
-cmd = TTY::Command.new(color: true)
-```
-
-#### 2.7.1 Custom printer
-
-If the built-in printers do not meet your requirements you can create your own. Add the very minimum you need to specify the `write` method that will be called during the lifecycle of command execution:
+If the built-in printers do not meet your requirements you can create your own. At the very minimum you need to specify the `write` method that will be called during the lifecycle of command execution:
 
 ```ruby
 CustomPrinter < TTY::Command::Printers::Abstract
@@ -347,7 +328,7 @@ printer = CustomPrinter
 cmd = TTY::Command.new(printer: printer)
 ```
 
-## 3. Example
+## 4. Example
 
 Here's a slightly more elaborate example to illustrate how tty-command can improve on plain old shell scripts. This example installs a new version of Ruby on an Ubuntu machine.
 
