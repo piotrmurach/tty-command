@@ -94,8 +94,13 @@ module TTY
       run!(:test, *args).success?
     end
 
+    # Check if in dry mode
+    #
+    # @return [Boolean]
+    #
+    # @public
     def dry_run?
-      @dryrun
+      @dry_run
     end
 
     def printer

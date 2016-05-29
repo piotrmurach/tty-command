@@ -3,6 +3,11 @@
 RSpec.describe TTY::Command, 'dry run' do
   let(:output) { StringIO.new }
 
+  it "queries for dry mode" do
+    command = TTY::Command.new(dry_run: false)
+    expect(command.dry_run?).to eq(false)
+  end
+
   it "runs command in dry run mode" do
     command = TTY::Command.new(output: output, dry_run: true)
     uuid = nil

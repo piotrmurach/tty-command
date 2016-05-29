@@ -46,8 +46,9 @@ Or install it yourself as:
 * [2. Interface](#2-interface)
   * [2.1. Run](#21-run)
   * [2.2. Run!](#22-run)
-  * [2.3. Logging](#23-logging)
-  * [2.4. Dry run](#24-dry-run)
+  * [2.3. Test](#23-test)
+  * [2.4. Logging](#24-logging)
+  * [2.5. Dry run](#25-dry-run)
 * [3. Advanced Interface](#3-advanced-interface)
   * [3.1. Environment variables](#31-environment-variables)
   * [3.2. Options](#32-options)
@@ -136,7 +137,20 @@ if cmd.run!('which xyzzy').failure?
 end
 ```
 
-### 2.3 Logging
+### 2.3 Test
+
+To simulate classic bash test command you case use `test` method with expression to check as a first argument:
+
+```ruby
+if cmd.test '-e /etc/passwd'
+  puts "Sweet..."
+else
+  puts "Ohh no! Where is it?"
+  exit 1
+end
+```
+
+### 2.4 Logging
 
 By default, when a command is run, the command and the output are printed to `stdout` using the `:pretty` printer. If you wish to change printer you can do so by passing a `:printer` option:
 
@@ -164,7 +178,7 @@ You can force the printer to always in print in color by passing the `:color` op
 cmd = TTY::Command.new(color: true)
 ```
 
-### 2.4 Dry run
+### 2.5 Dry run
 
 Sometimes it can be useful to put your script into a "dry run" mode that prints commands without actually running them. To simulate execution of the command use the `:dry_run` option:
 
@@ -172,6 +186,12 @@ Sometimes it can be useful to put your script into a "dry run" mode that prints 
 cmd = TTY::Command.new(dry_run: true)
 cmd.run(:rm, 'all_my_files')
 # => [123abc] (dry run) rm all_my_files
+```
+
+To check what mode the command is in use the `dry_run?` query helper:
+
+```ruby
+cmd.dry_run? # => true
 ```
 
 ## 3. Advanced Interface
