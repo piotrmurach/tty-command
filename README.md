@@ -124,6 +124,8 @@ If the command fails (with a non-zero exit code), a `TTY::Command::ExitError` is
   * stdout bytes
   * stderr bytes
 
+If the error output is very long, the stderr may contain only a prefix, number of omitted bytes and suffix.
+
 ### 2.2 Run!
 
 If you expect a command to fail occasionally, use `run!` instead. Then you can detect failures and respond appropriately. For example:
