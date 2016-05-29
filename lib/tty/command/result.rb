@@ -65,7 +65,7 @@ module TTY
 
       def ==(other)
         return false unless other.is_a?(TTY::Command::Result)
-        @status == other.to_i && self.to_ary == other.to_ary
+        @status == other.to_i && to_ary == other.to_ary
       end
     end # Result
   end # Command

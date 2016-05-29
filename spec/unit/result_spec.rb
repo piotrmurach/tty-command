@@ -13,6 +13,12 @@ RSpec.describe TTY::Command::Result do
     expect(result.success?).to eq(false)
   end
 
+  it "accesses exit code" do
+    result = TTY::Command::Result.new(127, '', '')
+    expect(result.to_i).to eq(127)
+    expect(result.to_s).to eq('127')
+  end
+
   it "doesn't exit" do
     result = TTY::Command::Result.new(nil, '', '')
     expect(result.exited?).to eq(false)
