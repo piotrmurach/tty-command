@@ -11,8 +11,6 @@ require 'tty/command/printers/pretty'
 require 'tty/command/printers/progress'
 require 'tty/command/printers/quiet'
 
-require 'tty/command/truncator'
-
 module TTY
   class Command
     ExecuteError = Class.new(StandardError)

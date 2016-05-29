@@ -2,6 +2,7 @@
 
 require 'tty/command/execute'
 require 'tty/command/result'
+require 'tty/command/truncator'
 
 module TTY
   class Command
@@ -53,7 +54,7 @@ module TTY
       # @api private
       def read_streams(cmd, stdout, stderr)
         stdout_data = ''
-        stderr_data = ''
+        stderr_data = Truncator.new
         timeout = cmd.options[:timeout]
 
         stdout_thread = Thread.new do
@@ -85,7 +86,7 @@ module TTY
             stderr_thread.raise(TimeoutExceeded)
           end
         end
-        [stdout_data, stderr_data]
+        [stdout_data, stderr_data.read]
       end
 
       # @api private
