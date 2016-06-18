@@ -335,7 +335,7 @@ result.failed?   # => false
 
 #### 3.3.3 exited?
 
-To check if command run to complition use `exited?` or `complete?`:
+To check if command ran to completion use `exited?` or `complete?`:
 
 ```ruby
 result = cmd.run(:echo, 'Hello')
