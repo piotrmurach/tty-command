@@ -49,6 +49,7 @@ Or install it yourself as:
   * [2.3. Test](#23-test)
   * [2.4. Logging](#24-logging)
   * [2.5. Dry run](#25-dry-run)
+  * [2.6. Ruby interpreter](#26-ruby-interpreter)
 * [3. Advanced Interface](#3-advanced-interface)
   * [3.1. Environment variables](#31-environment-variables)
   * [3.2. Options](#32-options)
@@ -192,6 +193,14 @@ To check what mode the command is in use the `dry_run?` query helper:
 
 ```ruby
 cmd.dry_run? # => true
+```
+
+### 2.6 Ruby interperter
+
+**TTY::Command** provides a helper for running comannds with Ruby interpreter:
+
+```ruby
+cmd.ruby %q{-e "puts 'Hello world'"}
 ```
 
 ## 3. Advanced Interface

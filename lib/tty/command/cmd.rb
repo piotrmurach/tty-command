@@ -136,7 +136,8 @@ module TTY
         end
       end
 
-      # Enclose s in quotes if it contains characters that require escaping
+      # Enclose argument in quotes if it contains
+      # characters that require escaping
       #
       # @param [String] arg
       #   the argument to escape

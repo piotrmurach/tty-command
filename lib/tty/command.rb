@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'thread'
+require 'rbconfig'
 require 'tty/command/version'
 require 'tty/command/cmd'
 require 'tty/command/exit_error'
@@ -16,6 +17,11 @@ module TTY
     ExecuteError = Class.new(StandardError)
 
     TimeoutExceeded = Class.new(StandardError)
+
+    # Path to the current Ruby
+    RUBY = ENV['RUBY'] || File.join(
+      RbConfig::CONFIG['bindir'],
+      RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT'])
 
     attr_reader :printer
 
@@ -92,6 +98,21 @@ module TTY
     # @api public
     def test(*args)
       run!(:test, *args).success?
+    end
+
+    # Run Ruby interperter with the given arguments
+    #
+    # @example
+    #   ruby %q{-e "puts 'Hello world'"}
+    #
+    # @api public
+    def ruby(*args, &block)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      if args.length > 1
+        run(*([RUBY] + args + [options]), &block)
+      else
+        run("#{RUBY} #{args.first}", options, &block)
+      end
     end
 
     # Check if in dry mode
