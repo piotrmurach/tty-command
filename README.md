@@ -197,7 +197,7 @@ cmd.dry_run? # => true
 
 ### 2.6 Ruby interpreter
 
-**TTY::Command** provides a helper for running comannds with Ruby interpreter:
+In order to run a command with Ruby interpreter do:
 
 ```ruby
 cmd.ruby %q{-e "puts 'Hello world'"}
