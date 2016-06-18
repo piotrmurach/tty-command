@@ -195,7 +195,7 @@ To check what mode the command is in use the `dry_run?` query helper:
 cmd.dry_run? # => true
 ```
 
-### 2.6 Ruby interperter
+### 2.6 Ruby interpreter
 
 **TTY::Command** provides a helper for running comannds with Ruby interpreter:
 
