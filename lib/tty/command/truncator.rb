@@ -36,7 +36,7 @@ module TTY
         content = append(content, @prefix)
 
         if (over = (content.bytesize - @max_size)) > 0
-          content = content[over..-1]
+          content = content.byteslice(over..-1)
           @skipped += over
         end
 
@@ -81,10 +81,10 @@ module TTY
         bytes = value.bytesize
         n = bytes < dest.bytesize ? bytes : dest.bytesize
 
-        head, tail = dest[0...n], dest[n..-1]
+        head, tail = dest.byteslice(0...n), dest.byteslice(n..-1)
         dest.replace("#{tail}#{value[0...n]}")
         @skipped += head.bytesize
-        value[n..-1]
+        value.byteslice(n..-1)
       end
 
       # Append value to destination
@@ -99,10 +99,10 @@ module TTY
         if remain > 0
           value_bytes = value.to_s.bytesize
           offset = value_bytes < remain ? value_bytes : remain
-          dst << value[0...offset]
-          value = value[offset..-1]
+          dst << value.byteslice(0...offset)
+          value = value.byteslice(offset..-1)
         end
-        value.to_s
+        value
       end
     end # Truncator
   end # Command
