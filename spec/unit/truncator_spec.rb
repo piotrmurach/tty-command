@@ -26,6 +26,15 @@ RSpec.describe TTY::Command::Truncator do
     expect(truncator.read).to eq("abcd")
   end
 
+  it "writes more bytes letter" do
+    truncator = described_class.new(max_size: 1000)
+
+    multibytes_string = "’test’"
+
+    expect { truncator.write(multibytes_string) }.to_not raise_error
+    expect(truncator.read).to eq(multibytes_string)
+  end
+
   it "overflows prefix and suffix " do
     truncator = described_class.new(max_size: 2)
 
