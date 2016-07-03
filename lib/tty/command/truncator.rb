@@ -102,7 +102,7 @@ module TTY
           dst << value[0...offset]
           value = value[offset..-1]
         end
-        value
+        value.to_s
       end
     end # Truncator
   end # Command
