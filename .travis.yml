@@ -11,6 +11,9 @@ rvm:
   - ruby-head
   - jruby-9.1.1.0
   - jruby-head
+env:
+  global:
+    - JRUBY_OPTS=''
 matrix:
   allow_failures:
     - rvm: ruby-head
