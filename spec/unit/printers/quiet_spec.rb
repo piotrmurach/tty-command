@@ -21,7 +21,7 @@ RSpec.describe TTY::Command::Printers::Quiet do
     printer.print_command_out_data(cmd, 'hello', 'world')
     output.rewind
 
-    expect(output.string).to eq("helloworld")
+    expect(output.string).to eq("hello world")
   end
 
   it "prints command stderr data" do
@@ -31,6 +31,6 @@ RSpec.describe TTY::Command::Printers::Quiet do
     printer.print_command_err_data(cmd, 'hello', 'world')
     output.rewind
 
-    expect(output.string).to eq("helloworld")
+    expect(output.string).to eq("hello world")
   end
 end

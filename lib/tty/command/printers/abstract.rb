@@ -30,15 +30,15 @@ module TTY
         end
 
         def print_command_out_data(cmd, *args)
-          write(args.join)
+          write(args.join(' '))
         end
 
         def print_command_err_data(cmd, *args)
-          write(args.join)
+          write(args.join(' '))
         end
 
         def print_command_exit(cmd, *args)
-          write(args.join)
+          write(args.join(' '))
         end
 
         def write(message)
