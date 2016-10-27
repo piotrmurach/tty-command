@@ -21,8 +21,8 @@ module TTY
         def initialize(output, options = {})
           @output  = output
           @options = options
-          enabled  = options.fetch(:color) { true }
-          @color   = ::Pastel.new(output: output, enabled: enabled)
+          @enabled  = options.fetch(:color) { true }
+          @color   = ::Pastel.new(output: output, enabled: @enabled)
         end
 
         def print_command_start(cmd, *args)
