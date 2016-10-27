@@ -4,20 +4,17 @@ sudo: false
 cache: bundler
 script: "bundle exec rake ci"
 rvm:
-  - 1.9.3
-  - 2.0
-  - 2.1
-  - 2.2
-  - 2.3.0
+  - 2.0.0
+  - 2.1.0
+  - 2.2.5
+  - 2.3.1
   - ruby-head
-  - jruby
-  - jruby-9000
-  - rbx-2
+  - jruby-9.1.1.0
+  - jruby-head
 matrix:
   allow_failures:
     - rvm: ruby-head
-    - rvm: jruby
-    - rvm: jruby-9000
+    - rvm: jruby-head
   fast_finish: true
 branches:
   only: master
