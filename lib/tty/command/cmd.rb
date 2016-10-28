@@ -17,6 +17,10 @@ module TTY
       # @api public
       attr_reader :options
 
+      # Unique identifier
+      # @api public
+      attr_reader :uuid
+
       # Initialize a new Cmd object
       #
       # @api private
@@ -46,13 +50,9 @@ module TTY
         end
         @env ||= {}
         @options = opts
-      end
 
-      # Unique identifier
-      #
-      # @api public
-      def uuid
-        @uuid ||= SecureRandom.uuid.split('-')[0]
+        @uuid = SecureRandom.uuid.split('-')[0]
+        freeze
       end
 
       # The shell environment variables

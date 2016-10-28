@@ -2,13 +2,13 @@
 
 RSpec.describe TTY::Command::Printers::Pretty do
   let(:output) { StringIO.new }
-  let(:uuid) { 'aaaaaa' }
+  let(:uuid) { 'aaaaaa-xxx' }
 
   it "prints command start in color" do
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty.new(output)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
 
-    allow(cmd).to receive(:uuid).and_return(uuid)
     printer.print_command_start(cmd)
     output.rewind
 
@@ -17,9 +17,9 @@ RSpec.describe TTY::Command::Printers::Pretty do
   end
 
   it "prints command start without color" do
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty.new(output, color: false)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
-    allow(cmd).to receive(:uuid).and_return(uuid)
 
     printer.print_command_start(cmd)
     output.rewind
@@ -28,9 +28,9 @@ RSpec.describe TTY::Command::Printers::Pretty do
   end
 
   it "prints command start without uuid" do
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty.new(output, uuid: false)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
-    allow(cmd).to receive(:uuid).and_return(uuid)
 
     printer.print_command_start(cmd)
     output.rewind
@@ -39,9 +39,9 @@ RSpec.describe TTY::Command::Printers::Pretty do
   end
 
   it "prints command stdout data" do
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty.new(output)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
-    allow(cmd).to receive(:uuid).and_return(uuid)
 
     printer.print_command_out_data(cmd, 'hello', 'world')
     output.rewind
@@ -50,9 +50,9 @@ RSpec.describe TTY::Command::Printers::Pretty do
   end
 
   it "prints command stderr data" do
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty.new(output)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
-    allow(cmd).to receive(:uuid).and_return(uuid)
 
     printer.print_command_err_data(cmd, 'hello', 'world')
     output.rewind
@@ -62,9 +62,9 @@ RSpec.describe TTY::Command::Printers::Pretty do
   end
 
   it "prints successful command exit in color" do
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty.new(output)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
-    allow(cmd).to receive(:uuid).and_return(uuid)
 
     printer.print_command_exit(cmd, 0, 5.321)
     output.rewind
@@ -73,9 +73,9 @@ RSpec.describe TTY::Command::Printers::Pretty do
   end
 
   it "prints failure command exit in color" do
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty.new(output)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
-    allow(cmd).to receive(:uuid).and_return(uuid)
 
     printer.print_command_exit(cmd, 1, 5.321)
     output.rewind
@@ -84,9 +84,9 @@ RSpec.describe TTY::Command::Printers::Pretty do
   end
 
   it "prints command exit without exit status in color" do
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty.new(output)
     cmd = TTY::Command::Cmd.new(:echo, 'hello')
-    allow(cmd).to receive(:uuid).and_return(uuid)
 
     printer.print_command_exit(cmd, nil, 5.321)
     output.rewind
