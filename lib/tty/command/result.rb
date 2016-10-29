@@ -6,10 +6,26 @@ module TTY
     #
     # @api public
     class Result
+      include Enumerable
+
       def initialize(status, out, err)
         @status = status
         @out    = out
         @err    = err
+      end
+
+      # Enumerate over output lines
+      #
+      # @api public
+      def each(separator = nil)
+        sep = separator || TTY::Command.record_separator
+        return unless @out
+        elements = @out.split(sep)
+        if block_given?
+          elements.each { |line| yield(line) }
+        else
+          elements.to_enum
+        end
       end
 
       # All data written out to process's stdout stream
