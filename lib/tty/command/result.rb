@@ -16,13 +16,13 @@ module TTY
       def out
         @out
       end
-      alias_method :stdout, :out
+      alias :stdout :out
 
       # All data written out to process's stdin stream
       def err
         @err
       end
-      alias_method :stderr, :err
+      alias :stderr :err
 
       # Information on how the process exited
       #
@@ -30,8 +30,8 @@ module TTY
       def exit_status
         @status
       end
-      alias_method :exitstatus, :exit_status
-      alias_method :status, :exit_status
+      alias :exitstatus :exit_status
+      alias :status :exit_status
 
       def to_i
         @status
@@ -48,7 +48,7 @@ module TTY
       def exited?
         @status != nil
       end
-      alias_method :complete?, :exited?
+      alias :complete? :exited?
 
       def success?
         if exited?
@@ -61,7 +61,7 @@ module TTY
       def failure?
         !success?
       end
-      alias_method :failed?, :failure?
+      alias :failed? :failure?
 
       def ==(other)
         return false unless other.is_a?(TTY::Command::Result)
