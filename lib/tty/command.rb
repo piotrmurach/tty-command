@@ -23,6 +23,14 @@ module TTY
       RbConfig::CONFIG['bindir'],
       RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT'])
 
+    def self.record_separator
+      @record_separator ||= $/
+    end
+
+    def self.record_separator=(sep)
+      @record_separator = sep
+    end
+
     attr_reader :printer
 
     # Initialize a Command object
@@ -122,10 +130,6 @@ module TTY
     # @public
     def dry_run?
       @dry_run
-    end
-
-    def printer
-      use_printer(@printer_name, color: @color, uuid: @uuid)
     end
 
     private
