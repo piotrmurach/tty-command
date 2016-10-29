@@ -63,6 +63,7 @@ Or install it yourself as:
     * [3.3.1. success?](#331-success)
     * [3.3.2. failure?](#332-failure)
     * [3.3.3. exited?](#333-exited)
+    * [3.3.4. each](#334-each)
   * [3.4. Custom printer](#34-custom-printer)
 * [4. Example](#4-example)
 
@@ -357,6 +358,25 @@ end
 printer = CustomPrinter
 
 cmd = TTY::Command.new(printer: printer)
+```
+
+#### 3.3.4 each
+
+The result itself is an enumerable and allows you to iterate over the stdout output:
+
+```ruby
+result = cmd.run(:ls, '-1')
+result.each { |line| puts line }
+# =>
+  CHANGELOG.md
+  CODE_OF_CONDUCT.md
+  Gemfile
+  Gemfile.lock
+  ...
+  lib
+  pkg
+  spec
+  tasks
 ```
 
 ## 4. Example
