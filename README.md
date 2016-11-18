@@ -55,10 +55,11 @@ Or install it yourself as:
   * [3.2. Options](#32-options)
     * [3.2.1. Current directory](#321-current-directory)
     * [3.2.2. Redirection](#322-redirection)
-    * [3.2.3. Timeout](#323-timeout)
-    * [3.2.4. User](#324-user)
-    * [3.2.5. Group](#325-group)
-    * [3.2.6. Umask](#326-umask)
+    * [3.2.3. Handling input](#323-handling-input)    
+    * [3.2.4. Timeout](#324-timeout)    
+    * [3.2.5. User](#324-user)
+    * [3.2.6. Group](#325-group)
+    * [3.2.7. Umask](#326-umask)
   * [3.3. Result](#33-result)
     * [3.3.1. success?](#331-success)
     * [3.3.2. failure?](#332-failure)
@@ -265,7 +266,22 @@ cmd.run(:ls, '-la', :stderr => :stdout)
 cmd.run(:ls, '-la', 2 => 1)
 ```
 
-#### 3.2.3 Timeout
+#### 3.2.3 Handling Input
+
+You can pass input via the :in option, by passing a StringIO Object. This object might have more than one line, if the executed command reads more than once from STDIN.
+
+Assume you have run a program, that first asks for your email address and then for a password:
+
+```ruby
+in_stream = StringIO.new
+in_stream.puts "username@example.com"
+in_stream.puts "password"
+in_stream.rewind
+
+TTY::Command.new.run("my_cli_program", "login", in: in_stream).out
+```
+
+#### 3.2.4 Timeout
 
 You can timeout command execuation by providing the `:timeout` option in seconds:
 
@@ -275,7 +291,7 @@ cmd.run("while test 1; sleep 1; done", timeout: 5)
 
 Please run `examples/timeout.rb` to see timeout in action.
 
-#### 3.2.4 User
+#### 3.2.5 User
 
 To run command as a given user do:
 
@@ -283,7 +299,7 @@ To run command as a given user do:
 cmd.run(:echo, 'hello', user: 'piotr')
 ```
 
-#### 3.2.5 Group
+#### 3.2.6 Group
 
 To run command as part of group do:
 
@@ -291,7 +307,7 @@ To run command as part of group do:
 cmd.run(:echo, 'hello', group: 'devs')
 ```
 
-#### 3.2.6 Umask
+#### 3.2.7 Umask
 
 To run command with umask do:
 
