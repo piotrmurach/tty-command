@@ -241,9 +241,15 @@ cmd.run(:echo, 'hello', chdir: '/var/tmp')
 
 #### 3.2.2 Redirection
 
-The streams can be redirected using hash keys `:in`, `:out`, `:err`, a fixnum, an IO and array. The keys specify a given file descriptor for the child process.
+There are few ways you can redirect commands output.
 
-You can specify a filename for redirection as a hash value:
+You can directly use shell redirection facility like so:
+
+```ruby
+cmd.run("ls 1&>2")
+```
+
+You can provide the streams as additional hash options where the key is one of `:in`, `:out`, `:err`, a fixnum(a file descriptor for the child process), an IO or array. The pair value can be a filename for redirection.
 
 ```ruby
 cmd.run(:ls, :in => "/dev/null")   # read mode
