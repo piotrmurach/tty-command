@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-require 'thread'
 require 'rbconfig'
 require 'tty/command/version'
 require 'tty/command/cmd'
@@ -57,6 +56,11 @@ module TTY
     #
     # @example
     #   cmd.run(command, [argv1, ..., argvN], [options])
+    #
+    # @example
+    #   cmd.run(command, ...) do |result|
+    #     ...
+    #   end
     #
     # @param [String] command
     #   the command to run
