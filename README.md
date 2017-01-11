@@ -385,6 +385,12 @@ result.each { |line| puts line }
 #  tasks
 ```
 
+By default the newline `\n` is used as a delimiter but this can be changed by calling `record_separator`:
+
+```ruby
+TTY::Command.record_separator = "\n\r"
+```
+
 ### 3.4 Custom printer
 
 If the built-in printers do not meet your requirements you can create your own. At the very minimum you need to specify the `write` method that will be called during the lifecycle of command execution:
@@ -441,4 +447,4 @@ The gem is available as open source under the terms of the [MIT License](http://
 
 ## Copyright
 
-Copyright (c) 2016 Piotr Murach. See LICENSE for further details.
+Copyright (c) 2016-2017 Piotr Murach. See LICENSE for further details.
