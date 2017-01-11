@@ -366,6 +366,25 @@ result.exited?    # => true
 result.complete?  # => true
 ```
 
+#### 3.3.4 each
+
+The result itself is an enumerable and allows you to iterate over the stdout output:
+
+```ruby
+result = cmd.run(:ls, '-1')
+result.each { |line| puts line }
+# =>
+#  CHANGELOG.md
+#  CODE_OF_CONDUCT.md
+#  Gemfile
+#  Gemfile.lock
+#  ...
+#  lib
+#  pkg
+#  spec
+#  tasks
+```
+
 ### 3.4 Custom printer
 
 If the built-in printers do not meet your requirements you can create your own. At the very minimum you need to specify the `write` method that will be called during the lifecycle of command execution:
@@ -382,24 +401,6 @@ printer = CustomPrinter
 cmd = TTY::Command.new(printer: printer)
 ```
 
-#### 3.3.4 each
-
-The result itself is an enumerable and allows you to iterate over the stdout output:
-
-```ruby
-result = cmd.run(:ls, '-1')
-result.each { |line| puts line }
-# =>
-  CHANGELOG.md
-  CODE_OF_CONDUCT.md
-  Gemfile
-  Gemfile.lock
-  ...
-  lib
-  pkg
-  spec
-  tasks
-```
 
 ## 4. Example
 
