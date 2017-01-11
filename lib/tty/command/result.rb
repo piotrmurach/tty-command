@@ -8,6 +8,14 @@ module TTY
     class Result
       include Enumerable
 
+      # All data written out to process's stdout stream
+      attr_reader :out
+      alias stdout out
+
+      # All data written out to process's stdin stream
+      attr_reader :err
+      alias stderr err
+
       def initialize(status, out, err)
         @status = status
         @out    = out
@@ -28,26 +36,14 @@ module TTY
         end
       end
 
-      # All data written out to process's stdout stream
-      def out
-        @out
-      end
-      alias :stdout :out
-
-      # All data written out to process's stdin stream
-      def err
-        @err
-      end
-      alias :stderr :err
-
       # Information on how the process exited
       #
       # @api public
       def exit_status
         @status
       end
-      alias :exitstatus :exit_status
-      alias :status :exit_status
+      alias exitstatus exit_status
+      alias status exit_status
 
       def to_i
         @status
@@ -64,20 +60,16 @@ module TTY
       def exited?
         @status != nil
       end
-      alias :complete? :exited?
+      alias complete? exited?
 
       def success?
-        if exited?
-          @status == 0
-        else
-          false
-        end
+        exited? ?  @status.zero? : false
       end
 
       def failure?
         !success?
       end
-      alias :failed? :failure?
+      alias failed? failure?
 
       def ==(other)
         return false unless other.is_a?(TTY::Command::Result)
