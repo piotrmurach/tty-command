@@ -47,7 +47,7 @@ module TTY
           content = copy(content, @suffix)
         end
       end
-      alias_method :<<, :write
+      alias << write
 
       # Truncated representation of the content
       #
@@ -67,7 +67,7 @@ module TTY
         res << @suffix
         res
       end
-      alias_method :to_s, :read
+      alias to_s read
 
       private
 
