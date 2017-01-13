@@ -41,12 +41,18 @@ RSpec.describe TTY::Command::Result do
     expect(result_foo).to eq(result_bar)
   end
 
-  it "iterates over output" do
+  it "iterates over output with default delimiter" do
     result = TTY::Command::Result.new(0, "line1\nline2\nline3", '')
     expect(result.to_a).to eq(['line1', 'line2', 'line3'])
   end
 
-  it "iterates over output with separator" do
+  it "iterates over output with global delimiter" do
+    allow(TTY::Command).to receive(:record_separator).and_return("\t")
+    result = TTY::Command::Result.new(0, "line1\tline2\tline3", '')
+    expect(result.each.to_a).to eq(['line1', 'line2', 'line3'])
+  end
+
+  it "iterates over output with argument delimiter" do
     result = TTY::Command::Result.new(0, "line1\tline2\tline3", '')
     expect(result.each("\t").to_a).to eq(['line1', 'line2', 'line3'])
   end
