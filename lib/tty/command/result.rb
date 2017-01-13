@@ -24,6 +24,8 @@ module TTY
 
       # Enumerate over output lines
       #
+      # @param [String] separator
+      #
       # @api public
       def each(separator = nil)
         sep = separator || TTY::Command.record_separator
