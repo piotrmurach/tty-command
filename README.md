@@ -385,10 +385,16 @@ result.each { |line| puts line }
 #  tasks
 ```
 
-By default the newline `\n` is used as a delimiter but this can be changed by calling `record_separator`:
+By default the linefeed character `\n` is used as a delimiter but this can be changed either globally by calling `record_separator`:
 
 ```ruby
 TTY::Command.record_separator = "\n\r"
+```
+
+or configured per `each` call by passing delimiter as an argument:
+
+```ruby
+cmd.run(:ls, '-1').each("\t") { ... }
 ```
 
 ### 3.4 Custom printer
