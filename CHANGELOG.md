@@ -1,13 +1,15 @@
 # Change log
 
-## [v0.3.0] - 2017-01-11
+## [v0.3.0] - 2017-01-13
 
 ### Added
 * Add ability to enumerate Result output
+* Add #record_saparator for specifying delimiter for enumeration
 
 ### Changed
 * Change Abstract printer to separate arguments out
 * Change Cmd to prevent modifications
+* Change pastel dependency version
 
 ## [v0.2.0] - 2016-07-03
 
