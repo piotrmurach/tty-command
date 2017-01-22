@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.3.1] - 2017-01-22
+
+### fixed
+* Fix top level File constant
+
 ## [v0.3.0] - 2017-01-13
 
 ### Added
