@@ -18,7 +18,7 @@ module TTY
     TimeoutExceeded = Class.new(StandardError)
 
     # Path to the current Ruby
-    RUBY = ENV['RUBY'] || File.join(
+    RUBY = ENV['RUBY'] || ::File.join(
       RbConfig::CONFIG['bindir'],
       RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT'])
 
