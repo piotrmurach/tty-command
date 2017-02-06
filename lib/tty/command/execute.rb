@@ -99,11 +99,11 @@ module TTY
       def convert_to_fd(object)
         return object if fd?(object)
 
-        if object.is_a?(::String) && File.exists?(object)
+        if object.is_a?(::String) && ::File.exists?(object)
           return object
         end
 
-        tmp = Tempfile.new(SecureRandom.uuid.split('-')[0])
+        tmp = ::Tempfile.new(::SecureRandom.uuid.split('-')[0])
 
         content = try_reading(object)
         tmp.write(content)
