@@ -249,7 +249,7 @@ You can directly use shell redirection facility like so:
 cmd.run("ls 1&>2")
 ```
 
-You can provide the streams as additional hash options where the key is one of `:in`, `:out`, `:err`, a fixnum(a file descriptor for the child process), an IO or array. The pair value can be a filename for redirection.
+You can provide the streams as additional hash options where the key is one of `:in`, `:out`, `:err`, an integer (a file descriptor for the child process), an IO or array. The pair value can be a filename for redirection.
 
 ```ruby
 cmd.run(:ls, :in => "/dev/null")   # read mode
