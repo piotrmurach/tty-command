@@ -1,5 +1,11 @@
 # Change log
 
+## [v0.3.3] - 2017-02-10
+
+### Changed
+* Update deprecated Fixnum class to Integer for Ruby 2.4 compatability by Edmund Larden(@admund)
+* Remove self extension from Execute
+
 ## [v0.3.2] - 2017-02-06
 
 ### Fixed
@@ -33,6 +39,7 @@
 
 * Initial implementation and release
 
+[v0.3.3]: https://github.com/piotrmurach/tty-command/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/piotrmurach/tty-command/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/piotrmurach/tty-command/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/piotrmurach/tty-command/compare/v0.2.0...v0.3.0
