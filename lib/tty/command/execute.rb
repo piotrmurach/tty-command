@@ -77,7 +77,7 @@ module TTY
           true
         when ::IO
           true
-        when ::Fixnum
+        when ::Integer
           object >= 0
         when respond_to?(:to_i) && !object.to_io.nil?
           true
