@@ -119,7 +119,7 @@ module TTY
           :out
         when STDERR, $stderr, :err, :stderr, 2
           :err
-        when Fixnum
+        when Integer
           object >= 0 ? IO.for_fd(object) : nil
         when IO
           object
