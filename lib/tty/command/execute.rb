@@ -6,8 +6,6 @@ require 'securerandom'
 module TTY
   class Command
     module Execute
-      extend self
-
       # Execute command in a child process
       #
       # The caller should ensure that all IO objects are closed
@@ -62,7 +60,7 @@ module TTY
             if process_key.to_s == 'in'
               value = convert_to_fd(value)
             end
-            opts[process_key]= value
+            opts[process_key] = value
           end
           opts
         end
@@ -99,7 +97,7 @@ module TTY
       def convert_to_fd(object)
         return object if fd?(object)
 
-        if object.is_a?(::String) && ::File.exists?(object)
+        if object.is_a?(::String) && ::File.exist?(object)
           return object
         end
 
