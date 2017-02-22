@@ -125,15 +125,11 @@ module TTY
 
       private
 
+      # Coerce to string
+      #
       # @api private
       def sanitize(value)
-        cmd = value.to_s.dup
-        lines = cmd.lines.to_a
-        lines.each_with_index.reduce('') do |acc, (line, index)|
-          acc << line.strip
-          acc << '; ' if (index + 1) != lines.size
-          acc
-        end
+        value.to_s.dup
       end
 
       # Enclose argument in quotes if it contains

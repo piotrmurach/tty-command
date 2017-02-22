@@ -29,7 +29,11 @@ RSpec.describe TTY::Command::Cmd, '::new' do
     EOHEREDOC
     expect(cmd.argv).to eq([])
     expect(cmd.options).to eq({})
-    expect(cmd.to_command).to eq(%{if [[ $? -eq 0]]; then; echo \"Bash it!\"; fi})
+    expect(cmd.to_command).to eq([
+      "      if [[ $? -eq 0]]; then",
+      "        echo \"Bash it!\"",
+      "      fi\n"
+    ].join("\n"))
   end
 
   it "accepts command as [cmdname, arg1, ...]" do
