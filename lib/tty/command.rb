@@ -2,14 +2,15 @@
 
 require 'rbconfig'
 require 'tty/command/version'
-require 'tty/command/cmd'
-require 'tty/command/exit_error'
-require 'tty/command/dry_runner'
-require 'tty/command/process_runner'
-require 'tty/command/printers/null'
-require 'tty/command/printers/pretty'
-require 'tty/command/printers/progress'
-require 'tty/command/printers/quiet'
+
+require_relative 'command/cmd'
+require_relative 'command/exit_error'
+require_relative 'command/dry_runner'
+require_relative 'command/process_runner'
+require_relative 'command/printers/null'
+require_relative 'command/printers/pretty'
+require_relative 'command/printers/progress'
+require_relative 'command/printers/quiet'
 
 module TTY
   class Command

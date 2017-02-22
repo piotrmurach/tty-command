@@ -1,9 +1,10 @@
 # encoding: utf-8
 
 require 'thread'
-require 'tty/command/execute'
-require 'tty/command/result'
-require 'tty/command/truncator'
+
+require_relative 'execute'
+require_relative 'result'
+require_relative 'truncator'
 
 module TTY
   class Command
