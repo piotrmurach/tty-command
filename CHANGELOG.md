@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.4.0] - 2017-02-22
+
+### Changed
+* Remove automatic insertion of semicolons on line breaks and fix issue #27
+
 ## [v0.3.3] - 2017-02-10
 
 ### Changed
