@@ -172,7 +172,7 @@ By default the printers log to `stdout` but this can be changed by passing an ob
 
 ```ruby
 logger = Logger.new('dev.log')
-cmd = TTY::Command.new(output: output)
+cmd = TTY::Command.new(output: logger)
 ```
 
 You can force the printer to always in print in color by passing the `:color` option:
