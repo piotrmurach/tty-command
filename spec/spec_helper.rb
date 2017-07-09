@@ -15,7 +15,15 @@ end
 
 require 'tty-command'
 
+module Helpers
+  def tmp_path(filename = nil)
+    File.join(File.dirname(__FILE__), '..', 'tmp', filename.to_s)
+  end
+end
+
 RSpec.configure do |config|
+  config.include(Helpers)
+
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
