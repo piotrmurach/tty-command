@@ -124,4 +124,14 @@ RSpec.describe TTY::Command, '#run' do
 
     expect(out).to eq("")
   end
+
+  it "reads user input data" do
+    cli = tmp_path('cli')
+    output = StringIO.new
+    command = TTY::Command.new(output: output)
+
+    out, _ = command.run(cli, data: "Piotr\n")
+
+    expect(out).to eq("Your name: Piotr\n")
+  end
 end

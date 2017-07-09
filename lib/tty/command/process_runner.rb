@@ -28,6 +28,7 @@ module TTY
         start = Time.now
 
         spawn(cmd) do |pid, stdin, stdout, stderr|
+          stdin.write cmd.options[:data]
           stdout_data, stderr_data = read_streams(cmd, stdout, stderr)
 
           runtime = Time.now - start
