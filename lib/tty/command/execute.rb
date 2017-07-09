@@ -19,7 +19,7 @@ module TTY
       #
       # @api public
       def spawn(cmd)
-        @process_options = normalize_redirect_options(cmd.options)
+        process_opts = normalize_redirect_options(cmd.options)
 
         # Create pipes
         in_rd,  in_wr  = IO.pipe # reading
@@ -31,7 +31,7 @@ module TTY
           :in  => in_rd, # in_wr  => :close,
           :out => out_wr,# out_rd => :close,
           :err => err_wr,# err_rd => :close
-        }).merge(@process_options)
+        }).merge(process_opts)
 
         pid = Process.spawn(cmd.to_command, opts)
 
