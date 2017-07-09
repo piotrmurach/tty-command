@@ -25,18 +25,19 @@ module TTY
         in_rd,  in_wr  = IO.pipe # reading
         out_rd, out_wr = IO.pipe # writing
         err_rd, err_wr = IO.pipe # error
+        in_wr.sync = true
 
         # redirect fds
         opts = ({
-          :in  => in_rd, # in_wr  => :close,
-          :out => out_wr,# out_rd => :close,
-          :err => err_wr,# err_rd => :close
+          :in  => in_rd,  in_wr  => :close,
+          :out => out_wr, out_rd => :close,
+          :err => err_wr, err_rd => :close
         }).merge(process_opts)
 
         pid = Process.spawn(cmd.to_command, opts)
 
         # close in parent process
-        [out_wr, err_wr].each { |fd| fd.close if fd }
+        [in_rd, out_wr, err_wr].each { |fd| fd.close if fd }
 
         tuple = [pid, in_wr, out_rd, err_rd]
 
