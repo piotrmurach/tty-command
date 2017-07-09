@@ -24,7 +24,6 @@ module TTY
       # Execute child process
       # @api public
       def run(cmd)
-        timeout = cmd.options[:timeout]
         @printer.print_command_start(cmd)
         start = Time.now
 
@@ -32,7 +31,7 @@ module TTY
           stdout_data, stderr_data = read_streams(cmd, stdout, stderr)
 
           runtime = Time.now - start
-          handle_timeout(timeout, runtime, pid)
+          handle_timeout(cmd, runtime, pid)
           status = waitpid(pid)
 
           @printer.print_command_exit(cmd, status, runtime)
@@ -41,15 +40,27 @@ module TTY
         end
       end
 
+      # Stop a process marked by pid
+      #
+      # @param [Cmd] cmd
+      # @param [Integer] pid
+      #
+      # @api public
+      def terminate(cmd, pid)
+        signal = cmd.options[:signal] || :TERM
+        ::Process.kill(signal, pid)
+      end
+
       private
 
       # @api private
-      def handle_timeout(timeout, runtime, pid)
+      def handle_timeout(cmd, runtime, pid)
+        timeout = cmd.options[:timeout]
         return unless timeout
 
         t = timeout - runtime
         if t < 0.0
-          ::Process.kill(:KILL, pid)
+          terminate(cmd, pid)
         end
       end
 

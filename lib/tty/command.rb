@@ -71,14 +71,14 @@ module TTY
     #
     # @param [Hash] options
     #   hash of operations to perform
-    #
     # @option options [String] :chdir
     #   The current directory.
-    #
     # @option options [Integer] :timeout
     #   Maximum number of seconds to allow the process
     #   to run before aborting with a TimeoutExceeded
     #   exception.
+    # @option options [Symbol] :signal
+    #   Signal used on timeout, SIGKILL by default
     #
     # @raise [ExitError]
     #   raised when command exits with non-zero code
