@@ -57,11 +57,12 @@ Or install it yourself as:
   * [3.2. Options](#32-options)
     * [3.2.1. Current directory](#321-current-directory)
     * [3.2.2. Redirection](#322-redirection)
-    * [3.2.3. Handling input](#323-handling-input)    
-    * [3.2.4. Timeout](#324-timeout)    
-    * [3.2.5. User](#324-user)
-    * [3.2.6. Group](#325-group)
-    * [3.2.7. Umask](#326-umask)
+    * [3.2.3. Handling input](#323-handling-input)
+    * [3.2.4. Timeout](#324-timeout)
+    * [3.2.5. Signal](#325-signal)
+    * [3.2.6. User](#326-user)
+    * [3.2.7. Group](#327-group)
+    * [3.2.8. Umask](#328-umask)
   * [3.3. Result](#33-result)
     * [3.3.1. success?](#331-success)
     * [3.3.2. failure?](#332-failure)
@@ -313,7 +314,15 @@ cmd.run("while test 1; sleep 1; done", timeout: 5)
 
 Please run `examples/timeout.rb` to see timeout in action.
 
-#### 3.2.5 User
+#### 3.2.5 Signal
+
+You can specify process termination signal other than the defaut 'SIGTERM':
+
+```ruby
+cmd.run("whilte test1; sleep1; done", timeout: 5, signal: :KILL)
+```
+
+#### 3.2.6 User
 
 To run command as a given user do:
 
@@ -321,7 +330,7 @@ To run command as a given user do:
 cmd.run(:echo, 'hello', user: 'piotr')
 ```
 
-#### 3.2.6 Group
+#### 3.2.7 Group
 
 To run command as part of group do:
 
@@ -329,7 +338,7 @@ To run command as part of group do:
 cmd.run(:echo, 'hello', group: 'devs')
 ```
 
-#### 3.2.7 Umask
+#### 3.2.8 Umask
 
 To run command with umask do:
 
