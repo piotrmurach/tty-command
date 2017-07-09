@@ -1,5 +1,18 @@
 # Change log
 
+## [v0.5.0] - 2017-07-xx
+
+### Added
+* Add :signal option for timeout
+* Add :data option for handling stdin input
+
+### Changed
+* Change ProcessRunner to immediately sync write pipe
+
+### Fixed
+* Fix quiet printer write call by @jamesepatrick
+* Fix to correctly close all pipe ends between parent and child process
+
 ## [v0.4.0] - 2017-02-22
 
 ### Changed
