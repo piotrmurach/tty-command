@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require 'rbconfig'
-require 'tty/command/version'
 
 require_relative 'command/cmd'
 require_relative 'command/exit_error'
@@ -11,6 +10,7 @@ require_relative 'command/printers/null'
 require_relative 'command/printers/pretty'
 require_relative 'command/printers/progress'
 require_relative 'command/printers/quiet'
+require_relative 'command/version'
 
 module TTY
   class Command
