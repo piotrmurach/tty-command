@@ -291,7 +291,21 @@ cmd.run(:ls, '-la', 2 => 1)
 
 #### 3.2.3 Handling Input
 
-You can pass input via the :in option, by passing a StringIO Object. This object might have more than one line, if the executed command reads more than once from STDIN.
+You can provide input to stdin stream using the `:data` key. For instance, given the following executable called `cli` that expects name from `stdin`:
+
+```ruby
+name = $stdin.gets
+puts "Your name: #{name}"
+```
+
+In order to execute `cli` with name input do:
+
+```ruby
+cmd.run('cli', data: "Piotr\n")
+# => Your name: Piotr
+```
+
+Alternatively, you can pass input via the :in option, by passing a `StringIO` Object. This object might have more than one line, if the executed command reads more than once from STDIN.
 
 Assume you have run a program, that first asks for your email address and then for a password:
 
@@ -301,7 +315,7 @@ in_stream.puts "username@example.com"
 in_stream.puts "password"
 in_stream.rewind
 
-TTY::Command.new.run("my_cli_program", "login", in: in_stream).out
+cmd.run("my_cli_program", "login", in: in_stream).out
 ```
 
 #### 3.2.4 Timeout
@@ -316,7 +330,7 @@ Please run `examples/timeout.rb` to see timeout in action.
 
 #### 3.2.5 Signal
 
-You can specify process termination signal other than the defaut 'SIGTERM':
+You can specify process termination signal other than the defaut `SIGTERM`:
 
 ```ruby
 cmd.run("whilte test1; sleep1; done", timeout: 5, signal: :KILL)
