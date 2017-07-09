@@ -17,7 +17,7 @@ module TTY
         end
 
         def write(message)
-          output.print(message)
+          output << message
         end
       end # Progress
     end # Printers
