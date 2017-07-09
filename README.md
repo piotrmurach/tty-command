@@ -48,6 +48,8 @@ Or install it yourself as:
   * [2.2. Run!](#22-run)
   * [2.3. Test](#23-test)
   * [2.4. Logging](#24-logging)
+    * [2.4.1. Color](#241-color)
+    * [2.4.2. UUID](#242-uuid)
   * [2.5. Dry run](#25-dry-run)
   * [2.6. Ruby interpreter](#26-ruby-interpreter)
 * [3. Advanced Interface](#3-advanced-interface)
@@ -179,6 +181,20 @@ You can force the printer to always in print in color by passing the `:color` op
 
 ```ruby
 cmd = TTY::Command.new(color: true)
+```
+
+#### 2.4.1 Color
+
+When using printers you can switch off coloring by using `color` option set to `false`.
+
+#### 2.4.2 UUID
+
+By default when logging is enabled each log entry is prefixed by specific command run uuid number. This number can be switched off using `uuid` option:
+
+```ruby
+cmd = TTY::Command.new uuid: false
+cmd.run('rm -R all_my_files')
+# => rm -r all_my_files
 ```
 
 ### 2.5 Dry run
