@@ -5,11 +5,17 @@ require_relative 'result'
 module TTY
   class Command
     class DryRunner
-      def initialize(printer)
+      attr_reader :cmd
+
+      def initialize(cmd, printer)
+        @cmd     = cmd
         @printer = printer
       end
 
-      def run(cmd)
+      # Show command without running
+      #
+      # @api public
+      def run!
         cmd.to_command
         message = "#{@printer.decorate('(dry run)', :blue)} "
         message << @printer.decorate(cmd.to_command, :yellow, :bold)

@@ -11,28 +11,30 @@ module TTY
     class ProcessRunner
       include Execute
 
+      attr_reader :cmd
       # Initialize a Runner object
       #
       # @param [Printer] printer
       #   the printer to use for logging
       #
       # @api private
-      def initialize(printer)
+      def initialize(cmd, printer)
+        @cmd     = cmd
         @printer = printer
       end
 
       # Execute child process
       # @api public
-      def run(cmd)
+      def run!
         @printer.print_command_start(cmd)
         start = Time.now
 
         spawn(cmd) do |pid, stdin, stdout, stderr|
           stdin.write cmd.options[:data]
-          stdout_data, stderr_data = read_streams(cmd, stdout, stderr)
+          stdout_data, stderr_data = read_streams(stdout, stderr)
 
           runtime = Time.now - start
-          handle_timeout(cmd, runtime, pid)
+          handle_timeout(runtime, pid)
           status = waitpid(pid)
 
           @printer.print_command_exit(cmd, status, runtime)
@@ -43,11 +45,10 @@ module TTY
 
       # Stop a process marked by pid
       #
-      # @param [Cmd] cmd
       # @param [Integer] pid
       #
       # @api public
-      def terminate(cmd, pid)
+      def terminate(pid)
         signal = cmd.options[:signal] || :TERM
         ::Process.kill(signal, pid)
       end
@@ -55,18 +56,18 @@ module TTY
       private
 
       # @api private
-      def handle_timeout(cmd, runtime, pid)
+      def handle_timeout(runtime, pid)
         timeout = cmd.options[:timeout]
         return unless timeout
 
         t = timeout - runtime
         if t < 0.0
-          terminate(cmd, pid)
+          terminate(pid)
         end
       end
 
       # @api private
-      def read_streams(cmd, stdout, stderr)
+      def read_streams(stdout, stderr)
         stdout_data = ''
         stderr_data = Truncator.new
         timeout = cmd.options[:timeout]

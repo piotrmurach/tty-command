@@ -148,8 +148,8 @@ module TTY
     def execute_command(cmd)
       mutex = Mutex.new
       dry_run = @dry_run || cmd.options[:dry_run] || false
-      @runner = select_runner(@printer, dry_run)
-      mutex.synchronize { @runner.run(cmd) }
+      @runner = select_runner(dry_run).new(cmd, @printer)
+      mutex.synchronize { @runner.run! }
     end
 
     # @api private
@@ -179,11 +179,11 @@ module TTY
     end
 
     # @api private
-    def select_runner(printer, dry_run)
+    def select_runner(dry_run)
       if dry_run
-        DryRunner.new(printer)
+        DryRunner
       else
-        ProcessRunner.new(printer)
+        ProcessRunner
       end
     end
   end # Command
