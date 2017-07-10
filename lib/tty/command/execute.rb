@@ -6,14 +6,15 @@ require 'securerandom'
 module TTY
   class Command
     module Execute
-      # Execute command in a child process
+      # Execute command in a child process with all IO streams piped
+      # in and out. The interface is similar to Process.spawn
       #
       # The caller should ensure that all IO objects are closed
       # when the child process is finished. However, when block
       # is provided this will be taken care of automatically.
       #
       # @param [Cmd] cmd
-      #   the command to execute
+      #   the command to spawn
       #
       # @return [pid, stdin, stdout, stderr]
       #
