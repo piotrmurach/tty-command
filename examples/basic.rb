@@ -4,6 +4,6 @@ require 'tty-command'
 
 cmd = TTY::Command.new
 
-out, err = cmd.execute(:echo, 'hello world!')
+out, err = cmd.run(:echo, 'hello world!')
 
 puts "Result: #{out}"
