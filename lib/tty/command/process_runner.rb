@@ -24,6 +24,7 @@ module TTY
         @cmd     = cmd
         @timeout = cmd.options[:timeout]
         @input   = cmd.options[:input]
+        @signal  = cmd.options[:signal] || :TERM
         @printer = printer
         @threads = []
         @lock    = Mutex.new
@@ -55,8 +56,7 @@ module TTY
       #
       # @api public
       def terminate(pid)
-        signal = cmd.options[:signal] || :TERM
-        ::Process.kill(signal, pid)
+        ::Process.kill(@signal, pid)
       end
 
       private
