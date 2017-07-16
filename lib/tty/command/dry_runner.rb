@@ -15,7 +15,7 @@ module TTY
       # Show command without running
       #
       # @api public
-      def run!
+      def run!(&block)
         cmd.to_command
         message = "#{@printer.decorate('(dry run)', :blue)} "
         message << @printer.decorate(cmd.to_command, :yellow, :bold)
