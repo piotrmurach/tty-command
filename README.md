@@ -291,7 +291,7 @@ cmd.run(:ls, '-la', 2 => 1)
 
 #### 3.2.3 Handling Input
 
-You can provide input to stdin stream using the `:data` key. For instance, given the following executable called `cli` that expects name from `stdin`:
+You can provide input to stdin stream using the `:input` key. For instance, given the following executable called `cli` that expects name from `stdin`:
 
 ```ruby
 name = $stdin.gets
@@ -301,7 +301,7 @@ puts "Your name: #{name}"
 In order to execute `cli` with name input do:
 
 ```ruby
-cmd.run('cli', data: "Piotr\n")
+cmd.run('cli', input: "Piotr\n")
 # => Your name: Piotr
 ```
 

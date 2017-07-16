@@ -130,7 +130,7 @@ RSpec.describe TTY::Command, '#run' do
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
-    out, _ = command.run(cli, data: "Piotr\n")
+    out, _ = command.run(cli, input: "Piotr\n")
 
     expect(out).to eq("Your name: Piotr\n")
   end

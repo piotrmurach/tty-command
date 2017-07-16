@@ -23,6 +23,7 @@ module TTY
       def initialize(cmd, printer)
         @cmd     = cmd
         @timeout = cmd.options[:timeout]
+        @input   = cmd.options[:input]
         @printer = printer
       end
 
@@ -70,8 +71,7 @@ module TTY
 
       # @api private
       def write_stream(stdin)
-        data = cmd.options[:data]
-        return unless data
+        return unless @input
         writers = [stdin]
 
         # wait when ready for writing to pipe
@@ -81,18 +81,23 @@ module TTY
         while writers.any?
           writable.each do |fd|
             begin
-              err = nil
-              size = fd.write(data)
-              data = data.byteslice(size..-1)
+              err   = nil
+              size  = fd.write(@input)
+              @input = @input.byteslice(size..-1)
             rescue Errno::EPIPE => err
             end
-            if err || data.bytesize == 0
+            if err || @input.bytesize == 0
               writers.delete(stdin)
             end
           end
         end
       end
 
+      # Read stdout & stderr streams in the background
+      #
+      # @param [IO] stdout
+      # @param [IO] stderr
+      #
       # @api private
       def read_streams(stdout, stderr)
         stdout_data = ''

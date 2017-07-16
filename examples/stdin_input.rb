@@ -5,6 +5,6 @@ require 'pathname'
 
 cmd = TTY::Command.new
 cli = Pathname.new('examples/cli')
-out, _ = cmd.run(cli, data: "Piotr\n")
+out, _ = cmd.run(cli, input: "Piotr\n")
 
 puts "#{out}"
