@@ -35,19 +35,25 @@ module TTY
       def run!(&block)
         @printer.print_command_start(cmd)
         start = Time.now
+        runtime = 0.0
 
-        spawn(cmd) do |pid, stdin, stdout, stderr|
-          write_stream(stdin)
-          stdout_data, stderr_data = read_streams(stdout, stderr, &block)
+        pid, stdin, stdout, stderr = spawn(cmd) # do |pid, stdin, stdout, stderr|
 
-          runtime = Time.now - start
-          handle_timeout(runtime, pid)
-          status = waitpid(pid)
+        # write and read streams
+        write_stream(stdin)
+        stdout_data, stderr_data = read_streams(stdout, stderr, &block)
 
-          @printer.print_command_exit(cmd, status, runtime)
+        status = waitpid(pid)
+        runtime = Time.now - start
 
-          Result.new(status, stdout_data, stderr_data)
-        end
+        @printer.print_command_exit(cmd, status, runtime)
+
+        Result.new(status, stdout_data, stderr_data)
+      rescue
+        terminate(pid)
+        Result.new(-1, stdout_data, stderr_data)
+      ensure
+        [stdin, stdout, stderr].each { |fd| fd.close if fd && !fd.closed? }
       end
 
       # Stop a process marked by pid
@@ -62,23 +68,22 @@ module TTY
       private
 
       # @api private
-      def handle_timeout(runtime, pid)
+      def handle_timeout(runtime)
         return unless @timeout
 
         t = @timeout - runtime
-        if t < 0.0
-          terminate(pid)
-        end
+        raise TimeoutExceeded if t < 0.0
       end
 
       # @api private
       def write_stream(stdin)
         return unless @input
         writers = [stdin]
+        start = Time.now
 
         # wait when ready for writing to pipe
         _, writable = IO.select(nil, writers, writers, @timeout)
-        return if writable.nil?
+        raise TimeoutExceeded if writable.nil?
 
         while writers.any?
           writable.each do |fd|
@@ -91,6 +96,10 @@ module TTY
             if err || @input.bytesize == 0
               writers.delete(stdin)
             end
+
+            # control total time spent writing
+            runtime = Time.now - start
+            handle_timeout(runtime)
           end
         end
       end
@@ -117,8 +126,8 @@ module TTY
         @threads.each do |th|
           result = th.join(@timeout)
           if result.nil?
-            @threads[0].raise(TimeoutExceeded)
-            @threads[1].raise(TimeoutExceeded)
+            @threads[0].raise
+            @threads[1].raise
           end
         end
 
@@ -127,6 +136,7 @@ module TTY
 
       def read_stream(stream, data, print_callback, callback)
         Thread.new do
+          Thread.current[:cmd_start] = Time.now
           begin
             while (line = stream.gets)
               @lock.synchronize do
@@ -134,8 +144,14 @@ module TTY
                 callback.(line)
                 print_callback.(cmd, line)
               end
+
+              # control total time spent reading
+              runtime = Time.now - Thread.current[:cmd_start]
+              handle_timeout(runtime)
             end
-          rescue TimeoutExceeded
+          rescue => err
+            raise err
+          ensure
             stream.close
           end
         end
