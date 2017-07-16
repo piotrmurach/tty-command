@@ -21,7 +21,8 @@ module TTY
     # Path to the current Ruby
     RUBY = ENV['RUBY'] || ::File.join(
       RbConfig::CONFIG['bindir'],
-      RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT'])
+      RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT']
+    )
 
     def self.record_separator
       @record_separator ||= $/
@@ -107,6 +108,25 @@ module TTY
       execute_command(cmd, &block)
     end
 
+    # Wait on long running script until output matches a specific pattern
+    #
+    # @example
+    #   cmd.wait 'tail -f /var/log/php.log', /something happened/
+    #
+    # @api public
+    def wait(*args)
+      pattern = args.pop
+      unless pattern
+        raise ArgumentError, 'Please provide condition to wait for'
+      end
+
+      run(*args) do |out, _|
+        raise if out =~ /#{pattern}/
+      end
+    rescue ExitError
+      # noop
+    end
+
     # Execute shell test command
     #
     # @api public
@@ -174,7 +194,7 @@ module TTY
     def find_printer_class(name)
       const_name = name.to_s.capitalize.to_sym
       if const_name.empty? || !TTY::Command::Printers.const_defined?(const_name)
-        fail ArgumentError, %(Unknown printer type "#{name}")
+        raise ArgumentError, %(Unknown printer type "#{name}")
       end
       TTY::Command::Printers.const_get(const_name)
     end
