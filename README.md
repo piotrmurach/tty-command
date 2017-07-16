@@ -46,12 +46,13 @@ Or install it yourself as:
 * [2. Interface](#2-interface)
   * [2.1. Run](#21-run)
   * [2.2. Run!](#22-run)
-  * [2.3. Test](#23-test)
-  * [2.4. Logging](#24-logging)
-    * [2.4.1. Color](#241-color)
-    * [2.4.2. UUID](#242-uuid)
-  * [2.5. Dry run](#25-dry-run)
-  * [2.6. Ruby interpreter](#26-ruby-interpreter)
+  * [2.3. Logging](#23-logging)
+    * [2.3.1. Color](#231-color)
+    * [2.3.2. UUID](#232-uuid)
+  * [2.4. Dry run](#24-dry-run)
+  * [2.5. Wait](#25-wait)
+  * [2.6. Test](#26-test)
+  * [2.7. Ruby interpreter](#27-ruby-interpreter)
 * [3. Advanced Interface](#3-advanced-interface)
   * [3.1. Environment variables](#31-environment-variables)
   * [3.2. Options](#32-options)
@@ -152,20 +153,7 @@ if cmd.run!('which xyzzy').failure?
 end
 ```
 
-### 2.3 Test
-
-To simulate classic bash test command you case use `test` method with expression to check as a first argument:
-
-```ruby
-if cmd.test '-e /etc/passwd'
-  puts "Sweet..."
-else
-  puts "Ohh no! Where is it?"
-  exit 1
-end
-```
-
-### 2.4 Logging
+### 2.3 Logging
 
 By default, when a command is run, the command and the output are printed to `stdout` using the `:pretty` printer. If you wish to change printer you can do so by passing a `:printer` option:
 
@@ -193,11 +181,11 @@ You can force the printer to always in print in color by passing the `:color` op
 cmd = TTY::Command.new(color: true)
 ```
 
-#### 2.4.1 Color
+#### 2.3.1 Color
 
 When using printers you can switch off coloring by using `color` option set to `false`.
 
-#### 2.4.2 UUID
+#### 2.3.2 Uuid
 
 By default when logging is enabled each log entry is prefixed by specific command run uuid number. This number can be switched off using `uuid` option:
 
@@ -207,7 +195,7 @@ cmd.run('rm -R all_my_files')
 # => rm -r all_my_files
 ```
 
-### 2.5 Dry run
+### 2.4 Dry run
 
 Sometimes it can be useful to put your script into a "dry run" mode that prints commands without actually running them. To simulate execution of the command use the `:dry_run` option:
 
@@ -223,7 +211,28 @@ To check what mode the command is in use the `dry_run?` query helper:
 cmd.dry_run? # => true
 ```
 
-### 2.6 Ruby interpreter
+### 2.5 Wait
+
+If you need to wait for a long running script and stop it when a given pattern has been matched use `wait` like so:
+
+```ruby
+cmd.wait 'tail -f /var/log/production.log', /something happened/
+```
+
+### 2.6 Test
+
+To simulate classic bash test command you case use `test` method with expression to check as a first argument:
+
+```ruby
+if cmd.test '-e /etc/passwd'
+  puts "Sweet..."
+else
+  puts "Ohh no! Where is it?"
+  exit 1
+end
+```
+
+### 2.7 Ruby interpreter
 
 In order to run a command with Ruby interpreter do:
 
