@@ -22,6 +22,7 @@ module TTY
       # @api private
       def initialize(cmd, printer)
         @cmd     = cmd
+        @timeout = cmd.options[:timeout]
         @printer = printer
       end
 
@@ -59,10 +60,9 @@ module TTY
 
       # @api private
       def handle_timeout(runtime, pid)
-        timeout = cmd.options[:timeout]
-        return unless timeout
+        return unless @timeout
 
-        t = timeout - runtime
+        t = @timeout - runtime
         if t < 0.0
           terminate(pid)
         end
@@ -75,7 +75,7 @@ module TTY
         writers = [stdin]
 
         # wait when ready for writing to pipe
-        _, writable = IO.select(nil, writers, writers, cmd.options[:timeout])
+        _, writable = IO.select(nil, writers, writers, @timeout)
         return if writable.nil?
 
         while writers.any?
@@ -97,7 +97,6 @@ module TTY
       def read_streams(stdout, stderr)
         stdout_data = ''
         stderr_data = Truncator.new
-        timeout = cmd.options[:timeout]
 
         stdout_thread = Thread.new do
           begin
@@ -122,7 +121,7 @@ module TTY
         end
 
         [stdout_thread, stderr_thread].each do |th|
-          result = th.join(timeout)
+          result = th.join(@timeout)
           if result.nil?
             stdout_thread.raise(TimeoutExceeded)
             stderr_thread.raise(TimeoutExceeded)
