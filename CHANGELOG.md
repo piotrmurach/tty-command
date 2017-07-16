@@ -4,10 +4,12 @@
 
 ### Added
 * Add :signal option for timeout
-* Add :data option for handling stdin input
+* Add :input option for handling stdin input
+* Add ability for Command#run to specify a callback that is invoked whenever stdout or stderr receive output
 
 ### Changed
 * Change ProcessRunner to immediately sync write pipe
+* Change ProcessRunner to write to stdin stream when writable
 
 ### Fixed
 * Fix quiet printer write call by @jamesepatrick
