@@ -26,6 +26,7 @@ module TTY
         @input   = cmd.options[:input]
         @printer = printer
         @threads = []
+        @lock    = Mutex.new
       end
 
       # Execute child process
@@ -128,9 +129,11 @@ module TTY
         Thread.new do
           begin
             while (line = stream.gets)
-              data << line
-              callback.(line)
-              print_callback.(cmd, line)
+              @lock.synchronize do
+                data << line
+                callback.(line)
+                print_callback.(cmd, line)
+              end
             end
           rescue TimeoutExceeded
             stream.close
