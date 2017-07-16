@@ -4,7 +4,7 @@ require 'tty-command'
 require 'pathname'
 
 cmd = TTY::Command.new
-cli = Pathname.new('examples/cli.rb')
+cli = Pathname.new('examples/cli')
 out, _ = cmd.run(cli, data: "Piotr\n")
 
 puts "#{out}"
