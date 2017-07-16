@@ -124,6 +124,15 @@ puts "The date is #{out}"
 # => "The date is Tue 10 May 2016 22:30:15 BST\n"
 ```
 
+You can also pass a block that gets invoked anytime stdout and/or stderr receive output:
+
+```ruby
+cmd.run('long running script') do |out, err|
+  output << out if out
+  errors << err if err
+end
+```
+
 If the command fails (with a non-zero exit code), a `TTY::Command::ExitError` is raised. The `ExitError` message will include:
 
   * the name of command executed
