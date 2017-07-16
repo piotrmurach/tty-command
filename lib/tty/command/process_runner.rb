@@ -11,7 +11,9 @@ module TTY
     class ProcessRunner
       include Execute
 
+      # the command to be spawned
       attr_reader :cmd
+
       # Initialize a Runner object
       #
       # @param [Printer] printer
@@ -30,7 +32,7 @@ module TTY
         start = Time.now
 
         spawn(cmd) do |pid, stdin, stdout, stderr|
-          stdin.write cmd.options[:data]
+          write_stream(stdin)
           stdout_data, stderr_data = read_streams(stdout, stderr)
 
           runtime = Time.now - start
@@ -63,6 +65,31 @@ module TTY
         t = timeout - runtime
         if t < 0.0
           terminate(pid)
+        end
+      end
+
+      # @api private
+      def write_stream(stdin)
+        data = cmd.options[:data]
+        return unless data
+        writers = [stdin]
+
+        # wait when ready for writing to pipe
+        _, writable = IO.select(nil, writers, writers, cmd.options[:timeout])
+        return if writable.nil?
+
+        while writers.any?
+          writable.each do |fd|
+            begin
+              err = nil
+              size = fd.write(data)
+              data = data.byteslice(size..-1)
+            rescue Errno::EPIPE => err
+            end
+            if err || data.bytesize == 0
+              writers.delete(stdin)
+            end
+          end
         end
       end
 
