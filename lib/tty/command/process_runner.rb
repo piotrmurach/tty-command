@@ -25,6 +25,7 @@ module TTY
         @timeout = cmd.options[:timeout]
         @input   = cmd.options[:input]
         @printer = printer
+        @threads = []
       end
 
       # Execute child process
@@ -103,41 +104,38 @@ module TTY
         stdout_data = ''
         stderr_data = Truncator.new
 
-        stdout_yield = -> (line) { block.(line, nil) }
-        stderr_yield = -> (line) { block.(nil, line) }
+        print_out = -> (cmd, line) { @printer.print_command_out_data(cmd, line) }
+        print_err = -> (cmd, line) { @printer.print_command_err_data(cmd, line) }
 
-        stdout_thread = Thread.new do
-          begin
-            while (line = stdout.gets)
-              stdout_data << line
-              stdout_yield.call(line) if block
-              @printer.print_command_out_data(cmd, line)
-            end
-          rescue TimeoutExceeded
-            stdout.close
-          end
-        end
+        stdout_yield = -> (line) { block.(line, nil) if block }
+        stderr_yield = -> (line) { block.(nil, line) if block }
 
-        stderr_thread = Thread.new do
-          begin
-            while (line = stderr.gets)
-              stderr_data << line
-              stderr_yield.call(line) if block
-              @printer.print_command_err_data(cmd, line)
-            end
-          rescue TimeoutExceeded
-            stderr.close
-          end
-        end
+        @threads << read_stream(stdout, stdout_data, print_out, stdout_yield)
+        @threads << read_stream(stderr, stderr_data, print_err, stderr_yield)
 
-        [stdout_thread, stderr_thread].each do |th|
+        @threads.each do |th|
           result = th.join(@timeout)
           if result.nil?
-            stdout_thread.raise(TimeoutExceeded)
-            stderr_thread.raise(TimeoutExceeded)
+            @threads[0].raise(TimeoutExceeded)
+            @threads[1].raise(TimeoutExceeded)
           end
         end
+
         [stdout_data, stderr_data.read]
+      end
+
+      def read_stream(stream, data, print_callback, callback)
+        Thread.new do
+          begin
+            while (line = stream.gets)
+              data << line
+              callback.(line)
+              print_callback.(cmd, line)
+            end
+          rescue TimeoutExceeded
+            stream.close
+          end
+        end
       end
 
       # @api private
