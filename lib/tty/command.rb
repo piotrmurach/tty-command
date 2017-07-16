@@ -80,14 +80,16 @@ module TTY
     # @option options [Symbol] :signal
     #   Signal used on timeout, SIGKILL by default
     #
+    # @yield [out, err]
+    #   Yields stdout and stderr output whenever available
+    #
     # @raise [ExitError]
     #   raised when command exits with non-zero code
     #
     # @api public
-    def run(*args)
+    def run(*args, &block)
       cmd = command(*args)
-      yield(cmd) if block_given?
-      result = execute_command(cmd)
+      result = execute_command(cmd, &block)
       if result && result.failure?
         raise ExitError.new(cmd.to_command, result)
       end
@@ -100,10 +102,9 @@ module TTY
     #   cmd.run!(command, [argv1, ..., argvN], [options])
     #
     # @api public
-    def run!(*args)
+    def run!(*args, &block)
       cmd = command(*args)
-      yield(cmd) if block_given?
-      execute_command(cmd)
+      execute_command(cmd, &block)
     end
 
     # Execute shell test command
@@ -145,11 +146,11 @@ module TTY
     end
 
     # @api private
-    def execute_command(cmd)
+    def execute_command(cmd, &block)
       mutex = Mutex.new
       dry_run = @dry_run || cmd.options[:dry_run] || false
       @runner = select_runner(dry_run).new(cmd, @printer)
-      mutex.synchronize { @runner.run! }
+      mutex.synchronize { @runner.run!(&block) }
     end
 
     # @api private

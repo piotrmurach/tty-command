@@ -23,14 +23,13 @@ RSpec.describe TTY::Command, '#run' do
 
   it 'runs command successfully with logging' do
     output = StringIO.new
-    uuid = nil
+    uuid= 'xxxx'
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output)
 
-    command.run(:echo, 'hello') do |cmd|
-      uuid = cmd.uuid
-    end
-    output.rewind
+    command.run(:echo, 'hello')
 
+    output.rewind
     lines = output.readlines
     lines.last.gsub!(/\d+\.\d+/, 'x')
     expect(lines).to eq([
@@ -42,14 +41,13 @@ RSpec.describe TTY::Command, '#run' do
 
   it 'runs command successfully with logging without color' do
     output = StringIO.new
-    uuid = nil
+    uuid= 'xxxx'
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output, color: false)
 
-    command.run(:echo, 'hello') do |cmd|
-      uuid = cmd.uuid
-    end
-    output.rewind
+    command.run(:echo, 'hello')
 
+    output.rewind
     lines = output.readlines
     lines.last.gsub!(/\d+\.\d+/, 'x')
     expect(lines).to eq([
@@ -77,14 +75,13 @@ RSpec.describe TTY::Command, '#run' do
 
   it "runs command and fails with logging" do
     output = StringIO.new
-    uuid = nil
+    uuid= 'xxxx'
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output)
 
-    command.run!("echo 'nooo'; exit 1") do |cmd|
-      uuid = cmd.uuid
-    end
-    output.rewind
+    command.run!("echo 'nooo'; exit 1")
 
+    output.rewind
     lines = output.readlines
     lines.last.gsub!(/\d+\.\d+/, 'x')
     expect(lines).to eq([
@@ -133,5 +130,18 @@ RSpec.describe TTY::Command, '#run' do
     out, _ = command.run(cli, input: "Piotr\n")
 
     expect(out).to eq("Your name: Piotr\n")
+  end
+
+  it "streams output data" do
+    output = StringIO.new
+    command = TTY::Command.new(output: output)
+    output = ''
+    error = ''
+    command.run("for i in 1 2 3; do echo 'hello '$i; done") do |out, err|
+     output << out if out
+     error << err if err
+    end
+    expect(output).to eq("hello 1\nhello 2\nhello 3\n")
+    expect(error).to eq('')
   end
 end

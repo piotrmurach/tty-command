@@ -29,13 +29,13 @@ module TTY
 
       # Execute child process
       # @api public
-      def run!
+      def run!(&block)
         @printer.print_command_start(cmd)
         start = Time.now
 
         spawn(cmd) do |pid, stdin, stdout, stderr|
           write_stream(stdin)
-          stdout_data, stderr_data = read_streams(stdout, stderr)
+          stdout_data, stderr_data = read_streams(stdout, stderr, &block)
 
           runtime = Time.now - start
           handle_timeout(runtime, pid)
@@ -99,14 +99,18 @@ module TTY
       # @param [IO] stderr
       #
       # @api private
-      def read_streams(stdout, stderr)
+      def read_streams(stdout, stderr, &block)
         stdout_data = ''
         stderr_data = Truncator.new
+
+        stdout_yield = -> (line) { block.(line, nil) }
+        stderr_yield = -> (line) { block.(nil, line) }
 
         stdout_thread = Thread.new do
           begin
             while (line = stdout.gets)
               stdout_data << line
+              stdout_yield.call(line) if block
               @printer.print_command_out_data(cmd, line)
             end
           rescue TimeoutExceeded
@@ -118,6 +122,7 @@ module TTY
           begin
             while (line = stderr.gets)
               stderr_data << line
+              stderr_yield.call(line) if block
               @printer.print_command_err_data(cmd, line)
             end
           rescue TimeoutExceeded

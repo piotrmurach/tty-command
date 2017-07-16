@@ -9,25 +9,25 @@ RSpec.describe TTY::Command, 'dry run' do
   end
 
   it "runs command in dry run mode" do
+    uuid= 'xxxx'
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output, dry_run: true)
-    uuid = nil
-    command.run(:echo, 'hello', 'world') do |cmd|
-      uuid = cmd.uuid
-    end
-    output.rewind
 
+    command.run(:echo, 'hello', 'world')
+
+    output.rewind
     expect(output.read).to eq(
       "[\e[32m#{uuid}\e[0m] \e[34m(dry run)\e[0m \e[33;1mecho hello world\e[0m\n")
   end
 
   it "allows to run command in dry mode" do
+    uuid= 'xxxx'
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output)
-    uuid = nil
-    command.run(:echo, 'hello', 'world', dry_run: true) do |cmd|
-      uuid = cmd.uuid
-    end
-    output.rewind
 
+    command.run(:echo, 'hello', 'world', dry_run: true)
+
+    output.rewind
     expect(output.read).to eq(
       "[\e[32m#{uuid}\e[0m] \e[34m(dry run)\e[0m \e[33;1mecho hello world\e[0m\n")
   end
