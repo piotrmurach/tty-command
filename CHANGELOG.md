@@ -1,11 +1,12 @@
 # Change log
 
-## [v0.5.0] - 2017-07-xx
+## [v0.5.0] - 2017-07-16
 
 ### Added
 * Add :signal option for timeout
 * Add :input option for handling stdin input
 * Add ability for Command#run to specify a callback that is invoked whenever stdout or stderr receive output
+* Add Command#wait for polling a long running script for matching output
 
 ### Changed
 * Change ProcessRunner to immediately sync write pipe
@@ -14,6 +15,7 @@
 ### Fixed
 * Fix quiet printer write call by @jamesepatrick
 * Fix to correctly close all pipe ends between parent and child process
+* Fix timeout behaviour for writable and readable streams
 
 ## [v0.4.0] - 2017-02-22
 
