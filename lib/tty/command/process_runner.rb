@@ -37,7 +37,7 @@ module TTY
         start = Time.now
         runtime = 0.0
 
-        pid, stdin, stdout, stderr = spawn(cmd) # do |pid, stdin, stdout, stderr|
+        pid, stdin, stdout, stderr = spawn(cmd)
 
         # write and read streams
         write_stream(stdin)
