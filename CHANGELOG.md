@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.6.0] - 2017-x-x
+
+### Added
+* Add runtime property to command result
+
 ## [v0.5.0] - 2017-07-16
 
 ### Added
