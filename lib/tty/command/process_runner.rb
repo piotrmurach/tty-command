@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'thread'
 
@@ -111,7 +112,7 @@ module TTY
       #
       # @api private
       def read_streams(stdout, stderr, &block)
-        stdout_data = ''
+        stdout_data = []
         stderr_data = Truncator.new
 
         print_out = -> (cmd, line) { @printer.print_command_out_data(cmd, line) }
@@ -131,7 +132,7 @@ module TTY
           end
         end
 
-        [stdout_data, stderr_data.read]
+        [stdout_data.join, stderr_data.read]
       end
 
       def read_stream(stream, data, print_callback, callback)

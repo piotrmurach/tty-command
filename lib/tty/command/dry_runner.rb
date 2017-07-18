@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require_relative 'result'
 
@@ -15,10 +16,10 @@ module TTY
       # Show command without running
       #
       # @api public
-      def run!(&block)
+      def run!(*)
         cmd.to_command
-        message = "#{@printer.decorate('(dry run)', :blue)} "
-        message << @printer.decorate(cmd.to_command, :yellow, :bold)
+        message = "#{@printer.decorate('(dry run)', :blue)} " +
+                  @printer.decorate(cmd.to_command, :yellow, :bold)
         @printer.write(message, cmd.uuid)
         Result.new(0, '', '')
       end
