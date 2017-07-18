@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 module TTY
   class Command
@@ -17,11 +18,14 @@ module TTY
       end
 
       def info(cmd_name, result)
-        message = ''
-        message << "Running `#{cmd_name}` failed with\n"
-        message << "  exit status: #{result.exit_status}\n"
-        message << "  stdout: #{(result.out || '').strip.empty? ? 'Nothing written' : result.out.strip}\n"
-        message << "  stderr: #{(result.err || '').strip.empty? ? 'Nothing written' : result.err.strip}\n"
+        "Running `#{cmd_name}` failed with\n" \
+        "  exit status: #{result.exit_status}\n" \
+        "  stdout: #{extract_output(result.out)}\n" \
+        "  stderr: #{extract_output(result.err)}\n"
+      end
+
+      def extract_output(value)
+        (value || '').strip.empty? ? 'Nothing written' : value.strip
       end
     end # ExitError
   end # Command
