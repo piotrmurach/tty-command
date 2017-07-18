@@ -19,6 +19,11 @@ RSpec.describe TTY::Command::Result do
     expect(result.to_s).to eq('127')
   end
 
+  it "provides runtime" do
+    result = TTY::Command::Result.new(0, '', '', 5.4)
+    expect(result.runtime).to eq(5.4)
+  end
+
   it "doesn't exit" do
     result = TTY::Command::Result.new(nil, '', '')
     expect(result.exited?).to eq(false)

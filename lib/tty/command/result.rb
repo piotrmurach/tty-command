@@ -16,10 +16,17 @@ module TTY
       attr_reader :err
       alias stderr err
 
-      def initialize(status, out, err)
+      # Total command execution time
+      attr_reader :runtime
+
+      # Create a result
+      #
+      # @api public
+      def initialize(status, out, err, runtime = 0.0)
         @status = status
         @out    = out
         @err    = err
+        @runtime = runtime
       end
 
       # Enumerate over output lines
