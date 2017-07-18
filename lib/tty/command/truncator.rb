@@ -1,4 +1,5 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 module TTY
   class Command
@@ -33,14 +34,14 @@ module TTY
       def write(content)
         content = content.to_s.dup
 
-        content = append(content, @prefix)
+        content, @prefix = append(content, @prefix)
 
         if (over = (content.bytesize - @max_size)) > 0
           content = content.byteslice(over..-1)
           @skipped += over
         end
 
-        content = append(content, @suffix)
+        content, @suffix = append(content, @suffix)
 
         # suffix is full but we still have content to write
         while content.bytesize > 0
@@ -61,11 +62,7 @@ module TTY
           return @prefix << @suffix
         end
 
-        res = ''
-        res << @prefix
-        res << "\n... omitting #{@skipped} bytes ...\n"
-        res << @suffix
-        res
+         @prefix + "\n... omitting #{@skipped} bytes ...\n" + @suffix
       end
       alias to_s read
 
@@ -95,14 +92,15 @@ module TTY
       #
       # @api private
       def append(value, dst)
-        remain = @max_size - dst.bytesize
+        remain    = @max_size - dst.bytesize
+        remaining = ''
         if remain > 0
           value_bytes = value.to_s.bytesize
           offset = value_bytes < remain ? value_bytes : remain
-          dst << value.byteslice(0...offset)
+          remaining = value.byteslice(0...offset)
           value = value.byteslice(offset..-1)
         end
-        value
+        [value, dst + remaining]
       end
     end # Truncator
   end # Command
