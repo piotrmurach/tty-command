@@ -56,6 +56,11 @@ module TTY
 
       private
 
+      # Normalize spawn fd into :in, :out, :err keys.
+      #
+      # @return [Hash]
+      #
+      # @api private
       def normalize_redirect_options(options)
         options.reduce({}) do |opts, (key, value)|
           if fd?(key)
@@ -69,49 +74,28 @@ module TTY
         end
       end
 
+      # Determine if object is a fd
+      #
+      # @return [Boolean]
+      #
       # @api private
       def fd?(object)
         case object
-        when :stdin, :stdout, :stderr, :in, :out, :err
-          true
-        when STDIN, STDOUT, STDERR, $stdin, $stdout, $stderr, ::IO
+        when :stdin, :stdout, :stderr, :in, :out, :err,
+             STDIN, STDOUT, STDERR, $stdin, $stdout, $stderr, ::IO
           true
         when ::IO
           true
         when ::Integer
           object >= 0
-        when respond_to?(:to_i) && !object.to_io.nil?
-          true
         else
-          false
+          respond_to?(:to_i) && !object.to_io.nil?
         end
       end
 
-      def try_reading(object)
-        if object.respond_to?(:read)
-          object.read
-        elsif object.respond_to?(:to_s)
-          object.to_s
-        else
-          object
-        end
-      end
-
-      def convert_to_fd(object)
-        return object if fd?(object)
-
-        if object.is_a?(::String) && ::File.exist?(object)
-          return object
-        end
-
-        tmp = ::Tempfile.new(::SecureRandom.uuid.split('-')[0])
-
-        content = try_reading(object)
-        tmp.write(content)
-        tmp.rewind
-        tmp
-      end
-
+      # Convert fd to name :in, :out, :err
+      #
+      # @api private
       def fd_to_process_key(object)
         case object
         when STDIN, $stdin, :in, :stdin, 0
@@ -128,6 +112,36 @@ module TTY
           object.to_io
         else
           raise ExecuteError, "Wrong execute redirect: #{object.inspect}"
+        end
+      end
+
+      # Convert file name to file handle
+      #
+      # @api private
+      def convert_to_fd(object)
+        return object if fd?(object)
+
+        if object.is_a?(::String) && ::File.exist?(object)
+          return object
+        end
+
+        tmp = ::Tempfile.new(::SecureRandom.uuid.split('-')[0])
+        content = try_reading(object)
+        tmp.write(content)
+        tmp.rewind
+        tmp
+      end
+
+      # Attempts to read object content
+      #
+      # @api private
+      def try_reading(object)
+        if object.respond_to?(:read)
+          object.read
+        elsif object.respond_to?(:to_s)
+          object.to_s
+        else
+          object
         end
       end
     end # Execute
