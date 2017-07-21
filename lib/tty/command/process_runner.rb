@@ -63,7 +63,7 @@ module TTY
       #
       # @api public
       def terminate(pid)
-        ::Process.kill(@signal, pid)
+        ::Process.kill(@signal, pid) rescue nil
       end
 
       private
