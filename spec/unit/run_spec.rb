@@ -11,16 +11,6 @@ RSpec.describe TTY::Command, '#run' do
     expect(err).to eq("")
   end
 
-  it 'runs command and prints to stderr' do
-    output = StringIO.new
-    command = TTY::Command.new(output: output)
-
-    out, err = command.run("echo 'hello' 1>& 2")
-
-    expect(out).to eq("")
-    expect(err).to eq("hello\n")
-  end
-
   it 'runs command successfully with logging' do
     output = StringIO.new
     uuid= 'xxxx'
@@ -103,15 +93,6 @@ RSpec.describe TTY::Command, '#run' do
        "  stdout: nooo",
        "  stderr: Nothing written\n"].join("\n")
     )
-  end
-
-  it "redirects STDOUT stream" do
-    output = StringIO.new
-    command = TTY::Command.new(output: output)
-
-    out, _ = command.run('echo hello', STDOUT => '/dev/null')
-
-    expect(out).to eq("")
   end
 
   it "reads user input data" do

@@ -64,11 +64,19 @@ module TTY
       def normalize_redirect_options(options)
         options.reduce({}) do |opts, (key, value)|
           if fd?(key)
-            process_key = fd_to_process_key(key)
-            if process_key.to_s == 'in'
-              value = convert_to_fd(value)
+            _key   = fd_to_process_key(key)
+            _value = value
+
+            if _key.to_s == 'in'
+              _value = convert_to_fd(value)
             end
-            opts[process_key] = value
+
+            if fd?(value)
+              _value = fd_to_process_key(value)
+              _value = [:child, _value] # redirect in child process
+            end
+
+            opts[_key] = _value
           end
           opts
         end
