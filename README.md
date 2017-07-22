@@ -322,6 +322,12 @@ cmd.run(:ls, :out => ['log', 'w', 0600])
 cmd.run(:ls, :out => ['log', File::WRONLY|File::EXCL|File::CREAT, 0600])
 ```
 
+You can, for example, read data from one source and output to another:
+
+```ruby
+cmd.run("cat", :in => "Gemfile", :out => 'gemfile.log')
+```
+
 #### 3.2.3 Handling Input
 
 You can provide input to stdin stream using the `:input` key. For instance, given the following executable called `cli` that expects name from `stdin`:
