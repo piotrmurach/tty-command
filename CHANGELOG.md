@@ -1,9 +1,10 @@
 # Change log
 
-## [v0.6.0] - 2017-x-x
+## [v0.6.0] - 2017-07-22
 
 ### Added
 * Add runtime property to command result
+* Add ability to merge multiple redirects
 
 ### Changed
 * Change to make all strings immutable
