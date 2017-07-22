@@ -5,6 +5,13 @@
 ### Added
 * Add runtime property to command result
 
+### Changed
+* Change to make all strings immutable
+* Change waiting for pid to recover when already dead
+
+### Fix
+* Fix redirection to instead of redirecting to parent process, redirect to child process. And hence allow for :out => :err redirection to work with output logging.
+
 ## [v0.5.0] - 2017-07-16
 
 ### Added
