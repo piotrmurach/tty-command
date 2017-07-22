@@ -278,33 +278,48 @@ cmd.run(:echo, 'hello', chdir: '/var/tmp')
 
 There are few ways you can redirect commands output.
 
-You can directly use shell redirection facility like so:
+You can directly use shell redirection like so:
 
 ```ruby
-cmd.run("ls 1&>2")
+out, err = cmd.run("ls 1&>2")
+puts err
+# =>
+# CHANGELOG.md
+# CODE_OF_CONDUCT.md
+# Gemfile
+# ...
 ```
 
-You can provide the streams as additional hash options where the key is one of `:in`, `:out`, `:err`, an integer (a file descriptor for the child process), an IO or array. The pair value can be a filename for redirection.
+You can provide redirection as additional hash options where the key is one of `:in`, `:out`, `:err`, an integer (a file descriptor for the child process), an IO or array. For example, `stderr` can be merged into stdout as follows:
 
 ```ruby
-cmd.run(:ls, :in => "/dev/null")   # read mode
-cmd.run(:ls, :out => "/dev/null")  # write mode
-cmd.run(:ls, :err => "log")        # write mode
-cmd.run(:ls, [:out, :err] => "/dev/null") # write mode
-cmd.run(:ls, 3 => "/dev/null")     # read mode
+cmd.run(:ls, :err => :out)
+cmd.run(:ls, :stderr => :stdout)
+cmd.run(:ls, 2 => 1)
+cmd.run(:ls, STDERR => :out)
+cmd.run(:ls, STDERR => STDOUT)
 ```
 
-You can also provide actual file descriptor for redirection:
+The hash key and value specify a file descriptor in the child process (stderr & stdout in the examples).
+
+You can also redirect to a file:
 
 ```ruby
+cmd.run(:cat, :in => 'file')
 cmd.run(:cat, :in => open('/etc/passwd'))
+cmd.run(:ls, :out => 'log')
+cmd.run(:ls, :out => "/dev/null")
+cmd.run(:ls, :out => 'out.log', :err => "err.log")
+cmd.run(:ls, [:out, :err] => "log")
+cmd.run("ls 1>&2", :err => 'log')
 ```
 
-For example, to merge stderr into stdout you would do:
+It is possible to specify flags and permissions of file creation explicitly by passing an array value:
 
 ```ruby
-cmd.run(:ls, '-la', :stderr => :stdout)
-cmd.run(:ls, '-la', 2 => 1)
+cmd.run(:ls, :out => ['log', 'w']) # 0664 assumed
+cmd.run(:ls, :out => ['log', 'w', 0600])
+cmd.run(:ls, :out => ['log', File::WRONLY|File::EXCL|File::CREAT, 0600])
 ```
 
 #### 3.2.3 Handling Input
