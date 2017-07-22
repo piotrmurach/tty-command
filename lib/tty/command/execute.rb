@@ -30,11 +30,11 @@ module TTY
         in_wr.sync = true
 
         # redirect fds
-        opts = ({
+        opts = {
           :in  => in_rd,  in_wr  => :close,
           :out => out_wr, out_rd => :close,
           :err => err_wr, err_rd => :close
-        }).merge(process_opts)
+        }.merge(process_opts)
 
         pid = Process.spawn(cmd.to_command, opts)
 
@@ -64,22 +64,34 @@ module TTY
       def normalize_redirect_options(options)
         options.reduce({}) do |opts, (key, value)|
           if fd?(key)
-            _key   = fd_to_process_key(key)
-            _value = value
-
-            if _key.to_s == 'in'
-              _value = convert_to_fd(value)
+            spawn_key, spawn_value = convert(key, value)
+            opts[spawn_key] = spawn_value
+          elsif key.is_a?(Array) && key.all?(&method(:fd?))
+            key.each do |k|
+              spawn_key, spawn_value = convert(k, value)
+              opts[spawn_key] = spawn_value
             end
-
-            if fd?(value)
-              _value = fd_to_process_key(value)
-              _value = [:child, _value] # redirect in child process
-            end
-
-            opts[_key] = _value
           end
           opts
         end
+      end
+
+      # Convert option pari to recognized spawn option pair
+      #
+      # @api private
+      def convert(spawn_key, spawn_value)
+        key   = fd_to_process_key(spawn_key)
+        value = spawn_value
+
+        if key.to_s == 'in'
+          value = convert_to_fd(spawn_value)
+        end
+
+        if fd?(spawn_value)
+          value = fd_to_process_key(spawn_value)
+          value = [:child, value] # redirect in child process
+        end
+        [key, value]
       end
 
       # Determine if object is a fd
@@ -91,8 +103,6 @@ module TTY
         case object
         when :stdin, :stdout, :stderr, :in, :out, :err,
              STDIN, STDOUT, STDERR, $stdin, $stdout, $stderr, ::IO
-          true
-        when ::IO
           true
         when ::Integer
           object >= 0
