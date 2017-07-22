@@ -4,7 +4,7 @@ require 'tty-command'
 
 cmd = TTY::Command.new
 
-out, err = cmd.run("echo 'hello' 1>& 2")
+out, err = cmd.run("echo 'hello'", :out => :err)
 
 puts "out: #{out}"
 puts "err: #{err}"

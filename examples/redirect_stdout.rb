@@ -4,4 +4,7 @@ require 'tty-command'
 
 cmd = TTY::Command.new
 
-cmd.run(:ls, :out => 'ls_sample')
+out, err = cmd.run(:ls, :out => 'ls.log')
+
+puts "OUT>> #{out}"
+puts "ERR>> #{err}"
