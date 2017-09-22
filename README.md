@@ -268,7 +268,7 @@ When a hash is given in the last argument (options), it allows to specify a curr
 
 #### 3.2.1 Current directory
 
-To change directory in which the command is run pass the `:chidir` option:
+To change directory in which the command is run pass the `:chdir` option:
 
 ```ruby
 cmd.run(:echo, 'hello', chdir: '/var/tmp')
