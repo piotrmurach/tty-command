@@ -117,4 +117,14 @@ RSpec.describe TTY::Command, '#run' do
     expect(output).to eq("hello 1\nhello 2\nhello 3\n")
     expect(error).to eq('')
   end
+
+  it "preserves ANSI codes" do
+    output = StringIO.new
+    command = TTY::Command.new(output: output, printer: :quiet)
+
+    out, _ = command.run :echo, "\e[35mhello\e[0m"
+
+    expect(out).to eq("\e[35mhello\e[0m\n")
+    expect(output.string).to eq("\e[35mhello\e[0m\n")
+  end
 end
