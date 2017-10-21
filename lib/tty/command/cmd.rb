@@ -55,6 +55,13 @@ module TTY
         freeze
       end
 
+      # Extend command options if keys don't already exist
+      #
+      # @api public
+      def update(**options)
+        @options.update(options.update(@options))
+      end
+
       # The shell environment variables
       #
       # @api public
