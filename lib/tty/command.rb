@@ -52,6 +52,7 @@ module TTY
       @printer_name = options.fetch(:printer) { :pretty }
       @dry_run = options.fetch(:dry_run) { false }
       @printer = use_printer(@printer_name, color: @color, uuid: @uuid)
+      @cmd_options = {}
     end
 
     # Start external executable in a child process
@@ -162,7 +163,9 @@ module TTY
 
     # @api private
     def command(*args)
-      Cmd.new(*args)
+      cmd = Cmd.new(*args)
+      cmd.update(@cmd_options)
+      cmd
     end
 
     # @api private
