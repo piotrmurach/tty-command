@@ -28,7 +28,6 @@ module TTY
         @signal  = cmd.options[:signal] || :TERM
         @printer = printer
         @threads = []
-        @lock    = Mutex.new
       end
 
       # Execute child process
@@ -140,11 +139,9 @@ module TTY
           Thread.current[:cmd_start] = Time.now
           begin
             while (line = stream.gets)
-              @lock.synchronize do
-                data << line
-                callback.(line)
-                print_callback.(cmd, line)
-              end
+              data << line
+              callback.(line)
+              print_callback.(cmd, line)
 
               # control total time spent reading
               runtime = Time.now - Thread.current[:cmd_start]
