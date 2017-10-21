@@ -1,5 +1,13 @@
 # Change log
 
+## [v0.7.0] - 2017-10-xx
+
+### Changed
+* Change Command to remove threads synchronization to leave it up to client to handle
+
+### Fixed
+* Fix ProcessRunner threads deadlocking on exclusive mutex
+
 ## [v0.6.0] - 2017-07-22
 
 ### Added
@@ -74,6 +82,9 @@
 
 * Initial implementation and release
 
+[v0.7.0]: https://github.com/piotrmurach/tty-command/compare/v0.6.0...v0.7.0
+[v0.6.0]: https://github.com/piotrmurach/tty-command/compare/v0.5.0...v0.6.0
+[v0.5.0]: https://github.com/piotrmurach/tty-command/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/piotrmurach/tty-command/compare/v0.3.3...v0.4.0
 [v0.3.3]: https://github.com/piotrmurach/tty-command/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/piotrmurach/tty-command/compare/v0.3.1...v0.3.2
