@@ -45,7 +45,7 @@ module TTY
     #   the mode for executing command
     #
     # @api public
-    def initialize(options = {})
+    def initialize(**options)
       @output = options.fetch(:output) { $stdout }
       @color   = options.fetch(:color) { true }
       @uuid    = options.fetch(:uuid) { true }
@@ -54,6 +54,7 @@ module TTY
       @printer = use_printer(@printer_name, color: @color, uuid: @uuid)
       @cmd_options = {}
       @cmd_options[:binmode] = true if options[:binmode]
+      @cmd_options[:timeout] = options[:timeout] if options[:timeout]
     end
 
     # Start external executable in a child process
