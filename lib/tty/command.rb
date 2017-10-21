@@ -173,8 +173,8 @@ module TTY
     # @api private
     def execute_command(cmd, &block)
       dry_run = @dry_run || cmd.options[:dry_run] || false
-      @runner = select_runner(dry_run).new(cmd, @printer)
-      @runner.run!(&block)
+      @runner = select_runner(dry_run).new(cmd, @printer, &block)
+      @runner.run!
     end
 
     # @api private

@@ -21,18 +21,20 @@ module TTY
       #   the printer to use for logging
       #
       # @api private
-      def initialize(cmd, printer)
+      def initialize(cmd, printer, &block)
         @cmd     = cmd
         @timeout = cmd.options[:timeout]
         @input   = cmd.options[:input]
         @signal  = cmd.options[:signal] || :TERM
         @printer = printer
         @threads = []
+        @block   = block
       end
 
       # Execute child process
+      #
       # @api public
-      def run!(&block)
+      def run!
         @printer.print_command_start(cmd)
         start = Time.now
         runtime = 0.0
@@ -41,7 +43,7 @@ module TTY
 
         # write and read streams
         write_stream(stdin)
-        stdout_data, stderr_data = read_streams(stdout, stderr, &block)
+        stdout_data, stderr_data = read_streams(stdout, stderr)
 
         status = waitpid(pid)
         runtime = Time.now - start
@@ -111,15 +113,15 @@ module TTY
       # @param [IO] stderr
       #
       # @api private
-      def read_streams(stdout, stderr, &block)
+      def read_streams(stdout, stderr)
         stdout_data = []
         stderr_data = Truncator.new
 
         print_out = -> (cmd, line) { @printer.print_command_out_data(cmd, line) }
         print_err = -> (cmd, line) { @printer.print_command_err_data(cmd, line) }
 
-        stdout_yield = -> (line) { block.(line, nil) if block }
-        stderr_yield = -> (line) { block.(nil, line) if block }
+        stdout_yield = -> (line) { @block.(line, nil) if @block }
+        stderr_yield = -> (line) { @block.(nil, line) if @block }
 
         @threads << read_stream(stdout, stdout_data, print_out, stdout_yield)
         @threads << read_stream(stderr, stderr_data, print_err, stderr_yield)
