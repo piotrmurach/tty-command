@@ -22,12 +22,19 @@ module TTY
       # @api public
       def spawn(cmd)
         process_opts = normalize_redirect_options(cmd.options)
+        binmode = cmd.options[:binmode] || false
 
         # Create pipes
         in_rd,  in_wr  = IO.pipe # reading
         out_rd, out_wr = IO.pipe # writing
         err_rd, err_wr = IO.pipe # error
         in_wr.sync = true
+
+        if binmode
+          in_wr.binmode
+          out_rd.binmode
+          err_rd.binmode
+        end
 
         # redirect fds
         opts = {
