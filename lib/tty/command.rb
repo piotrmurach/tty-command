@@ -1,8 +1,6 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
 require 'rbconfig'
-require 'monitor'
 
 require_relative 'command/cmd'
 require_relative 'command/exit_error'
@@ -16,8 +14,6 @@ require_relative 'command/version'
 
 module TTY
   class Command
-    include MonitorMixin
-
     ExecuteError = Class.new(StandardError)
 
     TimeoutExceeded = Class.new(StandardError)
@@ -50,7 +46,6 @@ module TTY
     #
     # @api public
     def initialize(options = {})
-      super()
       @output = options.fetch(:output) { $stdout }
       @color   = options.fetch(:color) { true }
       @uuid    = options.fetch(:uuid) { true }
@@ -174,7 +169,7 @@ module TTY
     def execute_command(cmd, &block)
       dry_run = @dry_run || cmd.options[:dry_run] || false
       @runner = select_runner(dry_run).new(cmd, @printer)
-      synchronize { @runner.run!(&block) }
+      @runner.run!(&block)
     end
 
     # @api private
