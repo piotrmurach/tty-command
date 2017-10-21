@@ -49,7 +49,8 @@ module TTY
         @printer.print_command_exit(cmd, status, runtime)
 
         Result.new(status, stdout_data, stderr_data, runtime)
-      rescue
+      rescue => err
+        stderr_data = "#{err}\n#{stderr_data}"
         terminate(pid)
         Result.new(-1, stdout_data, stderr_data)
       ensure
