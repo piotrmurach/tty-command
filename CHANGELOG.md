@@ -2,8 +2,13 @@
 
 ## [v0.7.0] - 2017-10-xx
 
+### Added
+* Add :binmode option to allow configuring input & ouput as binary
+
 ### Changed
 * Change Command to remove threads synchronization to leave it up to client to handle
+* Change Cmd to allow updating options
+* Change Command to accept options for all commands such as :timeout, :binmode etc...
 
 ### Fixed
 * Fix ProcessRunner threads deadlocking on exclusive mutex
