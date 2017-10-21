@@ -56,14 +56,15 @@ Or install it yourself as:
 * [3. Advanced Interface](#3-advanced-interface)
   * [3.1. Environment variables](#31-environment-variables)
   * [3.2. Options](#32-options)
-    * [3.2.1. Current directory](#321-current-directory)
-    * [3.2.2. Redirection](#322-redirection)
-    * [3.2.3. Handling input](#323-handling-input)
-    * [3.2.4. Timeout](#324-timeout)
+    * [3.2.1. Redirection](#321-redirection)
+    * [3.2.2. Handling input](#322-handling-input)
+    * [3.2.3. Timeout](#323-timeout)
+    * [3.2.4. Binary mode](#324-binary-mode)
     * [3.2.5. Signal](#325-signal)
-    * [3.2.6. User](#326-user)
-    * [3.2.7. Group](#327-group)
-    * [3.2.8. Umask](#328-umask)
+    * [3.2.6. Current directory](#326-current-directory)
+    * [3.2.7. User](#327-user)
+    * [3.2.8. Group](#328-group)
+    * [3.2.9. Umask](#329-umask)
   * [3.3. Result](#33-result)
     * [3.3.1. success?](#331-success)
     * [3.3.2. failure?](#332-failure)
@@ -266,15 +267,7 @@ cmd.run(:echo, 'hello', env: {foo: 'bar', baz: nil})
 
 When a hash is given in the last argument (options), it allows to specify a current directory, umask, user, group and and zero or more fd redirects for the child process.
 
-#### 3.2.1 Current directory
-
-To change directory in which the command is run pass the `:chdir` option:
-
-```ruby
-cmd.run(:echo, 'hello', chdir: '/var/tmp')
-```
-
-#### 3.2.2 Redirection
+#### 3.2.1 Redirection
 
 There are few ways you can redirect commands output.
 
@@ -328,7 +321,7 @@ You can, for example, read data from one source and output to another:
 cmd.run("cat", :in => "Gemfile", :out => 'gemfile.log')
 ```
 
-#### 3.2.3 Handling Input
+#### 3.2.2 Handling Input
 
 You can provide input to stdin stream using the `:input` key. For instance, given the following executable called `cli` that expects name from `stdin`:
 
@@ -357,7 +350,7 @@ in_stream.rewind
 cmd.run("my_cli_program", "login", in: in_stream).out
 ```
 
-#### 3.2.4 Timeout
+#### 3.2.3 Timeout
 
 You can timeout command execuation by providing the `:timeout` option in seconds:
 
@@ -365,7 +358,27 @@ You can timeout command execuation by providing the `:timeout` option in seconds
 cmd.run("while test 1; sleep 1; done", timeout: 5)
 ```
 
+And to set it for all commands do:
+
+```ruby
+cmd = TTY::Command.new(timeout: 5)
+```
+
 Please run `examples/timeout.rb` to see timeout in action.
+
+#### 3.2.4 Binary mode
+
+By default the standard input, output and error are non-binary. However, you can change to read and write in binary mode by using the `:binmode` option like so:
+
+```ruby
+cmd.run("echo 'hello'", binmode: true)
+```
+
+To set all commands to be run in binary mode do:
+
+```ruby
+cmd = TTY::Command.new(binmode: true)
+```
 
 #### 3.2.5 Signal
 
@@ -375,7 +388,15 @@ You can specify process termination signal other than the defaut `SIGTERM`:
 cmd.run("whilte test1; sleep1; done", timeout: 5, signal: :KILL)
 ```
 
-#### 3.2.6 User
+#### 3.2.6 Current directory
+
+To change directory in which the command is run pass the `:chdir` option:
+
+```ruby
+cmd.run(:echo, 'hello', chdir: '/var/tmp')
+```
+
+#### 3.2.7 User
 
 To run command as a given user do:
 
@@ -383,7 +404,7 @@ To run command as a given user do:
 cmd.run(:echo, 'hello', user: 'piotr')
 ```
 
-#### 3.2.7 Group
+#### 3.2.8 Group
 
 To run command as part of group do:
 
@@ -391,7 +412,7 @@ To run command as part of group do:
 cmd.run(:echo, 'hello', group: 'devs')
 ```
 
-#### 3.2.8 Umask
+#### 3.2.9 Umask
 
 To run command with umask do:
 
