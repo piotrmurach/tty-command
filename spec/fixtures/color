@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+out = "colored"
+if $stdout.tty?
+  out = "\e[32m#{out}\e[0m"
+end
+puts out
