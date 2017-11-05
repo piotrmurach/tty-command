@@ -157,6 +157,9 @@ module TTY
               runtime = Time.now - Thread.current[:cmd_start]
               handle_timeout(runtime)
             end
+          rescue Errno::EIO
+            # GNU/Linux `gets` raises when PTY slave is closed
+            nil
           rescue => err
             raise err
           ensure
