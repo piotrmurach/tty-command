@@ -78,6 +78,8 @@ module TTY
         raise TimeoutExceeded if t < 0.0
       end
 
+      # Write the input to the process stdin
+      #
       # @api private
       def write_stream(stdin)
         return unless @input
@@ -85,18 +87,23 @@ module TTY
         start = Time.now
 
         # wait when ready for writing to pipe
-        _, writable = IO.select(nil, writers, writers, @timeout)
+        _, writable = IO.select(nil, writers, [], @timeout)
         raise TimeoutExceeded if writable.nil?
 
         while writers.any?
           writable.each do |fd|
             begin
               err   = nil
-              size  = fd.write(@input)
+              size  = fd.write_nonblock(@input)
               @input = @input.byteslice(size..-1)
             rescue Errno::EPIPE => err
+              # The pipe closed before all input written
+              # Probably process exited prematurely
+              fd.close
+              writers.delete(stdin)
             end
             if err || @input.bytesize == 0
+              fd.close
               writers.delete(stdin)
             end
 
