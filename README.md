@@ -61,7 +61,7 @@ Or install it yourself as:
     * [3.2.3. Timeout](#323-timeout)
     * [3.2.4. Binary mode](#324-binary-mode)
     * [3.2.5. Signal](#325-signal)
-    * [3.2.6. PTY(pseudo-terminal)] (#326-pty)
+    * [3.2.6. PTY(pseudo-terminal)](#326-ptypseudo-terminal)
     * [3.2.7. Current directory](#327-current-directory)
     * [3.2.8. User](#328-user)
     * [3.2.9. Group](#329-group)
