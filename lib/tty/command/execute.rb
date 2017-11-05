@@ -54,6 +54,7 @@ module TTY
           begin
             return yield(*tuple)
           ensure
+            # ensure parent pipes are closed
             [in_wr, out_rd, err_rd].each { |fd| fd.close if fd && !fd.closed? }
           end
         else
