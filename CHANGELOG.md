@@ -1,9 +1,10 @@
 # Change log
 
-## [v0.7.0] - 2017-10-xx
+## [v0.7.0] - 2017-11-xx
 
 ### Added
 * Add :binmode option to allow configuring input & ouput as binary
+* Add :pty option to allow runnig commands in PTY(pseudo terminal)
 
 ### Changed
 * Change Command to remove threads synchronization to leave it up to client to handle
