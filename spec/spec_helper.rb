@@ -17,11 +17,11 @@ require 'tty-command'
 
 module Helpers
   def fixtures_path(filename = nil)
-    File.join(File.dirname(__FILE__), 'fixtures', filename.to_s)
+    File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', filename.to_s))
   end
 
   def tmp_path(filename = nil)
-    File.join(File.dirname(__FILE__), '..', 'tmp', filename.to_s)
+    File.expand_path(File.join(File.dirname(__FILE__), '..', 'tmp', filename.to_s))
   end
 end
 
