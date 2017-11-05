@@ -23,6 +23,10 @@ module Helpers
   def tmp_path(filename = nil)
     File.expand_path(File.join(File.dirname(__FILE__), '..', 'tmp', filename.to_s))
   end
+
+  def jruby?
+    RUBY_PLATFORM == "java"
+  end
 end
 
 RSpec.configure do |config|

@@ -6,7 +6,7 @@ RSpec.describe TTY::Command, '#ruby' do
     cmd = TTY::Command.new(output: output)
     out, err = cmd.ruby %q{-e "puts 'Hello World'"}
     expect(out).to eq("Hello World\n")
-    expect(err).to be_empty
+    expect(err).to be_empty unless jruby?
   end
 
   it "runs ruby with multiple arguments" do
