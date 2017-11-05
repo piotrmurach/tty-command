@@ -23,11 +23,18 @@ module TTY
       def spawn(cmd)
         process_opts = normalize_redirect_options(cmd.options)
         binmode = cmd.options[:binmode] || false
+        pty     = cmd.options[:pty] || false
+        pipe    = IO.method(:pipe)
+
+        if pty
+          require 'pty'
+          pipe = PTY.method(:open)
+        end
 
         # Create pipes
-        in_rd,  in_wr  = IO.pipe # reading
-        out_rd, out_wr = IO.pipe # writing
-        err_rd, err_wr = IO.pipe # error
+        in_rd,  in_wr  = pipe.() # reading
+        out_rd, out_wr = pipe.() # writing
+        err_rd, err_wr = pipe.() # error
         in_wr.sync = true
 
         if binmode
