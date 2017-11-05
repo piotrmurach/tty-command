@@ -61,10 +61,11 @@ Or install it yourself as:
     * [3.2.3. Timeout](#323-timeout)
     * [3.2.4. Binary mode](#324-binary-mode)
     * [3.2.5. Signal](#325-signal)
-    * [3.2.6. Current directory](#326-current-directory)
-    * [3.2.7. User](#327-user)
-    * [3.2.8. Group](#328-group)
-    * [3.2.9. Umask](#329-umask)
+    * [3.2.6. PTY(pseudo-terminal)] (#326-pty)
+    * [3.2.7. Current directory](#327-current-directory)
+    * [3.2.8. User](#328-user)
+    * [3.2.9. Group](#329-group)
+    * [3.2.10. Umask](#3210-umask)
   * [3.3. Result](#33-result)
     * [3.3.1. success?](#331-success)
     * [3.3.2. failure?](#332-failure)
@@ -388,7 +389,39 @@ You can specify process termination signal other than the defaut `SIGTERM`:
 cmd.run("whilte test1; sleep1; done", timeout: 5, signal: :KILL)
 ```
 
-#### 3.2.6 Current directory
+#### 3.2.6 PTY(pseudo terminal)
+
+The `:pty` configuration option causes the command to be executed in subprocess where each stream is a pseudo terminal. By default this options is set to `false`. However, some comamnds may require a terminal like device to work correctly. For example, a command may emit colored output only if it is running via terminal.
+
+In order to run command in pseudo terminal, either set the flag globally for all commands:
+
+```ruby
+cmd = TTY::Command.new(pty: true)
+```
+
+or for each executed command individually:
+
+```ruby
+cmd.run("echo 'hello'", pty: true)
+```
+
+Please note though, that setting `:pty` to `true` may change how the command behaves. For instance, on unix like systems the line feed character `\n` in output will be prefixed with carriage return `\r`:
+
+```ruby
+out, _ = cmd.run("echo 'hello'")
+out # => "hello\n"
+```
+
+and with `:pty` option:
+
+```ruby
+out, _ = cmd.run("echo 'hello'", pty: true)
+out # => "hello\r\n"
+```
+
+In addition, any input to command may be echoed to the standard output.
+
+#### 3.2.7 Current directory
 
 To change directory in which the command is run pass the `:chdir` option:
 
@@ -396,7 +429,7 @@ To change directory in which the command is run pass the `:chdir` option:
 cmd.run(:echo, 'hello', chdir: '/var/tmp')
 ```
 
-#### 3.2.7 User
+#### 3.2.8 User
 
 To run command as a given user do:
 
@@ -404,7 +437,7 @@ To run command as a given user do:
 cmd.run(:echo, 'hello', user: 'piotr')
 ```
 
-#### 3.2.8 Group
+#### 3.2.9 Group
 
 To run command as part of group do:
 
@@ -412,7 +445,7 @@ To run command as part of group do:
 cmd.run(:echo, 'hello', group: 'devs')
 ```
 
-#### 3.2.9 Umask
+#### 3.2.10 Umask
 
 To run command with umask do:
 
