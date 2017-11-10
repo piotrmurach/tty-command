@@ -27,7 +27,6 @@ module TTY
         @input   = cmd.options[:input]
         @signal  = cmd.options[:signal] || :TERM
         @printer = printer
-        @threads = []
         @block   = block
       end
 
@@ -130,16 +129,11 @@ module TTY
         stdout_yield = -> (line) { @block.(line, nil) if @block }
         stderr_yield = -> (line) { @block.(nil, line) if @block }
 
-        @threads << read_stream(stdout, stdout_data, print_out, stdout_yield)
-        @threads << read_stream(stderr, stderr_data, print_err, stderr_yield)
+        stdout_thread = read_stream(stdout, stdout_data, print_out, stdout_yield)
+        stderr_thread = read_stream(stderr, stderr_data, print_err, stderr_yield)
 
-        @threads.each do |th|
-          result = th.join(@timeout)
-          if result.nil?
-            @threads[0].raise
-            @threads[1].raise
-          end
-        end
+        stdout_thread.join
+        stderr_thread.join
 
         [stdout_data.join, stderr_data.read]
       end

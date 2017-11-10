@@ -6,7 +6,7 @@ RSpec.describe TTY::Command, '#run' do
     cmd = TTY::Command.new(output: output)
     expect {
       cmd.run("while test 1; do echo 'hello'; sleep 0.1; done", timeout: 0.1)
-    }.to raise_error(TTY::Command::ExitError)
+    }.to raise_error(TTY::Command::TimeoutExceeded)
   end
 
   it "times out globally all commands" do
@@ -14,7 +14,7 @@ RSpec.describe TTY::Command, '#run' do
     cmd = TTY::Command.new(output: output, timeout: 0.1)
     expect {
       cmd.run("while test 1; do echo 'hello'; sleep 0.1; done")
-    }.to raise_error(TTY::Command::ExitError)
+    }.to raise_error(TTY::Command::TimeoutExceeded)
   end
 
   it "reads user input data until timeout" do
@@ -24,6 +24,6 @@ RSpec.describe TTY::Command, '#run' do
 
     expect {
      cmd.run(cli, input: "Piotr\n", timeout: 0.01)
-    }.to raise_error(TTY::Command::ExitError)
+    }.to raise_error(TTY::Command::TimeoutExceeded)
   end
 end
