@@ -1,5 +1,5 @@
 RSpec.describe TTY::Command, ':pty' do
-  it "executes command in pseudo terminal mode as global option" do
+  it "executes command in pseudo terminal mode as global option", unless: RSpec::Support::OS.windows? do
     color_cli = tmp_path('color')
     output = StringIO.new
     cmd = TTY::Command.new(output: output, pty: true)
@@ -10,7 +10,7 @@ RSpec.describe TTY::Command, ':pty' do
     expect(out).to eq("\e[32mcolored\e[0m\r\n")
   end
 
-  it "executes command in pseudo terminal mode as command option" do
+  it "executes command in pseudo terminal mode as command option", unless: RSpec::Support::OS.windows? do
     color_cli = tmp_path('color')
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
