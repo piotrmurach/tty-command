@@ -57,7 +57,7 @@ RSpec.describe TTY::Command, 'redirect' do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, _ = cmd.run('echo hello', :out => '/dev/null')
+    out, _ = cmd.run('echo hello', :out => IO::NULL)
 
     expect(out).to eq("")
   end
