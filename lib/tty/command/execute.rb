@@ -24,17 +24,13 @@ module TTY
         process_opts = normalize_redirect_options(cmd.options)
         binmode = cmd.options[:binmode] || false
         pty     = cmd.options[:pty] || false
-        pipe    = IO.method(:pipe)
 
-        if pty
-          require 'pty'
-          pipe = PTY.method(:open)
-        end
+        pty = try_loading_pty if pty
 
         # Create pipes
-        in_rd,  in_wr  = pipe.() # reading
-        out_rd, out_wr = pipe.() # writing
-        err_rd, err_wr = pipe.() # error
+        in_rd,  in_wr  = pty ? PTY.open : IO.pipe # reading
+        out_rd, out_wr = pty ? PTY.open : IO.pipe # writing
+        err_rd, err_wr = pty ? PTY.open : IO.pipe # error
         in_wr.sync = true
 
         if binmode
@@ -70,6 +66,19 @@ module TTY
       end
 
       private
+
+      # Try loading pty module
+      #
+      # @return [Boolean]
+      #
+      # @api private
+      def try_loading_pty
+        require 'pty'
+        true
+      rescue
+        warn("Requested PTY device but the system doesn't support it.")
+        false
+      end
 
       # Normalize spawn fd into :in, :out, :err keys.
       #
