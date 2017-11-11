@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+puts 'nooo'
+exit 1
