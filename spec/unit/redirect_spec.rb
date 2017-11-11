@@ -6,10 +6,10 @@ RSpec.describe TTY::Command, 'redirect' do
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
-    out, err = command.run("echo 'hello' 1>& 2")
+    out, err = command.run("echo hello 1>& 2")
 
     expect(out).to eq("")
-    expect(err).to eq("hello\n")
+    expect(err).to match(%r{hello\s*\n})
   end
 
   it "redirects :out -> :err" do
