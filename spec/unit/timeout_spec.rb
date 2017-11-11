@@ -2,18 +2,20 @@
 
 RSpec.describe TTY::Command, '#run' do
   it "times out after a specified period" do
+    infinite = tmp_path('infinite')
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
     expect {
-      cmd.run("while test 1; do echo 'hello'; sleep 0.1; done", timeout: 0.1)
+      cmd.run("ruby #{infinite}", timeout: 0.1)
     }.to raise_error(TTY::Command::TimeoutExceeded)
   end
 
   it "times out globally all commands" do
+    infinite = tmp_path('infinite')
     output = StringIO.new
     cmd = TTY::Command.new(output: output, timeout: 0.1)
     expect {
-      cmd.run("while test 1; do echo 'hello'; sleep 0.1; done")
+      cmd.run("ruby #{infinite}")
     }.to raise_error(TTY::Command::TimeoutExceeded)
   end
 
