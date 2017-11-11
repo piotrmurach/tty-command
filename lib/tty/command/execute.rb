@@ -28,9 +28,9 @@ module TTY
         pty = try_loading_pty if pty
 
         # Create pipes
-        in_rd,  in_wr  = pty ? PTY.open : IO.pipe # reading
-        out_rd, out_wr = pty ? PTY.open : IO.pipe # writing
-        err_rd, err_wr = pty ? PTY.open : IO.pipe # error
+        in_rd,  in_wr  = pty ? PTY.open : IO.pipe("utf-8") # reading
+        out_rd, out_wr = pty ? PTY.open : IO.pipe("utf-8") # writing
+        err_rd, err_wr = pty ? PTY.open : IO.pipe("utf-8") # error
         in_wr.sync = true
 
         if binmode
