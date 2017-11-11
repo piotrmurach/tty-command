@@ -124,7 +124,7 @@ RSpec.describe TTY::Command, '#run' do
     output = StringIO.new
     command = TTY::Command.new(output: output, printer: :quiet)
 
-    out, _ = command.run :echo, "\e[35mhello\e[0m"
+    out, _ = command.run("echo \e[35mhello\e[0m")
 
     expect(out).to eq("\e[35mhello\e[0m\n")
     expect(output.string).to eq("\e[35mhello\e[0m\n")
