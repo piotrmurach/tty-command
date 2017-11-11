@@ -3,7 +3,7 @@
 
 require 'thread'
 
-require_relative 'execute'
+require_relative 'child_process'
 require_relative 'result'
 require_relative 'truncator'
 
@@ -36,7 +36,7 @@ module TTY
         start = Time.now
         runtime = 0.0
 
-        pid, stdin, stdout, stderr = Execute.spawn(cmd)
+        pid, stdin, stdout, stderr = ChildProcess.spawn(cmd)
 
         # write and read streams
         write_stream(stdin)

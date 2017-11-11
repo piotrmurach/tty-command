@@ -6,7 +6,7 @@ require 'securerandom'
 
 module TTY
   class Command
-    module Execute
+    module ChildProcess
       # Execute command in a child process with all IO streams piped
       # in and out. The interface is similar to Process.spawn
       #
@@ -192,6 +192,6 @@ module TTY
         end
       end
       module_function :try_reading
-    end # Execute
+    end # ChildProcess
   end # Command
 end # TTY
