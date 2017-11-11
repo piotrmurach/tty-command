@@ -28,9 +28,9 @@ module TTY
         pty = try_loading_pty if pty
 
         # Create pipes
-        in_rd,  in_wr  = pty ? PTY.open : IO.pipe("utf-8") # reading
-        out_rd, out_wr = pty ? PTY.open : IO.pipe("utf-8") # writing
-        err_rd, err_wr = pty ? PTY.open : IO.pipe("utf-8") # error
+        in_rd,  in_wr  = pty ? PTY.open : IO.pipe('utf-8') # reading
+        out_rd, out_wr = pty ? PTY.open : IO.pipe('utf-8') # writing
+        err_rd, err_wr = pty ? PTY.open : IO.pipe('utf-8') # error
         in_wr.sync = true
 
         if binmode
@@ -41,10 +41,19 @@ module TTY
 
         # redirect fds
         opts = {
-          :in  => in_rd,  in_wr  => :close,
-          :out => out_wr, out_rd => :close,
-          :err => err_wr, err_rd => :close
-        }.merge(process_opts)
+          in: in_rd,
+          out: out_wr,
+          err: err_wr
+        }
+        unless TTY::Command.windows?
+          close_child_fds = {
+            in_wr  => :close,
+            out_rd => :close,
+            err_rd => :close
+          }
+          opts.merge!(close_child_fds)
+        end
+        opts.merge!(process_opts)
 
         pid = Process.spawn(cmd.to_command, opts)
 

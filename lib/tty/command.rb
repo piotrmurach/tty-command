@@ -32,6 +32,10 @@ module TTY
       @record_separator = sep
     end
 
+    def self.windows?
+      !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
+    end
+
     attr_reader :printer
 
     # Initialize a Command object
