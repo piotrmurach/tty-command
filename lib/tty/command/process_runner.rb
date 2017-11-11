@@ -87,7 +87,7 @@ module TTY
           writable.each do |fd|
             begin
               err   = nil
-              size  = fd.write_nonblock(@input)
+              size  = fd.write(@input)
               @input = @input.byteslice(size..-1)
             rescue Errno::EPIPE => err
               # The pipe closed before all input written
