@@ -23,7 +23,7 @@ RSpec.describe TTY::Command, '#run' do
     cmd = TTY::Command.new(output: output)
 
     expect {
-     cmd.run(cli, input: "Piotr\n", timeout: 0.01)
+     cmd.run("ruby #{cli}", input: "Piotr\n", timeout: 0.01)
     }.to raise_error(TTY::Command::TimeoutExceeded)
   end
 end
