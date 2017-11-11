@@ -10,8 +10,6 @@ require_relative 'truncator'
 module TTY
   class Command
     class ProcessRunner
-      include Execute
-
       # the command to be spawned
       attr_reader :cmd
 
@@ -38,7 +36,7 @@ module TTY
         start = Time.now
         runtime = 0.0
 
-        pid, stdin, stdout, stderr = spawn(cmd)
+        pid, stdin, stdout, stderr = Execute.spawn(cmd)
 
         # write and read streams
         write_stream(stdin)

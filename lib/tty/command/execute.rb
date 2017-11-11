@@ -64,8 +64,7 @@ module TTY
           tuple
         end
       end
-
-      private
+      module_function :spawn
 
       # Try loading pty module
       #
@@ -79,6 +78,7 @@ module TTY
         warn("Requested PTY device but the system doesn't support it.")
         false
       end
+      module_function :try_loading_pty
 
       # Normalize spawn fd into :in, :out, :err keys.
       #
@@ -99,6 +99,7 @@ module TTY
           opts
         end
       end
+      module_function :normalize_redirect_options
 
       # Convert option pari to recognized spawn option pair
       #
@@ -117,6 +118,7 @@ module TTY
         end
         [key, value]
       end
+      module_function :convert
 
       # Determine if object is a fd
       #
@@ -134,6 +136,7 @@ module TTY
           respond_to?(:to_i) && !object.to_io.nil?
         end
       end
+      module_function :fd?
 
       # Convert fd to name :in, :out, :err
       #
@@ -156,6 +159,7 @@ module TTY
           raise ExecuteError, "Wrong execute redirect: #{object.inspect}"
         end
       end
+      module_function :fd_to_process_key
 
       # Convert file name to file handle
       #
@@ -173,6 +177,7 @@ module TTY
         tmp.rewind
         tmp
       end
+      module_function :convert_to_fd
 
       # Attempts to read object content
       #
@@ -186,6 +191,7 @@ module TTY
           object
         end
       end
+      module_function :try_reading
     end # Execute
   end # Command
 end # TTY
