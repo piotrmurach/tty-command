@@ -108,11 +108,12 @@ RSpec.describe TTY::Command, '#run' do
   end
 
   it "streams output data" do
+    stream = tmp_path('stream')
     output = StringIO.new
     command = TTY::Command.new(output: output)
     output = ''
     error = ''
-    command.run("for i in 1 2 3; do echo 'hello '$i; done") do |out, err|
+    command.run("ruby #{stream}") do |out, err|
      output << out if out
      error << err if err
     end
