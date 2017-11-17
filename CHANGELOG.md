@@ -11,12 +11,15 @@
 * Change Cmd to allow updating options
 * Change Command to accept options for all commands such as :timeout, :binmode etc...
 * Change Execute to ChildProcess module
+* Change ChildProcess to skip spawn redirect close options on Windows platform
 * Change to enforce UTF-8 encoding for process pipes to be cross platform
 * Change ProcessRunner to stop rescuing runtime failures
 
 ### Fixed
 * Fix ProcessRunner threads deadlocking on exclusive mutex
 * Fix :timeout option to raise TimeoutExceeded error
+* Fix test suite to work on Windows
+* Fix Cmd arguments escaping
 
 ## [v0.6.0] - 2017-07-22
 
