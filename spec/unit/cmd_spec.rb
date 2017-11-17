@@ -137,7 +137,16 @@ RSpec.describe TTY::Command::Cmd, '::new' do
     cmd = TTY::Command::Cmd.new(:echo, 'hello world')
     expect(cmd.to_hash).to include({
       command: 'echo',
-      argv: ["'hello world'"]
+      argv: ["hello\\ world"]
+    })
+  end
+
+  it "escapes special characters in split arguments" do
+    args = %w(git for-each-ref --format='%(refname)' refs/heads/)
+    cmd = TTY::Command::Cmd.new(*args)
+    expect(cmd.to_hash).to include({
+      command: 'git',
+      argv: ["for-each-ref", "--format\\=\\'\\%\\(refname\\)\\'", "refs/heads/"]
     })
   end
 end

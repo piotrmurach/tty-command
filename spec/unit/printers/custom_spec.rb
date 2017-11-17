@@ -13,12 +13,12 @@ RSpec.describe 'Custom Printer' do
 
   it "prints command start" do
     printer = CustomPrinter.new(output)
-    cmd = TTY::Command::Cmd.new(:echo, 'hello world')
+    cmd = TTY::Command::Cmd.new(:echo, "'hello world'")
 
     printer.print_command_start(cmd)
     output.rewind
 
-    expect(output.string).to eq("echo 'hello world'")
+    expect(output.string).to eq("echo \\'hello\\ world\\'")
   end
 
   it "prints command stdout data" do

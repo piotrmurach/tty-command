@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'securerandom'
+require 'shellwords'
 
 module TTY
   class Command
@@ -46,7 +47,7 @@ module TTY
           else
             @command = sanitize(command)
           end
-          @argv = args.map { |i| shell_escape(i) }
+          @argv = args.map { |i| Shellwords.escape(i) }
         end
         @env ||= {}
         @options = opts
@@ -137,20 +138,6 @@ module TTY
       # @api private
       def sanitize(value)
         value.to_s.dup
-      end
-
-      # Enclose argument in quotes if it contains
-      # characters that require escaping
-      #
-      # @param [String] arg
-      #   the argument to escape
-      #
-      # @api private
-      def shell_escape(arg)
-        str = arg.to_s.dup
-        return str if str =~ /^[0-9A-Za-z+,.\/:=@_-]+$/
-        str.gsub!("'", "'\\''")
-        "'#{str}'"
       end
     end # Cmd
   end # Command
