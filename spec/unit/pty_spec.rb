@@ -7,7 +7,7 @@ RSpec.describe TTY::Command, ':pty' do
     out, err = cmd.run(color_cli)
 
     expect(err).to eq('')
-    expect(out).to eq("\e[32mcolored\e[0m\r\n")
+    expect(out).to eq("\e[32mcolored\e[0m\n")
   end
 
   it "executes command in pseudo terminal mode as command option", unless: RSpec::Support::OS.windows? do
@@ -18,6 +18,6 @@ RSpec.describe TTY::Command, ':pty' do
     out, err = cmd.run(color_cli, pty: true)
 
     expect(err).to eq('')
-    expect(out).to eq("\e[32mcolored\e[0m\r\n")
+    expect(out).to eq("\e[32mcolored\e[0m\n")
   end
 end

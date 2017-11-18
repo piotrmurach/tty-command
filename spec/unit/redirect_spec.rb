@@ -42,7 +42,6 @@ RSpec.describe TTY::Command, 'redirect' do
     expect(err).to eq("hello\n")
   end
 
-
   it "redirects STDOUT -> :err" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)

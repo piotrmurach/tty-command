@@ -3,6 +3,7 @@
 
 require 'tempfile'
 require 'securerandom'
+require 'io/console'
 
 module TTY
   class Command
@@ -38,6 +39,12 @@ module TTY
           in_wr.binmode
           out_rd.binmode
           err_rd.binmode
+        end
+
+        if pty
+          in_wr.raw!
+          out_wr.raw!
+          err_wr.raw!
         end
 
         # redirect fds
