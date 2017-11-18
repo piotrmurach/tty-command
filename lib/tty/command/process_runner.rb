@@ -30,6 +30,12 @@ module TTY
 
       # Execute child process
       #
+      # Write the input if provided to the child's stdin and read
+      # the contents of both the stdout and stderr.
+      #
+      # If a block is provided then yield the stdout and stderr content
+      # as its being read.
+      #
       # @api public
       def run!
         @printer.print_command_start(cmd)
@@ -38,8 +44,19 @@ module TTY
 
         pid, stdin, stdout, stderr = ChildProcess.spawn(cmd)
 
-        # write and read streams
-        write_stream(stdin)
+        # no input to write, close child's stdin pipe
+        stdin.close if (@input.nil? || @input.empty?) && !stdin.nil?
+
+        readers = [stdout, stderr]
+        writers = [@input && stdin].compact
+
+        while writers.any?
+          ready_readers, ready_writers = IO.select(readers, writers, [], @timeout)
+          raise TimeoutExceeded if ready_readers.nil? || ready_writers.nil?
+
+          write_stream(ready_writers, writers)
+        end
+
         stdout_data, stderr_data = read_streams(stdout, stderr)
 
         status = waitpid(pid)
@@ -74,36 +91,28 @@ module TTY
       # Write the input to the process stdin
       #
       # @api private
-      def write_stream(stdin)
-        return unless @input
-        writers = [stdin]
+      def write_stream(ready_writers, writers)
         start = Time.now
-
-        # wait when ready for writing to pipe
-        _, writable = IO.select(nil, writers, [], @timeout)
-        raise TimeoutExceeded if writable.nil?
-
-        while writers.any?
-          writable.each do |fd|
-            begin
-              err   = nil
-              size  = fd.write(@input)
-              @input = @input.byteslice(size..-1)
-            rescue Errno::EPIPE => err
-              # The pipe closed before all input written
-              # Probably process exited prematurely
-              fd.close
-              writers.delete(stdin)
-            end
-            if err || @input.bytesize == 0
-              fd.close
-              writers.delete(stdin)
-            end
-
-            # control total time spent writing
-            runtime = Time.now - start
-            handle_timeout(runtime)
+        ready_writers.each do |fd|
+          begin
+            err   = nil
+            size  = fd.write_nonblock(@input)
+            @input = @input.byteslice(size..-1)
+          rescue IO::WaitWritable
+          rescue Errno::EPIPE => err
+            # The pipe closed before all input written
+            # Probably process exited prematurely
+            fd.close
+            writers.delete(fd)
           end
+          if err || @input.bytesize == 0
+            fd.close
+            writers.delete(fd)
+          end
+
+          # control total time spent writing
+          runtime = Time.now - start
+          handle_timeout(runtime)
         end
       end
 
