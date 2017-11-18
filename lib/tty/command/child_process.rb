@@ -26,6 +26,7 @@ module TTY
         pty     = cmd.options[:pty] || false
 
         pty = try_loading_pty if pty
+        require('pty') if pty # load within this scope
 
         # Create pipes
         in_rd,  in_wr  = pty ? PTY.open : IO.pipe('utf-8') # reading
@@ -83,7 +84,7 @@ module TTY
       def try_loading_pty
         require 'pty'
         true
-      rescue
+      rescue LoadError
         warn("Requested PTY device but the system doesn't support it.")
         false
       end
