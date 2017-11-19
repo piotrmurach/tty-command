@@ -3,9 +3,8 @@
 require 'memory_profiler'
 require 'tty-command'
 
-cmd = TTY::Command.new(color: false)
-
 report = MemoryProfiler.report do
+  cmd = TTY::Command.new(color: false)
   cmd.run("echo 'hello world!'")
 end
 
