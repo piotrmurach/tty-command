@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.7.0] - 2017-11-xx
+## [v0.7.0] - 2017-11-19
 
 ### Added
 * Add :binmode option to allow configuring input & ouput as binary
@@ -14,6 +14,7 @@
 * Change ChildProcess to skip spawn redirect close options on Windows platform
 * Change to enforce UTF-8 encoding for process pipes to be cross platform
 * Change ProcessRunner to stop rescuing runtime failures
+* Change to stop mutating String instances
 
 ### Fixed
 * Fix ProcessRunner threads deadlocking on exclusive mutex
