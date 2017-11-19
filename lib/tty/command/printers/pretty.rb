@@ -9,6 +9,8 @@ module TTY
   class Command
     module Printers
       class Pretty < Abstract
+        TIME_FORMAT = "%5.3f %s".freeze
+
         def print_command_start(cmd, *args)
           message = ["Running #{decorate(cmd.to_command, :yellow, :bold)}"]
           message << args.map(&:chomp).join(' ') unless args.empty?
@@ -26,7 +28,7 @@ module TTY
         end
 
         def print_command_exit(cmd, status, runtime, *args)
-          runtime = "%5.3f %s" % [runtime, pluralize(runtime, 'second')]
+          runtime = TIME_FORMAT % [runtime, pluralize(runtime, 'second')]
           message = ["Finished in #{runtime}"]
           message << " with exit status #{status}" if status
           message << " (#{success_or_failure(status)})"
