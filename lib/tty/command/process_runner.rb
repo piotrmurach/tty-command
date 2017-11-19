@@ -126,14 +126,20 @@ module TTY
         stdout_data = []
         stderr_data = Truncator.new
 
-        print_out = -> (cmd, line) { @printer.print_command_out_data(cmd, line) }
-        print_err = -> (cmd, line) { @printer.print_command_err_data(cmd, line) }
+        out_buffer = -> (line) {
+          stdout_data << line
+          @printer.print_command_out_data(cmd, line)
+          @block.(line, nil) if @block
+        }
 
-        stdout_yield = -> (line) { @block.(line, nil) if @block }
-        stderr_yield = -> (line) { @block.(nil, line) if @block }
+        err_buffer = -> (line) {
+          stderr_data << line
+          @printer.print_command_err_data(cmd, line)
+          @block.(nil, line) if @block
+        }
 
-        stdout_thread = read_stream(stdout, stdout_data, print_out, stdout_yield)
-        stderr_thread = read_stream(stderr, stderr_data, print_err, stderr_yield)
+        stdout_thread = read_stream(stdout, out_buffer)
+        stderr_thread = read_stream(stderr, err_buffer)
 
         stdout_thread.join
         stderr_thread.join
@@ -141,14 +147,12 @@ module TTY
         [stdout_data.join, stderr_data.read]
       end
 
-      def read_stream(stream, data, print_callback, callback)
+      def read_stream(stream, buffer)
         Thread.new do
           Thread.current[:cmd_start] = Time.now
           begin
             while (line = stream.gets)
-              data << line
-              callback.(line)
-              print_callback.(cmd, line)
+              buffer.(line)
 
               # control total time spent reading
               runtime = Time.now - Thread.current[:cmd_start]
