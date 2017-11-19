@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'tty/command/printers/abstract'
+require_relative 'abstract'
 
 module TTY
   class Command

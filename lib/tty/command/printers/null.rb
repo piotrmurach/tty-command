@@ -1,6 +1,7 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
-require 'tty/command/printers/abstract'
+require_relative 'abstract'
 
 module TTY
   class Command
