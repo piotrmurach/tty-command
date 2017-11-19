@@ -24,6 +24,8 @@ module TTY
       RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT']
     )
 
+    WIN_PLATFORMS = /cygwin|mswin|mingw|bccwin|wince|emx/.freeze
+
     def self.record_separator
       @record_separator ||= $/
     end
@@ -33,7 +35,7 @@ module TTY
     end
 
     def self.windows?
-      !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
+      !!(RbConfig::CONFIG['host_os'] =~ WIN_PLATFORMS)
     end
 
     attr_reader :printer
