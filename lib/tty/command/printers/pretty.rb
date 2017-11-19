@@ -1,16 +1,18 @@
 # encoding: utf-8
+# frozen_string_literal: true
 
 require 'pastel'
-require 'tty/command/printers/abstract'
+
+require_relative 'abstract'
 
 module TTY
   class Command
     module Printers
       class Pretty < Abstract
         def print_command_start(cmd, *args)
-          message = "Running #{decorate(cmd.to_command, :yellow, :bold)}"
+          message = ["Running #{decorate(cmd.to_command, :yellow, :bold)}"]
           message << args.map(&:chomp).join(' ') unless args.empty?
-          write(message, cmd.uuid)
+          write(message.join, cmd.uuid)
         end
 
         def print_command_out_data(cmd, *args)
@@ -25,10 +27,10 @@ module TTY
 
         def print_command_exit(cmd, status, runtime, *args)
           runtime = "%5.3f %s" % [runtime, pluralize(runtime, 'second')]
-          message = "Finished in #{runtime}"
+          message = ["Finished in #{runtime}"]
           message << " with exit status #{status}" if status
           message << " (#{success_or_failure(status)})"
-          write(message, cmd.uuid)
+          write(message.join, cmd.uuid)
         end
 
         # Write message out to output
@@ -36,12 +38,12 @@ module TTY
         # @api private
         def write(message, uuid = nil)
           uuid_needed = options.fetch(:uuid) { true }
-          out = ''
+          out = []
           if uuid_needed
             out << "[#{decorate(uuid, :green)}] " unless uuid.nil?
           end
           out << "#{message}\n"
-          output << out
+          output << out.join
         end
 
         private
