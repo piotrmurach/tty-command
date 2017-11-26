@@ -398,15 +398,15 @@ The `:pty` configuration option causes the command to be executed in subprocess 
 
 If you require to interface with interactive subprocess then setting this option to `true` will enable a `pty` terminal device. For example, a command may emit colored output only if it is running via terminal device. You may also wish to run a program that waits for user input, and simulates typing in commands and reading responses.
 
-This option will only work only on systems that support BSD pty devices such as Linux or OS X, and it will gracefully fallback to non-pty device on all the other.
+This option will only work on systems that support BSD pty devices such as Linux or OS X, and it will gracefully fallback to non-pty device on all the other.
 
-In order to run command in pseudo terminal, either set the flag globally for all commands:
+In order to run command in `pseudo terminal`, either set the flag globally for all commands:
 
 ```ruby
 cmd = TTY::Command.new(pty: true)
 ```
 
-or for each executed command individually:
+or individually for each executed command:
 
 ```ruby
 cmd.run("echo 'hello'", pty: true)
