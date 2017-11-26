@@ -394,7 +394,11 @@ cmd.run("whilte test1; sleep1; done", timeout: 5, signal: :KILL)
 
 #### 3.2.6 PTY(pseudo terminal)
 
-The `:pty` configuration option causes the command to be executed in subprocess where each stream is a pseudo terminal. By default this options is set to `false`. However, some comamnds may require a terminal like device to work correctly. For example, a command may emit colored output only if it is running via terminal.
+The `:pty` configuration option causes the command to be executed in subprocess where each stream is a `pseudo terminal`. By default this options is set to `false`.
+
+If you require to interface with interactive subprocess then setting this option to `true` will enable a `pty` terminal device. For example, a command may emit colored output only if it is running via terminal device. You may also wish to run a program that waits for user input, and simulates typing in commands and reading responses.
+
+This option will only work only on systems that support BSD pty devices such as Linux or OS X, and it will gracefully fallback to non-pty device on all the other.
 
 In order to run command in pseudo terminal, either set the flag globally for all commands:
 
@@ -408,21 +412,19 @@ or for each executed command individually:
 cmd.run("echo 'hello'", pty: true)
 ```
 
-Please note though, that setting `:pty` to `true` may change how the command behaves. For instance, on unix like systems the line feed character `\n` in output will be prefixed with carriage return `\r`:
+Please note that setting `:pty` to `true` may change how the command behaves. It's important to understand the difference between `interactive` and `non-interactive` modes. For example, executing `git log` to view the commit history in default `non-interactive` mode:
 
 ```ruby
-out, _ = cmd.run("echo 'hello'")
-out # => "hello\n"
+cmd.run("git log") # => finishes and produces full output
 ```
 
-and with `:pty` option:
+However, in `interactive` mode with `pty` flag on:
 
 ```ruby
-out, _ = cmd.run("echo 'hello'", pty: true)
-out # => "hello\r\n"
+cmd.run("git log", pty: true) # => uses pager and waits for user input (never returns)
 ```
 
-In addition, any input to command may be echoed to the standard output.
+In addition, when pty device is used, any input to command may be echoed to the standard output, as well as some redirets may not work.
 
 #### 3.2.7 Current directory
 
