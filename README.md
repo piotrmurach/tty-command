@@ -82,7 +82,7 @@ Or install it yourself as:
 Create a command instance and then run some commands:
 
 ```ruby
-require 'tty/command'
+require 'tty-command'
 
 cmd = TTY::Command.new
 cmd.run('ls -la')
