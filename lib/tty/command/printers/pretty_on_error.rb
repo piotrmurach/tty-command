@@ -29,7 +29,7 @@ module TTY
         end
 
         def print_command_exit(cmd, status, runtime, *args)
-          unless status == 0
+          unless status.zero?
             output << @out_data
             output << @err_data
           end
