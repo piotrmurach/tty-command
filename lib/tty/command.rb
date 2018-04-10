@@ -8,6 +8,7 @@ require_relative 'command/dry_runner'
 require_relative 'command/process_runner'
 require_relative 'command/printers/null'
 require_relative 'command/printers/pretty'
+require_relative 'command/printers/pretty_on_error'
 require_relative 'command/printers/progress'
 require_relative 'command/printers/quiet'
 require_relative 'command/version'
@@ -203,7 +204,7 @@ module TTY
     #
     # @api private
     def find_printer_class(name)
-      const_name = name.to_s.capitalize.to_sym
+      const_name = name.to_s.split('_').map(&:capitalize).join('').to_sym
       if const_name.empty? || !TTY::Command::Printers.const_defined?(const_name)
         raise ArgumentError, %(Unknown printer type "#{name}")
       end
