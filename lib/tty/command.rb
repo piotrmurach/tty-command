@@ -204,7 +204,7 @@ module TTY
     #
     # @api private
     def find_printer_class(name)
-      const_name = name.to_s.split('_').map(&:capitalize).join('').to_sym
+      const_name = name.to_s.split('_').map(&:capitalize).join.to_sym
       if const_name.empty? || !TTY::Command::Printers.const_defined?(const_name)
         raise ArgumentError, %(Unknown printer type "#{name}")
       end
