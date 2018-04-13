@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+loop do
+  sleep 5
+end

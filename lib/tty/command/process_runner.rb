@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require 'thread'
+require 'timeout'
 
 require_relative 'child_process'
 require_relative 'result'
@@ -151,12 +152,8 @@ module TTY
         Thread.new do
           Thread.current[:cmd_start] = Time.now
           begin
-            while (line = stream.gets)
+            while (line = next_written_line(stream))
               buffer.(line)
-
-              # control total time spent reading
-              runtime = Time.now - Thread.current[:cmd_start]
-              handle_timeout(runtime)
             end
           rescue Errno::EIO
             # GNU/Linux `gets` raises when PTY slave is closed
@@ -167,6 +164,15 @@ module TTY
             stream.close
           end
         end
+      end
+
+      def next_written_line(stream)
+        return stream.gets unless @timeout
+
+        limit = (Thread.current[:cmd_start] + @timeout) - Time.now
+        Timeout.timeout(limit) { return stream.gets }
+      rescue Timeout::Error
+        raise TimeoutExceeded
       end
 
       # @api private
