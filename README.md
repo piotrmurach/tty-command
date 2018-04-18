@@ -190,14 +190,14 @@ cmd = TTY::Command.new(color: true)
 
 #### 2.3.1 Color
 
-When using printers you can switch off coloring by using `color` option set to `false`.
+When using printers you can switch off coloring by using `:color` option set to `false`.
 
 #### 2.3.2 Uuid
 
-By default when logging is enabled each log entry is prefixed by specific command run uuid number. This number can be switched off using `uuid` option:
+By default, when logging is enabled, each log entry is prefixed by specific command run uuid number. This number can be switched off using the `:uuid` option:
 
 ```ruby
-cmd = TTY::Command.new uuid: false
+cmd = TTY::Command.new(uuid: false)
 cmd.run('rm -R all_my_files')
 # => rm -r all_my_files
 ```
