@@ -93,4 +93,51 @@ RSpec.describe TTY::Command::Printers::Pretty do
 
     expect(output.string).to eq("[\e[32maaaaaa\e[0m] Finished in 5.321 seconds (\e[31;1mfailed\e[0m)\n")
   end
+
+  it "doesn't print output on success when only_output_on_error is true" do
+    zero_exit = tmp_path('zero_exit')
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
+    printer = TTY::Command::Printers::Pretty
+    cmd = TTY::Command.new(output: output, printer: printer)
+
+    cmd.run!(:ruby, zero_exit, only_output_on_error: true)
+    cmd.run!(:ruby, zero_exit)
+
+    output.rewind
+
+    lines = output.readlines
+    lines.each { |line| line.gsub!(/\d+\.\d+(?= seconds)/, 'x') }
+
+    expect(lines).to eq([
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] \tyess\n",
+      "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
+    ])
+  end
+
+  it "prints output on error when only_output_on_error is true" do
+    non_zero_exit = tmp_path('non_zero_exit')
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
+    printer = TTY::Command::Printers::Pretty
+    cmd = TTY::Command.new(output: output, printer: printer)
+
+    cmd.run!(:ruby, non_zero_exit, only_output_on_error: true)
+    cmd.run!(:ruby, non_zero_exit)
+
+    output.rewind
+
+    lines = output.readlines
+    lines.each { |line| line.gsub!(/\d+\.\d+(?= seconds)/, 'x') }
+
+    expect(lines).to eq([
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{non_zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] \tnooo\n",
+      "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{non_zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] \tnooo\n",
+      "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n"
+    ])
+  end
 end
