@@ -202,6 +202,39 @@ cmd.run('rm -R all_my_files')
 # => rm -r all_my_files
 ```
 
+### 2.3.3 Only output on error
+
+When using a command that can fail, setting `:only_output_on_error` option to `true` hides the output if the command succeeds:
+
+```ruby
+cmd = TTY::Command.new
+cmd.run!('non_failing_command', only_output_on_error: true)
+```
+
+This will only print the `Running` and `Finished` lines, while:
+
+```ruby
+cmd.run!('non_failing_command')
+```
+
+will also print any output that the `non_failing_command` might generate.
+
+Running either:
+
+```ruby
+cmd.run!('failing_command', only_output_on_error: true)
+```
+
+either:
+
+```ruby
+cmd.run!('failing_command')
+```
+
+will also print the output.
+
+*Setting this option will cause the output to show at once, at the end of the command.*
+
 ### 2.4 Dry run
 
 Sometimes it can be useful to put your script into a "dry run" mode that prints commands without actually running them. To simulate execution of the command use the `:dry_run` option:
