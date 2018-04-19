@@ -20,7 +20,7 @@ module TTY
         cmd.to_command
         message = "#{@printer.decorate('(dry run)', :blue)} " +
                   @printer.decorate(cmd.to_command, :yellow, :bold)
-        @printer.write(message, cmd.uuid)
+        @printer.write(cmd, message, cmd.uuid)
         Result.new(0, '', '')
       end
     end # DryRunner

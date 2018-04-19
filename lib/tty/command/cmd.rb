@@ -22,6 +22,9 @@ module TTY
       # @api public
       attr_reader :uuid
 
+      # Flag that controls whether to print the output only on error or not
+      attr_reader :only_output_on_error
+
       # Initialize a new Cmd object
       #
       # @api private
@@ -53,6 +56,7 @@ module TTY
         @options = opts
 
         @uuid = SecureRandom.uuid.split('-')[0]
+        @only_output_on_error = opts.fetch(:only_output_on_error) { false }
         freeze
       end
 
