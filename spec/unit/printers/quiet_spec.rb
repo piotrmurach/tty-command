@@ -33,4 +33,39 @@ RSpec.describe TTY::Command::Printers::Quiet do
 
     expect(output.string).to eq("hello world")
   end
+
+  it "doesn't print output on success when only_output_on_error is true" do
+    zero_exit = tmp_path('zero_exit')
+    printer = TTY::Command::Printers::Quiet
+    cmd = TTY::Command.new(output: output, printer: printer)
+
+    cmd.run!(:ruby, zero_exit, only_output_on_error: true)
+    cmd.run!(:ruby, zero_exit)
+
+    output.rewind
+
+    lines = output.readlines
+
+    expect(lines).to eq([
+      "yess\n"
+    ])
+  end
+
+  it "prints output on error when only_output_on_error is true" do
+    non_zero_exit = tmp_path('non_zero_exit')
+    printer = TTY::Command::Printers::Quiet
+    cmd = TTY::Command.new(output: output, printer: printer)
+
+    cmd.run!(:ruby, non_zero_exit, only_output_on_error: true)
+    cmd.run!(:ruby, non_zero_exit)
+
+    output.rewind
+
+    lines = output.readlines
+
+    expect(lines).to eq([
+      "nooo\n",
+      "nooo\n"
+    ])
+  end
 end

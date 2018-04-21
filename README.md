@@ -190,17 +190,50 @@ cmd = TTY::Command.new(color: true)
 
 #### 2.3.1 Color
 
-When using printers you can switch off coloring by using `color` option set to `false`.
+When using printers you can switch off coloring by using `:color` option set to `false`.
 
 #### 2.3.2 Uuid
 
-By default when logging is enabled each log entry is prefixed by specific command run uuid number. This number can be switched off using `uuid` option:
+By default, when logging is enabled, each log entry is prefixed by specific command run uuid number. This number can be switched off using the `:uuid` option:
 
 ```ruby
-cmd = TTY::Command.new uuid: false
+cmd = TTY::Command.new(uuid: false)
 cmd.run('rm -R all_my_files')
 # => rm -r all_my_files
 ```
+
+### 2.3.3 Only output on error
+
+When using a command that can fail, setting `:only_output_on_error` option to `true` hides the output if the command succeeds:
+
+```ruby
+cmd = TTY::Command.new
+cmd.run!('non_failing_command', only_output_on_error: true)
+```
+
+This will only print the `Running` and `Finished` lines, while:
+
+```ruby
+cmd.run!('non_failing_command')
+```
+
+will also print any output that the `non_failing_command` might generate.
+
+Running either:
+
+```ruby
+cmd.run!('failing_command', only_output_on_error: true)
+```
+
+either:
+
+```ruby
+cmd.run!('failing_command')
+```
+
+will also print the output.
+
+*Setting this option will cause the output to show at once, at the end of the command.*
 
 ### 2.4 Dry run
 

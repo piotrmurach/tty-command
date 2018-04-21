@@ -14,38 +14,44 @@ module TTY
         def print_command_start(cmd, *args)
           message = ["Running #{decorate(cmd.to_command, :yellow, :bold)}"]
           message << args.map(&:chomp).join(' ') unless args.empty?
-          write(message.join, cmd.uuid)
+          write(cmd, message.join, cmd.uuid)
         end
 
         def print_command_out_data(cmd, *args)
           message = args.map(&:chomp).join(' ')
-          write("\t#{message}", cmd.uuid)
+          write(cmd, "\t#{message}", cmd.uuid, out_data)
         end
 
         def print_command_err_data(cmd, *args)
           message = args.map(&:chomp).join(' ')
-          write("\t" + decorate(message, :red), cmd.uuid)
+          write(cmd, "\t" + decorate(message, :red), cmd.uuid, err_data)
         end
 
         def print_command_exit(cmd, status, runtime, *args)
+          unless !cmd.only_output_on_error || status.zero?
+            output << out_data
+            output << err_data
+          end
+
           runtime = TIME_FORMAT % [runtime, pluralize(runtime, 'second')]
           message = ["Finished in #{runtime}"]
           message << " with exit status #{status}" if status
           message << " (#{success_or_failure(status)})"
-          write(message.join, cmd.uuid)
+          write(cmd, message.join, cmd.uuid)
         end
 
         # Write message out to output
         #
         # @api private
-        def write(message, uuid = nil)
+        def write(cmd, message, uuid = nil, data = nil)
           uuid_needed = options.fetch(:uuid) { true }
           out = []
           if uuid_needed
             out << "[#{decorate(uuid, :green)}] " unless uuid.nil?
           end
           out << "#{message}\n"
-          output << out.join
+          target = (cmd.only_output_on_error && !data.nil?) ? data : output
+          target << out.join
         end
 
         private

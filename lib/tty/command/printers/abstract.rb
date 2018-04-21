@@ -11,6 +11,7 @@ module TTY
         def_delegators :@color, :decorate
 
         attr_reader :output, :options
+        attr_accessor :out_data, :err_data
 
         # Initialize a Printer object
         #
@@ -21,8 +22,11 @@ module TTY
         def initialize(output, options = {})
           @output  = output
           @options = options
-          @enabled  = options.fetch(:color) { true }
+          @enabled = options.fetch(:color) { true }
           @color   = ::Pastel.new(output: output, enabled: @enabled)
+
+          @out_data = ''
+          @err_data = ''
         end
 
         def print_command_start(cmd, *args)
@@ -41,7 +45,7 @@ module TTY
           write(args.join(' '))
         end
 
-        def write(message)
+        def write(cmd, message)
           raise NotImplemented, "Abstract printer cannot be used"
         end
       end # Abstract
