@@ -52,6 +52,7 @@ Or install it yourself as:
   * [2.3. Logging](#23-logging)
     * [2.3.1. Color](#231-color)
     * [2.3.2. UUID](#232-uuid)
+    * [2.3.3. Only output on error](#233-only-output-on-error)
   * [2.4. Dry run](#24-dry-run)
   * [2.5. Wait](#25-wait)
   * [2.6. Test](#26-test)
@@ -208,13 +209,13 @@ When using a command that can fail, setting `:only_output_on_error` option to `t
 
 ```ruby
 cmd = TTY::Command.new
-cmd.run!('non_failing_command', only_output_on_error: true)
+cmd.run('non_failing_command', only_output_on_error: true)
 ```
 
 This will only print the `Running` and `Finished` lines, while:
 
 ```ruby
-cmd.run!('non_failing_command')
+cmd.run('non_failing_command')
 ```
 
 will also print any output that the `non_failing_command` might generate.
@@ -222,13 +223,13 @@ will also print any output that the `non_failing_command` might generate.
 Running either:
 
 ```ruby
-cmd.run!('failing_command', only_output_on_error: true)
+cmd.run('failing_command', only_output_on_error: true)
 ```
 
 either:
 
 ```ruby
-cmd.run!('failing_command')
+cmd.run('failing_command')
 ```
 
 will also print the output.
