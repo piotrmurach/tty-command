@@ -117,7 +117,7 @@ RSpec.describe TTY::Command::Printers::Pretty do
     ])
   end
 
-  it "prints output on error when only_output_on_error is true" do
+  it "prints output on error & raises ExitError when only_output_on_error is true" do
     non_zero_exit = fixtures_path('non_zero_exit')
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty
@@ -125,6 +125,35 @@ RSpec.describe TTY::Command::Printers::Pretty do
 
     cmd.run!(:ruby, non_zero_exit, only_output_on_error: true)
     cmd.run!(:ruby, non_zero_exit)
+
+    output.rewind
+
+    lines = output.readlines
+    lines.each { |line| line.gsub!(/\d+\.\d+(?= seconds)/, 'x') }
+
+    expect(lines).to eq([
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{non_zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] \tnooo\n",
+      "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{non_zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] \tnooo\n",
+      "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n"
+    ])
+  end
+
+  it "prints output on error when only_output_on_error is true" do
+    non_zero_exit = fixtures_path('non_zero_exit')
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
+    printer = TTY::Command::Printers::Pretty
+    cmd = TTY::Command.new(output: output, printer: printer)
+
+    expect {
+      cmd.run(:ruby, non_zero_exit, only_output_on_error: true)
+    }.to raise_error(TTY::Command::ExitError)
+
+    expect {
+      cmd.run(:ruby, non_zero_exit)
+    }.to raise_error(TTY::Command::ExitError)
 
     output.rewind
 
