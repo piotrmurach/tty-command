@@ -61,7 +61,7 @@ RSpec.describe TTY::Command, 'redirect' do
     expect(out).to eq("")
   end
 
-  it "redirects to a file" do
+  it "redirects to a file", type: :cli do
     file = tmp_path('log')
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
@@ -73,7 +73,7 @@ RSpec.describe TTY::Command, 'redirect' do
     expect(File.read(file)).to eq("hello\n")
   end
 
-  it "redirects to a file as an array value" do
+  it "redirects to a file as an array value", type: :cli do
     file = tmp_path('log')
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
@@ -90,7 +90,7 @@ RSpec.describe TTY::Command, 'redirect' do
     end
   end
 
-  it "redirects multiple fds to a file" do
+  it "redirects multiple fds to a file", type: :cli do
     file = tmp_path('log')
     output = StringIO.new
     cmd = TTY::Command.new(output: output)

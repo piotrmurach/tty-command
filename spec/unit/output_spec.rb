@@ -2,7 +2,7 @@
 
 require 'fileutils'
 
-RSpec.describe TTY::Command, ':output' do
+RSpec.describe TTY::Command, ':output', type: :cli do
   it 'runs command and prints to a file' do
     stub_const('Tee', Class.new do
       def initialize(file)
@@ -14,9 +14,6 @@ RSpec.describe TTY::Command, ':output' do
       end
     end)
 
-    unless File.exist?(tmp_path)
-      FileUtils.mkdir(tmp_path)
-    end
     file = tmp_path('foo.log')
     output = Tee.new(File.open(file, 'w'))
 
@@ -24,7 +21,5 @@ RSpec.describe TTY::Command, ':output' do
     command = command.run("echo hello")
 
     expect(File.read(file)).to eq("hello\n")
-
-    FileUtils.rm_rf(file)
   end
 end

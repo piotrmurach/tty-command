@@ -1,6 +1,6 @@
 RSpec.describe TTY::Command, ':pty' do
   it "executes command in pseudo terminal mode as global option", unless: RSpec::Support::OS.windows? do
-    color_cli = tmp_path('color')
+    color_cli = fixtures_path('color')
     output = StringIO.new
     cmd = TTY::Command.new(output: output, pty: true)
 
@@ -11,7 +11,7 @@ RSpec.describe TTY::Command, ':pty' do
   end
 
   it "executes command in pseudo terminal mode as command option", unless: RSpec::Support::OS.windows? do
-    color_cli = tmp_path('color')
+    color_cli = fixtures_path('color')
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 

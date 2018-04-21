@@ -64,7 +64,7 @@ RSpec.describe TTY::Command, '#run' do
   end
 
   it "runs command and fails with logging" do
-    non_zero_exit = tmp_path('non_zero_exit')
+    non_zero_exit = fixtures_path('non_zero_exit')
     output = StringIO.new
     uuid= 'xxxx'
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
@@ -83,7 +83,7 @@ RSpec.describe TTY::Command, '#run' do
   end
 
   it "raises ExitError on command failure" do
-    non_zero_exit = tmp_path('non_zero_exit')
+    non_zero_exit = fixtures_path('non_zero_exit')
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
@@ -98,7 +98,7 @@ RSpec.describe TTY::Command, '#run' do
   end
 
   it "reads user input data" do
-    cli = tmp_path('cli')
+    cli = fixtures_path('cli')
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
@@ -108,7 +108,7 @@ RSpec.describe TTY::Command, '#run' do
   end
 
   it "streams output data" do
-    stream = tmp_path('stream')
+    stream = fixtures_path('stream')
     output = StringIO.new
     command = TTY::Command.new(output: output)
     output = ''

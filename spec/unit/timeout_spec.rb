@@ -2,7 +2,7 @@
 
 RSpec.describe TTY::Command, '#run' do
   it "times out after a specified period" do
-    infinite = tmp_path('infinite')
+    infinite = fixtures_path('infinite')
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
     expect {
@@ -11,7 +11,7 @@ RSpec.describe TTY::Command, '#run' do
   end
 
   it "times out globally all commands" do
-    infinite = tmp_path('infinite')
+    infinite = fixtures_path('infinite')
     output = StringIO.new
     cmd = TTY::Command.new(output: output, timeout: 0.1)
     expect {
@@ -20,7 +20,7 @@ RSpec.describe TTY::Command, '#run' do
   end
 
   it "reads user input data until timeout" do
-    cli = tmp_path('cli')
+    cli = fixtures_path('cli')
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 

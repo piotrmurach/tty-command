@@ -35,7 +35,7 @@ RSpec.describe TTY::Command::Printers::Quiet do
   end
 
   it "doesn't print output on success when only_output_on_error is true" do
-    zero_exit = tmp_path('zero_exit')
+    zero_exit = fixtures_path('zero_exit')
     printer = TTY::Command::Printers::Quiet
     cmd = TTY::Command.new(output: output, printer: printer)
 
@@ -52,7 +52,7 @@ RSpec.describe TTY::Command::Printers::Quiet do
   end
 
   it "prints output on error when only_output_on_error is true" do
-    non_zero_exit = tmp_path('non_zero_exit')
+    non_zero_exit = fixtures_path('non_zero_exit')
     printer = TTY::Command::Printers::Quiet
     cmd = TTY::Command.new(output: output, printer: printer)
 
