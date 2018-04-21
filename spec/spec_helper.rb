@@ -15,26 +15,40 @@ end
 
 require 'tty-command'
 
-module Helpers
-  def fixtures_path(filename = nil)
-    File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', filename.to_s))
+module TestHelpers
+  module Paths
+    def gem_root
+      File.expand_path(File.join(File.dirname(__FILE__), ".."))
+    end
+
+    def dir_path(*args)
+      path = File.join(gem_root, *args)
+      FileUtils.mkdir_p(path) unless ::File.exist?(path)
+      File.realpath(path)
+    end
+
+    def tmp_path(*args)
+      File.expand_path(File.join(dir_path('tmp'), *args))
+    end
+
+    def fixtures_path(*args)
+      File.expand_path(File.join(dir_path('spec/fixtures'), *args))
+    end
   end
 
-  def tmp_path(filename = nil)
-    File.expand_path(File.join(File.dirname(__FILE__), '..', 'tmp', filename.to_s))
-  end
-
-  def jruby?
-    RUBY_PLATFORM == "java"
+  module Platform
+    def jruby?
+      RUBY_PLATFORM == "java"
+    end
   end
 end
 
 RSpec.configure do |config|
-  config.include(Helpers)
+  config.include(TestHelpers::Paths)
+  config.include(TestHelpers::Platform)
 
-  config.before(:each) do
+  config.after(:each, type: :cli) do
     FileUtils.rm_rf(tmp_path)
-    FileUtils.cp_r(fixtures_path, tmp_path)
   end
 
   config.expect_with :rspec do |expectations|
