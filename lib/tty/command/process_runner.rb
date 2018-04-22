@@ -25,12 +25,8 @@ module TTY
         @input   = cmd.options[:input]
         @signal  = cmd.options[:signal] || "SIGKILL"
         @binmode = cmd.options[:binmode]
-        @pty     = cmd.options[:pty] || false
         @printer = printer
         @block   = block
-
-        @pty = TTY::Command.try_loading_pty if @pty
-        require('pty') if @pty
       end
 
       # Execute child process
@@ -185,34 +181,20 @@ module TTY
                 runtime = Time.now - Thread.current[:cmd_start]
                 handle_timeout(runtime)
               rescue Errno::EAGAIN, Errno::EINTR
-              rescue EOFError, Errno::EPIPE, Errno::EIO
+              rescue EOFError, Errno::EPIPE, Errno::EIO # thrown by PTY
                 readers.delete(reader)
                 reader.close
               end
-
-              # unless alive?(@pid)
-              #   readers.delete(reader)
-              #   reader.close
-              # end
             end
           end
           puts "READER THREAD DEAD!"
         end
       end
 
-      def alive?(pid)
-        !!Process.kill(0, pid) rescue false
-      end
-
       # @api private
       def waitpid(pid)
-        if @pty
-          status = PTY.check(pid)
-          status.exitstatus if status
-        else
-          _pid, status = ::Process.waitpid2(pid, ::Process::WUNTRACED)
-          status.exitstatus || status.termsig if _pid
-        end
+        _pid, status = ::Process.waitpid2(pid, ::Process::WUNTRACED)
+        status.exitstatus || status.termsig if _pid
       rescue Errno::ECHILD
         # In JRuby, waiting on a finished pid raises.
       end
