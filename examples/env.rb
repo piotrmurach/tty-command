@@ -4,6 +4,6 @@ require 'tty-command'
 
 cmd = TTY::Command.new
 
-out, err = cmd.run(:echo, "$FOO", env: { foo: 'hello'})
+out, err = cmd.run("env | grep FOO", env: { 'FOO' =>'hello'})
 
 puts "Result: #{out}"
