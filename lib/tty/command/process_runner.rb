@@ -190,10 +190,10 @@ module TTY
                 reader.close
               end
 
-              unless alive?(@pid)
-                readers.delete(reader)
-                reader.close
-              end
+              # unless alive?(@pid)
+              #   readers.delete(reader)
+              #   reader.close
+              # end
             end
           end
           puts "READER THREAD DEAD!"
