@@ -186,11 +186,6 @@ module TTY
                 readers.delete(reader)
                 reader.close
               end
-
-              if @pty && !alive?(@pid)
-                readers.delete(reader)
-                reader.close
-              end
             end
           end
         end
@@ -202,9 +197,13 @@ module TTY
 
       # @api private
       def waitpid(pid)
-        _pid, status = ::Process.waitpid2(pid, ::Process::WUNTRACED)
-        status.exitstatus || status.termsig if _pid
-        $?.exitstatus
+        if @pty
+          status = PTY.check(pid)
+          status.exitstatus if status
+        else
+          _pid, status = ::Process.waitpid2(pid, ::Process::WUNTRACED)
+          status.exitstatus || status.termsig if _pid
+        end
       rescue Errno::ECHILD
         # In JRuby, waiting on a finished pid raises.
       end
