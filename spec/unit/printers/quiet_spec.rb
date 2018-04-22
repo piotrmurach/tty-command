@@ -44,10 +44,10 @@ RSpec.describe TTY::Command::Printers::Quiet do
 
     output.rewind
 
-    lines = output.readlines
+    lines = output.readlines.map(&:chomp)
 
     expect(lines).to eq([
-      "yess\n"
+      "yess"
     ])
   end
 
@@ -61,11 +61,11 @@ RSpec.describe TTY::Command::Printers::Quiet do
 
     output.rewind
 
-    lines = output.readlines
+    lines = output.readlines.map(&:chomp)
 
     expect(lines).to eq([
-      "nooo\n",
-      "nooo\n"
+      "nooo",
+      "nooo"
     ])
   end
 end

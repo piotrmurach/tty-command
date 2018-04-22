@@ -19,7 +19,7 @@ RSpec.describe TTY::Command, 'redirect' do
     out, err = cmd.run("echo hello", :out => :err)
 
     expect(out).to be_empty
-    expect(err).to eq("hello\n")
+    expect(err.chomp).to eq("hello")
   end
 
   it "redirects :stdout -> :stderr" do
@@ -29,7 +29,7 @@ RSpec.describe TTY::Command, 'redirect' do
     out, err = cmd.run("echo hello", :stdout => :stderr)
 
     expect(out).to be_empty
-    expect(err).to eq("hello\n")
+    expect(err.chomp).to eq("hello")
   end
 
   it "redirects 1 -> 2" do
@@ -39,7 +39,7 @@ RSpec.describe TTY::Command, 'redirect' do
     out, err = cmd.run("echo hello", 1 => 2)
 
     expect(out).to be_empty
-    expect(err).to eq("hello\n")
+    expect(err.chomp).to eq("hello")
   end
 
   it "redirects STDOUT -> :err" do
@@ -49,7 +49,7 @@ RSpec.describe TTY::Command, 'redirect' do
     out, err = cmd.run("echo hello", STDOUT => :err)
 
     expect(out).to be_empty
-    expect(err).to eq("hello\n")
+    expect(err.chomp).to eq("hello")
   end
 
   it "redirects STDOUT -> '/dev/null" do

@@ -20,6 +20,6 @@ RSpec.describe TTY::Command, ':output', type: :cli do
     command = TTY::Command.new(output: output, printer: :quiet)
     command = command.run("echo hello")
 
-    expect(File.read(file)).to eq("hello\n")
+    expect(File.read(file).chomp).to eq("hello")
   end
 end

@@ -7,7 +7,7 @@ RSpec.describe TTY::Command, '#run' do
 
     out, err = command.run(:echo, 'hello')
 
-    expect(out).to eq("hello\n")
+    expect(out.chomp).to eq("hello")
     expect(err).to eq("")
   end
 
@@ -104,20 +104,20 @@ RSpec.describe TTY::Command, '#run' do
 
     out, _ = command.run("ruby #{cli}", input: "Piotr\n")
 
-    expect(out).to eq("Your name: Piotr\n")
+    expect(out.chomp).to eq("Your name: Piotr")
   end
 
   it "streams output data" do
     stream = fixtures_path('stream')
-    output = StringIO.new
-    command = TTY::Command.new(output: output)
+    out_stream = StringIO.new
+    command = TTY::Command.new(output: out_stream)
     output = ''
     error = ''
     command.run("ruby #{stream}") do |out, err|
      output << out if out
      error << err if err
     end
-    expect(output).to eq("hello 1\nhello 2\nhello 3\n")
+    expect(output.gsub(/\r\n|\n/,'')).to eq("hello 1hello 2hello 3")
     expect(error).to eq('')
   end
 
@@ -127,7 +127,7 @@ RSpec.describe TTY::Command, '#run' do
 
     out, _ = command.run("echo \e[35mhello\e[0m")
 
-    expect(out).to eq("\e[35mhello\e[0m\n")
-    expect(output.string).to eq("\e[35mhello\e[0m\n")
+    expect(out.chomp).to eq("\e[35mhello\e[0m")
+    expect(output.string.chomp).to eq("\e[35mhello\e[0m")
   end
 end

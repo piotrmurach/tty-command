@@ -5,7 +5,7 @@ RSpec.describe TTY::Command, '#ruby' do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
     out, err = cmd.ruby %q{-e "puts 'Hello World'"}
-    expect(out).to eq("Hello World\n")
+    expect(out.chomp).to eq("Hello World")
     expect(err).to be_empty unless jruby?
   end
 
