@@ -53,6 +53,7 @@ Or install it yourself as:
     * [2.3.1. Color](#231-color)
     * [2.3.2. UUID](#232-uuid)
     * [2.3.3. Only output on error](#233-only-output-on-error)
+    * [2.3.4. Verbose](#234-verbose)
   * [2.4. Dry run](#24-dry-run)
   * [2.5. Wait](#25-wait)
   * [2.6. Test](#26-test)
@@ -203,7 +204,7 @@ cmd.run('rm -R all_my_files')
 # => rm -r all_my_files
 ```
 
-### 2.3.3 Only output on error
+#### 2.3.3 Only output on error
 
 When using a command that can fail, setting `:only_output_on_error` option to `true` hides the output if the command succeeds:
 
@@ -235,6 +236,14 @@ cmd.run('failing_command')
 will also print the output.
 
 *Setting this option will cause the output to show at once, at the end of the command.*
+
+#### 2.3.4 Verbose
+
+By default commands will produce warnings when, for example `pty` option is not supported on a given platform. You can switch off such warnings with `:verbose` option set to `false`.
+
+```ruby
+cmd.run("echo '\e[32mColors!\e[0m'", pty: true, verbose: false)
+```
 
 ### 2.4 Dry run
 
