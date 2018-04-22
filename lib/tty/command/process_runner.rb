@@ -165,7 +165,7 @@ module TTY
 
             ready[0].each do |reader|
               begin
-                line = reader.read_nonblock(BUFSIZE)
+                line = reader.readpartial(BUFSIZE)
                 buffer.(line)
 
                 # control total time spent reading
