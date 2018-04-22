@@ -62,6 +62,7 @@ module TTY
 
         stdout_data, stderr_data = read_streams(stdout, stderr)
 
+        puts "WAITING FOR PID: #{@pid}"
         status = waitpid(@pid)
         runtime = Time.now - start
 
@@ -168,12 +169,14 @@ module TTY
           readers = [stream]
 
           while readers.any?
+            puts "SELECTING READER"
             ready = IO.select(readers, nil, readers, @timeout)
             raise TimeoutExceeded if ready.nil?
 
             ready[0].each do |reader|
               begin
                 line = reader.readpartial(BUFSIZE)
+                puts "BUFFER #{line.inspect}"
                 buffer.(line)
 
                 # control total time spent reading
@@ -182,12 +185,13 @@ module TTY
               rescue Errno::EAGAIN, Errno::EINTR
               rescue Errno::EIO
                 # GNU/Linux `gets` raises when PTY slave is closed
-              rescue EOFError, Errno::EPIPE
+              rescue EOFError, Errno::EPIPE, Errno::EIO
                 readers.delete(reader)
                 reader.close
               end
             end
           end
+          puts "READER THREAD DEAD!"
         end
       end
 
