@@ -42,7 +42,7 @@ module TTY
         @printer.print_command_start(cmd)
         start = Time.now
 
-        @pid, stdin, stdout, stderr = ChildProcess.spawn(cmd)
+        pid, stdin, stdout, stderr = ChildProcess.spawn(cmd)
 
         # no input to write, close child's stdin pipe
         stdin.close if (@input.nil? || @input.empty?) && !stdin.nil?
@@ -58,8 +58,7 @@ module TTY
 
         stdout_data, stderr_data = read_streams(stdout, stderr)
 
-        puts "WAITING FOR PID: #{@pid}"
-        status = waitpid(@pid)
+        status = waitpid(pid)
         runtime = Time.now - start
 
         @printer.print_command_exit(cmd, status, runtime)
@@ -165,16 +164,12 @@ module TTY
           readers = [stream]
 
           while readers.any?
-            puts "SELECTING READER #{readers.inspect}"
             ready = IO.select(readers, nil, readers, @timeout)
             raise TimeoutExceeded if ready.nil?
-
-            puts "READY: #{ready[0].inspect}"
 
             ready[0].each do |reader|
               begin
                 line = reader.readpartial(BUFSIZE)
-                puts "BUFFER #{line.inspect}"
                 buffer.(line)
 
                 # control total time spent reading
@@ -187,7 +182,6 @@ module TTY
               end
             end
           end
-          puts "READER THREAD DEAD!"
         end
       end
 
