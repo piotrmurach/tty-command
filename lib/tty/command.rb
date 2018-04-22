@@ -38,6 +38,19 @@ module TTY
       !!(RbConfig::CONFIG['host_os'] =~ WIN_PLATFORMS)
     end
 
+    # Try loading pty module
+    #
+    # @return [Boolean]
+    #
+    # @api private
+    def self.try_loading_pty
+      require 'pty'
+      true
+    rescue LoadError
+      warn("Requested PTY device but the system doesn't support it.")
+      false
+    end
+
     attr_reader :printer
 
     # Initialize a Command object

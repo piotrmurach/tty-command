@@ -25,8 +25,12 @@ module TTY
         @input   = cmd.options[:input]
         @signal  = cmd.options[:signal] || "SIGKILL"
         @binmode = cmd.options[:binmode]
+        @pty     = cmd.options[:pty] || false
         @printer = printer
         @block   = block
+
+        @pty = TTY::Command.try_loading_pty if @pty
+        require('pty') if @pty
       end
 
       # Execute child process
@@ -42,7 +46,7 @@ module TTY
         @printer.print_command_start(cmd)
         start = Time.now
 
-        pid, stdin, stdout, stderr = ChildProcess.spawn(cmd)
+        @pid, stdin, stdout, stderr = ChildProcess.spawn(cmd)
 
         # no input to write, close child's stdin pipe
         stdin.close if (@input.nil? || @input.empty?) && !stdin.nil?
@@ -58,7 +62,7 @@ module TTY
 
         stdout_data, stderr_data = read_streams(stdout, stderr)
 
-        status = waitpid(pid)
+        status = waitpid(@pid)
         runtime = Time.now - start
 
         @printer.print_command_exit(cmd, status, runtime)
@@ -66,9 +70,9 @@ module TTY
         Result.new(status, stdout_data, stderr_data, runtime)
       ensure
         [stdin, stdout, stderr].each { |fd| fd.close if fd && !fd.closed? }
-        if pid # Ensure no zombie processes
-          ::Process.detach(pid)
-          terminate(pid)
+        if @pid # Ensure no zombie processes
+          ::Process.detach(@pid)
+          terminate(@pid)
         end
       end
 
@@ -182,15 +186,25 @@ module TTY
                 readers.delete(reader)
                 reader.close
               end
+
+              if @pty && !alive?(@pid)
+                readers.delete(reader)
+                reader.close
+              end
             end
           end
         end
+      end
+
+      def alive?(pid)
+        !!Process.kill(0, pid) rescue false
       end
 
       # @api private
       def waitpid(pid)
         _pid, status = ::Process.waitpid2(pid, ::Process::WUNTRACED)
         status.exitstatus || status.termsig if _pid
+        $?.exitstatus
       rescue Errno::ECHILD
         # In JRuby, waiting on a finished pid raises.
       end
