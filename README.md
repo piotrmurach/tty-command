@@ -626,4 +626,4 @@ The gem is available as open source under the terms of the [MIT License](http://
 
 ## Copyright
 
-Copyright (c) 2016-2017 Piotr Murach. See LICENSE for further details.
+Copyright (c) 2016-2018 Piotr Murach. See LICENSE for further details.
