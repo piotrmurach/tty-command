@@ -169,9 +169,11 @@ module TTY
           readers = [stream]
 
           while readers.any?
-            puts "SELECTING READER"
+            puts "SELECTING READER #{readers.inspect}"
             ready = IO.select(readers, nil, readers, @timeout)
             raise TimeoutExceeded if ready.nil?
+
+            puts "READY: #{ready[0].inspect}"
 
             ready[0].each do |reader|
               begin
