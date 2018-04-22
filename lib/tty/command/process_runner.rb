@@ -185,9 +185,12 @@ module TTY
                 runtime = Time.now - Thread.current[:cmd_start]
                 handle_timeout(runtime)
               rescue Errno::EAGAIN, Errno::EINTR
-              rescue Errno::EIO
-                # GNU/Linux `gets` raises when PTY slave is closed
               rescue EOFError, Errno::EPIPE, Errno::EIO
+                readers.delete(reader)
+                reader.close
+              end
+
+              unless alive?(@pid)
                 readers.delete(reader)
                 reader.close
               end
