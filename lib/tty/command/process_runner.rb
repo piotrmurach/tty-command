@@ -64,6 +64,9 @@ module TTY
         @printer.print_command_exit(cmd, status, runtime)
 
         Result.new(status, stdout_data, stderr_data, runtime)
+      rescue
+        terminate(pid) if pid # Ensure no zombie processes
+        raise
       ensure
         [stdin, stdout, stderr].each { |fd| fd.close if fd && !fd.closed? }
       end
