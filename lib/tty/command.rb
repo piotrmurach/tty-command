@@ -59,6 +59,7 @@ module TTY
       @dry_run = options.fetch(:dry_run) { false }
       @printer = use_printer(@printer_name, color: @color, uuid: @uuid)
       @cmd_options = {}
+      @cmd_options[:verbose] = options.fetch(:verbose, true)
       @cmd_options[:pty] = true if options[:pty]
       @cmd_options[:binmode] = true if options[:binmode]
       @cmd_options[:timeout] = options[:timeout] if options[:timeout]

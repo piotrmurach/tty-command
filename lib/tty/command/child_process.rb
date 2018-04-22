@@ -25,8 +25,9 @@ module TTY
         process_opts = normalize_redirect_options(cmd.options)
         binmode = cmd.options[:binmode] || false
         pty     = cmd.options[:pty] || false
+        verbose = cmd.options[:verbose]
 
-        pty = try_loading_pty if pty
+        pty = try_loading_pty(verbose) if pty
         require('pty') if pty # load within this scope
 
         # Create pipes
@@ -95,11 +96,11 @@ module TTY
       # @return [Boolean]
       #
       # @api private
-      def try_loading_pty
+      def try_loading_pty(verbose = false)
         require 'pty'
         true
       rescue LoadError
-        warn("Requested PTY device but the system doesn't support it.")
+        warn("Requested PTY device but the system doesn't support it.") if verbose
         false
       end
       module_function :try_loading_pty
