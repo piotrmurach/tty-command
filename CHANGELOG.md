@@ -1,9 +1,18 @@
 # Change log
 
-## [v0.8.0] - 2018-04-xx
+## [v0.8.0] - 2018-04-22
 
 ### Added
 * Add :output_only_on_error option by Iulian Onofrei(@revolter)
+* Add :verbose flag to toggle warnings
+
+### Changed
+* Change ProcessRunner to use waitpid2 api for direct status
+* Change ProcessRunner stdout & stderr reading to use IO.select and be non-blocking
+
+### Fixed
+* Fix :timeout to raise when long running without input or output
+* Fix ProcessRunner to ensure no zombie processes on timeouts
 
 ## [v0.7.0] - 2017-11-19
 
