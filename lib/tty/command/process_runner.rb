@@ -66,9 +66,9 @@ module TTY
         Result.new(status, stdout_data, stderr_data, runtime)
       ensure
         [stdin, stdout, stderr].each { |fd| fd.close if fd && !fd.closed? }
-        if @pid # Ensure no zombie processes
-          ::Process.detach(@pid)
-          terminate(@pid)
+        if pid # Ensure no zombie processes
+          ::Process.detach(pid)
+          terminate(pid)
         end
       end
 
