@@ -23,7 +23,7 @@ module TTY
         @cmd     = cmd
         @timeout = cmd.options[:timeout]
         @input   = cmd.options[:input]
-        @signal  = cmd.options[:signal] || :TERM
+        @signal  = cmd.options[:signal] || "TERM"
         @binmode = cmd.options[:binmode]
         @printer = printer
         @block   = block
@@ -64,11 +64,12 @@ module TTY
         @printer.print_command_exit(cmd, status, runtime)
 
         Result.new(status, stdout_data, stderr_data, runtime)
-      rescue
-        terminate(pid) if pid # Ensure no zombie processes
-        raise
       ensure
         [stdin, stdout, stderr].each { |fd| fd.close if fd && !fd.closed? }
+        if pid # Ensure no zombie processes
+          ::Process.detach(pid)
+          terminate(pid)
+        end
       end
 
       # Stop a process marked by pid
