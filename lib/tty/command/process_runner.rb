@@ -23,7 +23,7 @@ module TTY
         @cmd     = cmd
         @timeout = cmd.options[:timeout]
         @input   = cmd.options[:input]
-        @signal  = cmd.options[:signal] || "TERM"
+        @signal  = cmd.options[:signal] || "SIGKILL"
         @binmode = cmd.options[:binmode]
         @printer = printer
         @block   = block
