@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+loop do
+  name = $stdin.gets
+  puts "NAME: #{name}"
+end

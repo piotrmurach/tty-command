@@ -24,6 +24,7 @@ module TTY
         @timeout = cmd.options[:timeout]
         @input   = cmd.options[:input]
         @signal  = cmd.options[:signal] || :TERM
+        @binmode = cmd.options[:binmode]
         @printer = printer
         @block   = block
       end
@@ -40,21 +41,19 @@ module TTY
       def run!
         @printer.print_command_start(cmd)
         start = Time.now
-        runtime = 0.0
 
         pid, stdin, stdout, stderr = ChildProcess.spawn(cmd)
 
         # no input to write, close child's stdin pipe
         stdin.close if (@input.nil? || @input.empty?) && !stdin.nil?
 
-        readers = [stdout, stderr]
         writers = [@input && stdin].compact
 
         while writers.any?
-          ready_readers, ready_writers = IO.select(readers, writers, [], @timeout)
-          raise TimeoutExceeded if ready_readers.nil? || ready_writers.nil?
+          ready = IO.select(nil, writers, writers, @timeout)
+          raise TimeoutExceeded if ready.nil?
 
-          write_stream(ready_writers, writers)
+          write_stream(ready[1], writers)
         end
 
         stdout_data, stderr_data = read_streams(stdout, stderr)
@@ -79,6 +78,9 @@ module TTY
       end
 
       private
+
+      # The buffer size for reading stdout and stderr
+      BUFSIZE = 16 * 1024
 
       # @api private
       def handle_timeout(runtime)
@@ -126,13 +128,13 @@ module TTY
         stdout_data = []
         stderr_data = Truncator.new
 
-        out_buffer = -> (line) {
+        out_buffer = ->(line) {
           stdout_data << line
           @printer.print_command_out_data(cmd, line)
           @block.(line, nil) if @block
         }
 
-        err_buffer = -> (line) {
+        err_buffer = ->(line) {
           stderr_data << line
           @printer.print_command_err_data(cmd, line)
           @block.(nil, line) if @block
@@ -144,27 +146,39 @@ module TTY
         stdout_thread.join
         stderr_thread.join
 
-        [stdout_data.join, stderr_data.read]
+        encoding = @binmode ? Encoding::BINARY : Encoding::UTF_8
+
+        [
+          stdout_data.join.force_encoding(encoding),
+          stderr_data.read.dup.force_encoding(encoding)
+        ]
       end
 
       def read_stream(stream, buffer)
         Thread.new do
           Thread.current[:cmd_start] = Time.now
-          begin
-            while (line = stream.gets)
-              buffer.(line)
+          readers = [stream]
 
-              # control total time spent reading
-              runtime = Time.now - Thread.current[:cmd_start]
-              handle_timeout(runtime)
+          while readers.any?
+            ready = IO.select(readers, nil, readers, @timeout)
+            raise TimeoutExceeded if ready.nil?
+
+            ready[0].each do |reader|
+              begin
+                line = reader.read_nonblock(BUFSIZE)
+                buffer.(line)
+
+                # control total time spent reading
+                runtime = Time.now - Thread.current[:cmd_start]
+                handle_timeout(runtime)
+              rescue Errno::EAGAIN, Errno::EINTR
+              rescue Errno::EIO
+                # GNU/Linux `gets` raises when PTY slave is closed
+              rescue EOFError
+                readers.delete(reader)
+                reader.close
+              end
             end
-          rescue Errno::EIO
-            # GNU/Linux `gets` raises when PTY slave is closed
-            nil
-          rescue => err
-            raise err
-          ensure
-            stream.close
           end
         end
       end
