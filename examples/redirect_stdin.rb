@@ -1,9 +1,8 @@
 # encoding: utf-8
 
 require 'tty-command'
-require 'pathname'
 
-cli = Pathname.new('examples/cli.rb')
+cli = File.expand_path('cli', __dir__)
 cmd = TTY::Command.new
 
 stdin = StringIO.new
