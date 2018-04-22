@@ -65,8 +65,8 @@ module TTY
 
         pid = Process.spawn(cmd.to_command, opts)
 
-        # close in parent process
-        [in_rd, out_wr, err_wr].each { |fd| fd.close if fd }
+        # close streams in parent process talking to the child
+        close_fds(in_rd, out_wr, err_wr)
 
         tuple = [pid, in_wr, out_rd, err_rd]
 
@@ -75,13 +75,20 @@ module TTY
             return yield(*tuple)
           ensure
             # ensure parent pipes are closed
-            [in_wr, out_rd, err_rd].each { |fd| fd.close if fd && !fd.closed? }
+            close_fds(in_wr, out_rd, err_rd)
           end
         else
           tuple
         end
       end
       module_function :spawn
+
+      # Close all streams
+      # @api private
+      def close_fds(*fds)
+        fds.each { |fd| fd && !fd.closed? && fd.close }
+      end
+      module_function :close_fds
 
       # Try loading pty module
       #
