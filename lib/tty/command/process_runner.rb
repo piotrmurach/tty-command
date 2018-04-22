@@ -178,7 +178,7 @@ module TTY
               rescue Errno::EAGAIN, Errno::EINTR
               rescue Errno::EIO
                 # GNU/Linux `gets` raises when PTY slave is closed
-              rescue EOFError
+              rescue EOFError, Errno::EPIPE
                 readers.delete(reader)
                 reader.close
               end
