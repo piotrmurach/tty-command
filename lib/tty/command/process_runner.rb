@@ -171,8 +171,8 @@ module TTY
 
       # @api private
       def waitpid(pid)
-        ::Process.waitpid(pid, Process::WUNTRACED)
-        $?.exitstatus
+        _pid, status = ::Process.waitpid2(pid, ::Process::WUNTRACED)
+        status.exitstatus || status.termsig if _pid
       rescue Errno::ECHILD
         # In JRuby, waiting on a finished pid raises.
       end
