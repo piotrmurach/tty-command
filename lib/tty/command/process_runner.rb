@@ -83,7 +83,7 @@ module TTY
       private
 
       # The buffer size for reading stdout and stderr
-      BUFSIZE = 16 * 1024
+      BUFSIZE = 3 * 1024
 
       # @api private
       def handle_timeout(runtime)
