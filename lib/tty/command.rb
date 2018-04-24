@@ -55,9 +55,10 @@ module TTY
       @output = options.fetch(:output) { $stdout }
       @color   = options.fetch(:color) { true }
       @uuid    = options.fetch(:uuid) { true }
+      @separate_commands_with_newline = options.fetch(:separate_commands_with_newline) { false }
       @printer_name = options.fetch(:printer) { :pretty }
       @dry_run = options.fetch(:dry_run) { false }
-      @printer = use_printer(@printer_name, color: @color, uuid: @uuid)
+      @printer = use_printer(@printer_name, color: @color, uuid: @uuid, separate_commands_with_newline: @separate_commands_with_newline)
       @cmd_options = {}
       @cmd_options[:verbose] = options.fetch(:verbose, true)
       @cmd_options[:pty] = true if options[:pty]
