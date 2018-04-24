@@ -169,4 +169,15 @@ RSpec.describe TTY::Command::Printers::Pretty do
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n"
     ])
   end
+
+  it "prints new line after command output if separate_commands_with_newline is true" do
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
+    printer = TTY::Command::Printers::Pretty.new(output, separate_commands_with_newline: true)
+    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+
+    printer.print_command_exit(cmd, 0, 5.321)
+    output.rewind
+
+    expect(output.string).to end_with("\n\n")
+  end
 end

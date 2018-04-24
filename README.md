@@ -54,6 +54,7 @@ Or install it yourself as:
     * [2.3.2. UUID](#232-uuid)
     * [2.3.3. Only output on error](#233-only-output-on-error)
     * [2.3.4. Verbose](#234-verbose)
+    * [2.3.5 Separate commands with newline](#235-separate-commands-with-newline)
   * [2.4. Dry run](#24-dry-run)
   * [2.5. Wait](#25-wait)
   * [2.6. Test](#26-test)
@@ -243,6 +244,22 @@ By default commands will produce warnings when, for example `pty` option is not 
 
 ```ruby
 cmd.run("echo '\e[32mColors!\e[0m'", pty: true, verbose: false)
+```
+
+#### 2.3.5 Separate commands with newline
+
+Setting `:separate_commands_with_newline` to `true` prints an empty line between `:pretty` command outputs:
+
+```ruby
+cmd = TTY::Command.new(separate_commands_with_newline: true)
+cmd.run('rm -f file_1') && cmd.run('rm -f file_2')
+# =>
+# [5d90db5d] Running rm -f file_1
+# [5d90db5d] Finished in 0.013 seconds with exit status 0 (successful)
+# 
+# [e8114d68] Running rm -f file_2
+# [e8114d68] Finished in 0.007 seconds with exit status 0 (successful)
+# 
 ```
 
 ### 2.4 Dry run

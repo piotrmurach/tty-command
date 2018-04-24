@@ -38,6 +38,7 @@ module TTY
           message << " with exit status #{status}" if status
           message << " (#{success_or_failure(status)})"
           write(cmd, message.join, cmd.uuid)
+          output << "\n" if options.fetch(:separate_commands_with_newline) { false }
         end
 
         # Write message out to output
