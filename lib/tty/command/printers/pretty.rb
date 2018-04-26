@@ -11,20 +11,25 @@ module TTY
       class Pretty < Abstract
         TIME_FORMAT = "%5.3f %s".freeze
 
+        def initialize(*)
+          super
+          @uuid = options.fetch(:uuid) { true }
+        end
+
         def print_command_start(cmd, *args)
           message = ["Running #{decorate(cmd.to_command, :yellow, :bold)}"]
           message << args.map(&:chomp).join(' ') unless args.empty?
-          write(cmd, message.join, cmd.uuid)
+          write(cmd, message.join)
         end
 
         def print_command_out_data(cmd, *args)
           message = args.map(&:chomp).join(' ')
-          write(cmd, "\t#{message}", cmd.uuid, out_data)
+          write(cmd, "\t#{message}", out_data)
         end
 
         def print_command_err_data(cmd, *args)
           message = args.map(&:chomp).join(' ')
-          write(cmd, "\t" + decorate(message, :red), cmd.uuid, err_data)
+          write(cmd, "\t" + decorate(message, :red), err_data)
         end
 
         def print_command_exit(cmd, status, runtime, *args)
@@ -37,17 +42,18 @@ module TTY
           message = ["Finished in #{runtime}"]
           message << " with exit status #{status}" if status
           message << " (#{success_or_failure(status)})"
-          write(cmd, message.join, cmd.uuid)
+          write(cmd, message.join)
         end
 
         # Write message out to output
         #
         # @api private
-        def write(cmd, message, uuid = nil, data = nil)
-          uuid_needed = options.fetch(:uuid) { true }
+        def write(cmd, message, data = nil)
+          cmd_set_uuid = cmd.options.fetch(:uuid, true)
+          uuid_needed = cmd.options[:uuid].nil? ? @uuid : cmd_set_uuid
           out = []
           if uuid_needed
-            out << "[#{decorate(uuid, :green)}] " unless uuid.nil?
+            out << "[#{decorate(cmd.uuid, :green)}] " unless cmd.uuid.nil?
           end
           out << "#{message}\n"
           target = (cmd.only_output_on_error && !data.nil?) ? data : output
