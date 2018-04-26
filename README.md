@@ -194,14 +194,28 @@ cmd = TTY::Command.new(color: true)
 
 When using printers you can switch off coloring by using `:color` option set to `false`.
 
-#### 2.3.2 Uuid
+#### 2.3.2 UUID
 
-By default, when logging is enabled, each log entry is prefixed by specific command run uuid number. This number can be switched off using the `:uuid` option:
+By default, when logging is enabled and `pretty` printer is used, each log entry is prefixed by specific command run uuid number. This number can be switched off using the `:uuid` option at initialization:
 
 ```ruby
 cmd = TTY::Command.new(uuid: false)
 cmd.run('rm -R all_my_files')
-# => rm -r all_my_files
+# =>
+#  Running rm -r all_my_files
+#  ...
+#  Finished in 6 seconds with exit status 0 (successful)
+```
+
+or individually per command run:
+
+```rub
+cmd = TTY::Command.new
+cmd.run("echo hello", uuid: false)
+# =>
+#  Running echo hello
+#      hello
+#  Finished in 0.003 seconds with exit status 0 (successful)
 ```
 
 #### 2.3.3 Only output on error
@@ -581,11 +595,11 @@ cmd.run(:ls, '-1').each("\t") { ... }
 
 ### 3.4 Custom printer
 
-If the built-in printers do not meet your requirements you can create your own. At the very minimum you need to specify the `write` method that will be called during the lifecycle of command execution:
+If the built-in printers do not meet your requirements you can create your own. At the very minimum you need to specify the `write` method that will be called during the lifecycle of command execution. The `write` accepts two arguments, first the currently run command instance and second the message to be printed:
 
 ```ruby
 CustomPrinter < TTY::Command::Printers::Abstract
-  def write(message)
+  def write(cmd, message)
     puts message
   end
 end
@@ -595,6 +609,7 @@ printer = CustomPrinter
 cmd = TTY::Command.new(printer: printer)
 ```
 
+Please see [lib/tty/command/printers/abstract.rb](https://github.com/piotrmurach/tty-command/blob/master/lib/tty/command/printers/abstract.rb) for a full set of methods that you can override.
 
 ## 4. Example
 
