@@ -41,7 +41,7 @@ RSpec.describe TTY::Command, ':pty' do
     lines = output.readlines
     lines.last.gsub!(/\d+\.\d+/, 'x')
     expect(lines).to eq([
-      "[\e[32m#{uuid}\e[0m] Running \e[33;1m#{phased_output}\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{phased_output}\e[0m\n",
       "[\e[32m#{uuid}\e[0m] \t.\n",
       "[\e[32m#{uuid}\e[0m] \t.\n",
       "[\e[32m#{uuid}\e[0m] \t.\n",

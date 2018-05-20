@@ -153,7 +153,7 @@ RSpec.describe TTY::Command, '#run' do
     lines = output.readlines
     lines.last.gsub!(/\d+\.\d+/, 'x')
     expect(lines).to eq([
-      "[\e[32m#{uuid}\e[0m] Running \e[33;1m#{phased_output}\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{phased_output}\e[0m\n",
       "[\e[32m#{uuid}\e[0m] \t..........\n",
       "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
     ])
