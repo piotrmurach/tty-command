@@ -44,17 +44,7 @@ module TTY
 
         pid, stdin, stdout, stderr = ChildProcess.spawn(cmd)
 
-        # no input to write, close child's stdin pipe
-        stdin.close if (@input.nil? || @input.empty?) && !stdin.nil?
-
-        writers = [@input && stdin].compact
-
-        while writers.any?
-          ready = IO.select(nil, writers, writers, @timeout)
-          raise TimeoutExceeded if ready.nil?
-
-          write_stream(ready[1], writers)
-        end
+        write_stream(stdin, @input)
 
         stdout_data, stderr_data = read_streams(stdout, stderr)
 
@@ -84,7 +74,7 @@ module TTY
       private
 
       # The buffer size for reading stdout and stderr
-      BUFSIZE = 3 * 1024
+      BUFSIZE = 16 * 1024
 
       # @api private
       def handle_timeout(runtime)
@@ -97,28 +87,35 @@ module TTY
       # Write the input to the process stdin
       #
       # @api private
-      def write_stream(ready_writers, writers)
+      def write_stream(stream, input)
         start = Time.now
-        ready_writers.each do |fd|
-          begin
-            err   = nil
-            size  = fd.write(@input)
-            @input = @input.byteslice(size..-1)
-          rescue IO::WaitWritable
-          rescue Errno::EPIPE => err
-            # The pipe closed before all input written
-            # Probably process exited prematurely
-            fd.close
-            writers.delete(fd)
-          end
-          if err || @input.bytesize == 0
-            fd.close
-            writers.delete(fd)
-          end
+        writers = [input && stream].compact
 
-          # control total time spent writing
-          runtime = Time.now - start
-          handle_timeout(runtime)
+        while writers.any?
+          ready = IO.select(nil, writers, writers, @timeout)
+          raise TimeoutExceeded if ready.nil?
+
+          ready[1].each do |writer|
+            begin
+              err   = nil
+              size  = writer.write(@input)
+              input = input.byteslice(size..-1)
+            rescue IO::WaitWritable
+            rescue Errno::EPIPE => err
+              # The pipe closed before all input written
+              # Probably process exited prematurely
+              writer.close
+              writers.delete(writer)
+            end
+            if err || input.bytesize == 0
+              writer.close
+              writers.delete(writer)
+            end
+
+            # control total time spent writing
+            runtime = Time.now - start
+            handle_timeout(runtime)
+          end
         end
       end
 
