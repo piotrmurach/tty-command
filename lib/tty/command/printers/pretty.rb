@@ -33,7 +33,7 @@ module TTY
         end
 
         def print_command_exit(cmd, status, runtime, *args)
-          unless !cmd.only_output_on_error || status.zero?
+          if cmd.only_output_on_error && !status.zero?
             output << out_data
             output << err_data
           end
