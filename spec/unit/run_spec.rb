@@ -144,7 +144,7 @@ RSpec.describe TTY::Command, '#run' do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run(phased_output)
+    out, err = cmd.run("ruby #{phased_output}")
 
     expect(out).to eq('.' * 10)
     expect(err).to eq('')

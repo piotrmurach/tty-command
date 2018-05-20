@@ -32,7 +32,7 @@ RSpec.describe TTY::Command, ':pty' do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run(phased_output, pty: true)
+    out, err = cmd.run("ruby #{phased_output}", pty: true)
 
     expect(out).to eq('.' * 10)
     expect(err).to eq('')
