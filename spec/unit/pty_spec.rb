@@ -25,7 +25,9 @@ RSpec.describe TTY::Command, ':pty' do
     expect(out).to eq("\e[32mcolored\e[0m\n")
   end
 
-  it "logs phased output in pseudo terminal mode" do
+  it "logs phased output in pseudo terminal mode",
+      unless: RSpec::Support::OS.windows? do
+
     phased_output = fixtures_path('phased_output')
     uuid= 'xxxx'
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
