@@ -3,4 +3,5 @@
 loop do
   name = $stdin.gets
   puts "NAME: #{name}"
+  sleep 0.001
 end
