@@ -113,16 +113,6 @@ RSpec.describe TTY::Command, '#run' do
     )
   end
 
-  it "reads user input data" do
-    cli = fixtures_path('cli')
-    output = StringIO.new
-    command = TTY::Command.new(output: output)
-
-    out, _ = command.run("ruby #{cli}", input: "Piotr\n")
-
-    expect(out.chomp).to eq("Your name: Piotr")
-  end
-
   it "streams output data" do
     stream = fixtures_path('stream')
     out_stream = StringIO.new
@@ -145,5 +135,27 @@ RSpec.describe TTY::Command, '#run' do
 
     expect(out.chomp).to eq("\e[35mhello\e[0m")
     expect(output.string.chomp).to eq("\e[35mhello\e[0m")
+  end
+
+  it "logs phased output in one line" do
+    phased_output = fixtures_path('phased_output')
+    uuid= 'xxxx'
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
+    output = StringIO.new
+    cmd = TTY::Command.new(output: output)
+
+    out, err = cmd.run(phased_output)
+
+    expect(out).to eq('.' * 10)
+    expect(err).to eq('')
+
+    output.rewind
+    lines = output.readlines
+    lines.last.gsub!(/\d+\.\d+/, 'x')
+    expect(lines).to eq([
+      "[\e[32m#{uuid}\e[0m] Running \e[33;1m#{phased_output}\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] \t..........\n",
+      "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
+    ])
   end
 end

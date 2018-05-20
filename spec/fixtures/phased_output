@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+10.times do
+  print '.'
+  sleep 0.001
+end
