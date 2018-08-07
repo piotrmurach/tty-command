@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.8.2] - 2018-08-07
+
+### Fixed
+* Fix issue with Ruby greater than 2.5.0 displaying thread error traceback by default
+
 ## [v0.8.1] - 2018-05-20
 
 ### Changed
@@ -115,6 +120,7 @@
 
 * Initial implementation and release
 
+[v0.8.2]: https://github.com/piotrmurach/tty-command/compare/v0.8.1...v0.8.2
 [v0.8.1]: https://github.com/piotrmurach/tty-command/compare/v0.8.0...v0.8.1
 [v0.8.0]: https://github.com/piotrmurach/tty-command/compare/v0.7.0...v0.8.0
 [v0.7.0]: https://github.com/piotrmurach/tty-command/compare/v0.6.0...v0.7.0
