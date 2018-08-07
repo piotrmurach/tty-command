@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://piotrmurach.github.io/tty"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = Dir['README.md', 'LICENSE.txt', 'CHANGELOG.md', "lib/**/*.rb", 'tty-command.gemspec']
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
