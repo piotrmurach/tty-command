@@ -2,6 +2,9 @@
 
 ## [v0.8.2] - 2018-08-07
 
+### Changed
+* Change gemspec to load only required files
+
 ### Fixed
 * Fix issue with Ruby greater than 2.5.0 displaying thread error traceback by default
 
