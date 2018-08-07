@@ -157,6 +157,9 @@ module TTY
 
       def read_stream(stream, buffer)
         Thread.new do
+          if Thread.current.respond_to?(:report_on_exception)
+            Thread.current.report_on_exception = false
+          end
           Thread.current[:cmd_start] = Time.now
           readers = [stream]
 
