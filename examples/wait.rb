@@ -1,7 +1,7 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
-require 'tty-command'
 require 'logger'
+require_relative '../lib/tty-command'
 
 logger = Logger.new('dev.log')
 cmd = TTY::Command.new

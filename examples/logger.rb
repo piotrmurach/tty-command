@@ -1,7 +1,7 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 require 'logger'
-require 'tty-command'
+require_relative '../lib/tty-command'
 
 logger = Logger.new('dev.log')
 

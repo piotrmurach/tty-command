@@ -1,9 +1,9 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
-require 'tty-command'
+require_relative '../lib/tty-command'
 
 cmd = TTY::Command.new
 
-out, err = cmd.run("env | grep FOO", env: { 'FOO' =>'hello'})
+out, _ = cmd.run("env | grep FOO", env: { 'FOO' =>'hello'})
 
 puts "Result: #{out}"
