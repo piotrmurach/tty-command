@@ -190,6 +190,8 @@ You can force the printer to always in print in color by passing the `:color` op
 cmd = TTY::Command.new(color: true)
 ```
 
+If the default printers don't meet your needs you can always create [a custom printer](#34-custom-printer)
+
 #### 2.3.1 Color
 
 When using printers you can switch off coloring by using `:color` option set to `false`.
@@ -595,21 +597,23 @@ cmd.run(:ls, '-1').each("\t") { ... }
 
 ### 3.4 Custom printer
 
-If the built-in printers do not meet your requirements you can create your own. At the very minimum you need to specify the `write` method that will be called during the lifecycle of command execution. The `write` accepts two arguments, first the currently run command instance and second the message to be printed:
+If the built-in printers do not meet your requirements you can create your own. A printer is a regular Ruby class that can be registered through `:printer` option to receive notifications about received command data.
+
+As the command runs the custom printer will be notified when the command starts, when data is printed to stdout, when data is printed to stderr and when the command exits.
+
+Please see [lib/tty/command/printers/abstract.rb](https://github.com/piotrmurach/tty-command/blob/master/lib/tty/command/printers/abstract.rb) for a full set of methods that you can override.
+
+At the very minimum you need to specify the `write` method that will be called during the lifecycle of command execution. The `write` accepts two arguments, first the currently run command instance and second the message to be printed:
 
 ```ruby
 CustomPrinter < TTY::Command::Printers::Abstract
   def write(cmd, message)
-    puts message
+    puts cmd.to_command + message
   end
 end
 
-printer = CustomPrinter
-
-cmd = TTY::Command.new(printer: printer)
+cmd = TTY::Command.new(printer: CustomPrinter)
 ```
-
-Please see [lib/tty/command/printers/abstract.rb](https://github.com/piotrmurach/tty-command/blob/master/lib/tty/command/printers/abstract.rb) for a full set of methods that you can override.
 
 ## 4. Example
 
