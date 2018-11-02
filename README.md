@@ -1,3 +1,7 @@
+<div align="center">
+  <a href="https://piotrmurach.github.io/tty" target="_blank"><img width="130" src="https://cdn.rawgit.com/piotrmurach/tty/master/images/tty.png" alt="tty logo" /></a>
+</div>
+
 # TTY::Command [![Gitter](https://badges.gitter.im/Join%20Chat.svg)][gitter]
 
 [![Gem Version](https://badge.fury.io/rb/tty-command.svg)][gem]
@@ -330,7 +334,7 @@ cmd.run(:echo, 'hello', env: {foo: 'bar', baz: nil})
 
 ### 3.2 Options
 
-When a hash is given in the last argument (options), it allows to specify a current directory, umask, user, group and and zero or more fd redirects for the child process.
+When a hash is given in the last argument (options), it allows to specify a current directory, umask, user, group and zero or more fd redirects for the child process.
 
 #### 3.2.1 Redirection
 
@@ -417,7 +421,7 @@ cmd.run("my_cli_program", "login", in: in_stream).out
 
 #### 3.2.3 Timeout
 
-You can timeout command execuation by providing the `:timeout` option in seconds:
+You can timeout command execution by providing the `:timeout` option in seconds:
 
 ```ruby
 cmd.run("while test 1; sleep 1; done", timeout: 5)
@@ -447,7 +451,7 @@ cmd = TTY::Command.new(binmode: true)
 
 #### 3.2.5 Signal
 
-You can specify process termination signal other than the defaut `SIGTERM`:
+You can specify process termination signal other than the default `SIGTERM`:
 
 ```ruby
 cmd.run("whilte test1; sleep1; done", timeout: 5, signal: :KILL)
@@ -485,7 +489,7 @@ However, in `interactive` mode with `pty` flag on:
 cmd.run("git log", pty: true) # => uses pager and waits for user input (never returns)
 ```
 
-In addition, when pty device is used, any input to command may be echoed to the standard output, as well as some redirets may not work.
+In addition, when pty device is used, any input to command may be echoed to the standard output, as well as some redirects may not work.
 
 #### 3.2.7 Current directory
 
