@@ -1,4 +1,3 @@
-# coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'tty/command/version'
@@ -14,10 +13,14 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://piotrmurach.github.io/tty"
   spec.license       = "MIT"
 
-  spec.files         = Dir['README.md', 'LICENSE.txt', 'CHANGELOG.md', 'Rakefile', "{lib,spec}/**/*.rb", "{bin,examples,tasks}/*", 'tty-command.gemspec']
+  spec.files         = Dir['{lib,spec,examples}/**/*.rb']
+  spec.files        += Dir['{bin,tasks}/*', 'tty-command.gemspec']
+  spec.files        += Dir['README.md', 'CHANGELOG.md', 'LICENSE.txt', 'Rakefile']
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+
+  spec.required_ruby_version = '>= 2.0.0'
 
   spec.add_dependency 'pastel', '~> 0.7.0'
 
