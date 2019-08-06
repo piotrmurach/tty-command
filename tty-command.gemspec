@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = "tty-command"
   spec.version       = TTY::Command::VERSION
   spec.authors       = ["Piotr Murach"]
-  spec.email         = [""]
+  spec.email         = ["me@piotrmurach.com"]
 
   spec.summary       = %q{Execute shell commands with pretty output logging and capture their stdout, stderr and exit status.}
   spec.description   = %q{Execute shell commands with pretty output logging and capture their stdout, stderr and exit status. Redirect stdin, stdout and stderr of each command to a file or a string.}
@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'pastel', '~> 0.7.0'
 
-  spec.add_development_dependency 'bundler', '>= 1.5.0', '< 2.0'
-  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'bundler', '>= 1.5.0'
+  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec', '~> 3.0'
 end
