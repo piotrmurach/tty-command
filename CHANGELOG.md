@@ -1,5 +1,10 @@
 # Change log
 
+## [v0.9.0] - 2019-08-x
+
+### Changed
+* Change gemspec to require Ruby >= 2.0.0
+
 ## [v0.8.2] - 2018-08-07
 
 ### Changed
@@ -123,6 +128,7 @@
 
 * Initial implementation and release
 
+[v0.9.0]: https://github.com/piotrmurach/tty-command/compare/v0.8.2...v0.9.0
 [v0.8.2]: https://github.com/piotrmurach/tty-command/compare/v0.8.1...v0.8.2
 [v0.8.1]: https://github.com/piotrmurach/tty-command/compare/v0.8.0...v0.8.1
 [v0.8.0]: https://github.com/piotrmurach/tty-command/compare/v0.7.0...v0.8.0
