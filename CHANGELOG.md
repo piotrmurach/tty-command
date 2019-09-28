@@ -1,6 +1,6 @@
 # Change log
 
-## [v0.9.0] - 2019-08-x
+## [v0.9.0] - 2019-09-28
 
 ### Changed
 * Change gemspec to require Ruby >= 2.0.0
