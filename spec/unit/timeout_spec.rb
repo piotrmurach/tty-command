@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Command, '#run' do
   it "times out infinite process without input or output" do

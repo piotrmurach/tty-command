@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe TTY::Command, ':pty' do
   it "executes command in pseudo terminal mode as global option",
      unless: RSpec::Support::OS.windows? do

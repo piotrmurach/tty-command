@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Command::Cmd, '::new' do
   it "requires at least command argument" do

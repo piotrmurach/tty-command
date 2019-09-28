@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 RSpec.describe TTY::Command, '#run' do
   it 'runs command and prints to stdout' do
     output = StringIO.new

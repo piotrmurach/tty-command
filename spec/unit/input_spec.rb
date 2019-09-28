@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe TTY::Command, 'input' do
   it "reads user input data" do
     cli = fixtures_path('cli')
