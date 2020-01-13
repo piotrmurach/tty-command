@@ -63,7 +63,7 @@ module TTY
       # Extend command options if keys don't already exist
       #
       # @api public
-      def update(**options)
+      def update(options)
         @options.update(options.update(@options))
       end
 
