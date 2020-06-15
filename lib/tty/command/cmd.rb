@@ -94,7 +94,7 @@ module TTY
 
       def chdir(value)
         return value unless options[:chdir]
-        %(cd #{options[:chdir]} && %s) % [value]
+        %(cd #{Shellwords.escape(options[:chdir])} && #{value})
       end
 
       def user(value)
