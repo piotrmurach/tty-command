@@ -75,6 +75,11 @@ RSpec.describe TTY::Command::Cmd, '::new' do
     expect(cmd.to_command).to eq(%{( export FOO=\"true\" BAR=\"1\" ; echo hello )})
   end
 
+  it "handles environment with fanky characters" do
+    cmd = TTY::Command::Cmd.new(:echo, "hello", env: {foo: "%16"})
+    expect(cmd.to_command).to eq(%{( export FOO=\"%16\" ; echo hello )})
+  end
+
   it "runs command in specified directory" do
     cmd = TTY::Command::Cmd.new(:echo, 'hello', chdir: '/tmp')
     expect(cmd.to_command).to eq("cd /tmp && echo hello")

@@ -84,7 +84,7 @@ module TTY
 
       def evars(value, &block)
         return (value || block) unless environment.any?
-        %(( export #{environment_string} ; %s )) % [value || block.call]
+        "( export #{environment_string} ; #{value || block.call} )"
       end
 
       def umask(value)
