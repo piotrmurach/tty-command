@@ -1,5 +1,15 @@
 # Change log
 
+## [v0.10.0] - 2020-07-xx
+
+### Changed
+* Change :chdir option to escape directory location path
+* Change gemspec to add metadata and remove test artefacts
+
+### Fixed
+* Fix Ruby 2.7 keyword conversion errors
+* Fix error when environment variable contains % character
+
 ## [v0.9.0] - 2019-09-28
 
 ### Changed
@@ -128,6 +138,7 @@
 
 * Initial implementation and release
 
+[v0.10.0]: https://github.com/piotrmurach/tty-command/compare/v0.9.0...v0.10.0
 [v0.9.0]: https://github.com/piotrmurach/tty-command/compare/v0.8.2...v0.9.0
 [v0.8.2]: https://github.com/piotrmurach/tty-command/compare/v0.8.1...v0.8.2
 [v0.8.1]: https://github.com/piotrmurach/tty-command/compare/v0.8.0...v0.8.1
