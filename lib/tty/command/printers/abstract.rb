@@ -23,7 +23,7 @@ module TTY
           @output  = output
           @options = options
           @enabled = options.fetch(:color) { true }
-          @color   = ::Pastel.new(output: output, enabled: @enabled)
+          @color   = ::Pastel.new(enabled: @enabled)
 
           @out_data = ''
           @err_data = ''
