@@ -1,14 +1,16 @@
 # Change log
 
-## [v0.10.0] - 2020-07-xx
+## [v0.10.0] - 2020-08-11
 
 ### Changed
 * Change :chdir option to escape directory location path
 * Change gemspec to add metadata and remove test artefacts
+* Change pastel dependency version to `0.8`
 
 ### Fixed
 * Fix Ruby 2.7 keyword conversion errors
 * Fix error when environment variable contains % character
+* Fix Ruby 2.7 keyword parameter warning when calling `cmd.run`
 
 ## [v0.9.0] - 2019-09-28
 
