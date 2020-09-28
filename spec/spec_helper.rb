@@ -16,21 +16,18 @@ if ENV["COVERAGE"] || ENV["TRAVIS"]
 end
 
 require "tty-command"
+require "tmpdir"
 
 module TestHelpers
   module Paths
     def gem_root
-      File.expand_path(File.join(File.dirname(__FILE__), ".."))
+      ::File.dirname(__dir__)
     end
 
     def dir_path(*args)
       path = File.join(gem_root, *args)
       FileUtils.mkdir_p(path) unless ::File.exist?(path)
       File.realpath(path)
-    end
-
-    def tmp_path(*args)
-      File.expand_path(File.join(dir_path("tmp"), *args))
     end
 
     def fixtures_path(*args)
@@ -45,13 +42,18 @@ module TestHelpers
   end
 end
 
+RSpec.shared_context "sandbox" do
+  around(:each) do |example|
+    ::Dir.mktmpdir do |dir|
+      ::Dir.chdir(dir, &example)
+    end
+  end
+end
+
 RSpec.configure do |config|
   config.include(TestHelpers::Paths)
   config.include(TestHelpers::Platform)
-
-  config.after(:each, type: :cli) do
-    FileUtils.rm_rf(tmp_path)
-  end
+  config.include_context "sandbox", type: :sandbox
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
