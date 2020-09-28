@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Command, '#ruby' do
+RSpec.describe TTY::Command, "#ruby" do
   it "runs ruby with a single string argument" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
@@ -14,7 +14,7 @@ RSpec.describe TTY::Command, '#ruby' do
     cmd = TTY::Command.new(output: output)
     result = double(:success? => true)
     allow(cmd).to receive(:run).with(TTY::Command::RUBY,
-      'script.rb', 'foo', 'bar', {}).and_return(result)
-    expect(cmd.ruby('script.rb', 'foo', 'bar')).to eq(result)
+      "script.rb", "foo", "bar", {}).and_return(result)
+    expect(cmd.ruby("script.rb", "foo", "bar")).to eq(result)
   end
 end

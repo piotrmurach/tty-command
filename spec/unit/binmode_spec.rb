@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Command, '#run' do
+RSpec.describe TTY::Command, "#run" do
   it "encodes output as unicode by default" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)

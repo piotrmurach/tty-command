@@ -6,7 +6,7 @@ RSpec.describe TTY::Command::Truncator do
 
     truncator.write(nil)
 
-    expect(truncator.read).to eq('')
+    expect(truncator.read).to eq("")
   end
 
   it "writes content within maximum size" do

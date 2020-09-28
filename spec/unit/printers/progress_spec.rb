@@ -1,11 +1,11 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Command::Printers::Progress do
   let(:output) { StringIO.new }
 
   it "doesn't print command start" do
     printer = TTY::Command::Printers::Progress.new(output)
-    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+    cmd = TTY::Command::Cmd.new(:echo, "hello")
 
     printer.print_command_start(cmd)
     output.rewind
@@ -15,9 +15,9 @@ RSpec.describe TTY::Command::Printers::Progress do
 
   it "doesn't print command stdout data" do
     printer = TTY::Command::Printers::Progress.new(output)
-    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+    cmd = TTY::Command::Cmd.new(:echo, "hello")
 
-    printer.print_command_out_data(cmd, 'hello', 'world')
+    printer.print_command_out_data(cmd, "hello", "world")
     output.rewind
 
     expect(output.string).to be_empty
@@ -25,7 +25,7 @@ RSpec.describe TTY::Command::Printers::Progress do
 
   it "prints successful command exit in color" do
     printer = TTY::Command::Printers::Progress.new(output)
-    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+    cmd = TTY::Command::Cmd.new(:echo, "hello")
 
     printer.print_command_exit(cmd, 0, 5.321)
     output.rewind
@@ -35,7 +35,7 @@ RSpec.describe TTY::Command::Printers::Progress do
 
   it "prints failure command exit in color" do
     printer = TTY::Command::Printers::Progress.new(output)
-    cmd = TTY::Command::Cmd.new(:echo, 'hello')
+    cmd = TTY::Command::Cmd.new(:echo, "hello")
 
     printer.print_command_exit(cmd, 1, 5.321)
     output.rewind

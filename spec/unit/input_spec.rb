@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Command, 'input' do
+RSpec.describe TTY::Command, "input" do
   it "reads user input data" do
-    cli = fixtures_path('cli')
+    cli = fixtures_path("cli")
     output = StringIO.new
     command = TTY::Command.new(output: output)
 

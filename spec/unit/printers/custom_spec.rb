@@ -1,10 +1,10 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
-RSpec.describe 'Custom Printer' do
+RSpec.describe "Custom Printer" do
   let(:output) { StringIO.new }
 
   before do
-    stub_const('CustomPrinter', Class.new(TTY::Command::Printers::Abstract) do
+    stub_const("CustomPrinter", Class.new(TTY::Command::Printers::Abstract) do
       def write(message)
         output << message
       end
@@ -23,9 +23,9 @@ RSpec.describe 'Custom Printer' do
 
   it "prints command stdout data" do
     printer = CustomPrinter.new(output)
-    cmd = TTY::Command::Cmd.new(:echo, 'hello world')
+    cmd = TTY::Command::Cmd.new(:echo, "hello world")
 
-    printer.print_command_out_data(cmd, 'data')
+    printer.print_command_out_data(cmd, "data")
     output.rewind
 
     expect(output.string).to eq("data")
@@ -33,7 +33,7 @@ RSpec.describe 'Custom Printer' do
 
   it "prints command exit" do
     printer = CustomPrinter.new(output)
-    cmd = TTY::Command::Cmd.new(:echo, 'hello world')
+    cmd = TTY::Command::Cmd.new(:echo, "hello world")
 
     printer.print_command_exit(cmd)
     output.rewind

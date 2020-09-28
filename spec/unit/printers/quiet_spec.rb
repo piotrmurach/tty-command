@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 RSpec.describe TTY::Command::Printers::Quiet do
   let(:output) { StringIO.new }
@@ -18,7 +18,7 @@ RSpec.describe TTY::Command::Printers::Quiet do
     printer = TTY::Command::Printers::Quiet.new(output)
     cmd = TTY::Command::Cmd.new("echo hello")
 
-    printer.print_command_out_data(cmd, 'hello', 'world')
+    printer.print_command_out_data(cmd, "hello", "world")
     output.rewind
 
     expect(output.string).to eq("hello world")
@@ -28,14 +28,14 @@ RSpec.describe TTY::Command::Printers::Quiet do
     printer = TTY::Command::Printers::Quiet.new(output)
     cmd = TTY::Command::Cmd.new("echo hello")
 
-    printer.print_command_err_data(cmd, 'hello', 'world')
+    printer.print_command_err_data(cmd, "hello", "world")
     output.rewind
 
     expect(output.string).to eq("hello world")
   end
 
   it "doesn't print output on success when only_output_on_error is true" do
-    zero_exit = fixtures_path('zero_exit')
+    zero_exit = fixtures_path("zero_exit")
     printer = TTY::Command::Printers::Quiet
     cmd = TTY::Command.new(output: output, printer: printer)
 
@@ -52,7 +52,7 @@ RSpec.describe TTY::Command::Printers::Quiet do
   end
 
   it "prints output on error when only_output_on_error is true" do
-    non_zero_exit = fixtures_path('non_zero_exit')
+    non_zero_exit = fixtures_path("non_zero_exit")
     printer = TTY::Command::Printers::Quiet
     cmd = TTY::Command.new(output: output, printer: printer)
 

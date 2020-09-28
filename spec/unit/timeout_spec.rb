@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Command, '#run' do
+RSpec.describe TTY::Command, "#run" do
   it "times out infinite process without input or output" do
-    infinite = fixtures_path('infinite_no_output')
+    infinite = fixtures_path("infinite_no_output")
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
@@ -12,7 +12,7 @@ RSpec.describe TTY::Command, '#run' do
   end
 
   it "times out an infite process with constant output" do
-    infinite = fixtures_path('infinite_output')
+    infinite = fixtures_path("infinite_output")
     output = StringIO.new
     cmd = TTY::Command.new(output: output, timeout: 0.1)
 
@@ -22,7 +22,7 @@ RSpec.describe TTY::Command, '#run' do
   end
 
   it "times out an infinite process with constant input data" do
-    cli = fixtures_path('infinite_input')
+    cli = fixtures_path("infinite_input")
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 

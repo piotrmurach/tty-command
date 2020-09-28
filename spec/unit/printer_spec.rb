@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TTY::Command, ':printer' do
+RSpec.describe TTY::Command, ":printer" do
   it "fails to find printer for nil" do
     expect {
       TTY::Command.new(printer: nil)
@@ -38,7 +38,7 @@ RSpec.describe TTY::Command, ':printer' do
   end
 
   it "uses custom printer" do
-    stub_const('CustomPrinter', Class.new(TTY::Command::Printers::Abstract) do
+    stub_const("CustomPrinter", Class.new(TTY::Command::Printers::Abstract) do
       def write(message)
         output << message
       end
