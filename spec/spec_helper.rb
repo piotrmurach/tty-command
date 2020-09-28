@@ -1,19 +1,21 @@
-if RUBY_VERSION > '1.9' and (ENV['COVERAGE'] || ENV['TRAVIS'])
-  require 'simplecov'
-  require 'coveralls'
+# frozen_string_literal: true
 
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+if ENV["COVERAGE"] || ENV["TRAVIS"]
+  require "simplecov"
+  require "coveralls"
+
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
     SimpleCov::Formatter::HTMLFormatter,
     Coveralls::SimpleCov::Formatter
-  ]
+  ])
 
   SimpleCov.start do
-    command_name 'spec'
-    add_filter 'spec'
+    command_name "spec"
+    add_filter "spec"
   end
 end
 
-require 'tty-command'
+require "tty-command"
 
 module TestHelpers
   module Paths
@@ -28,11 +30,11 @@ module TestHelpers
     end
 
     def tmp_path(*args)
-      File.expand_path(File.join(dir_path('tmp'), *args))
+      File.expand_path(File.join(dir_path("tmp"), *args))
     end
 
     def fixtures_path(*args)
-      File.expand_path(File.join(dir_path('spec/fixtures'), *args))
+      File.expand_path(File.join(dir_path("spec/fixtures"), *args))
     end
   end
 
@@ -67,7 +69,7 @@ RSpec.configure do |config|
   config.warnings = true
 
   if config.files_to_run.one?
-    config.default_formatter = 'doc'
+    config.default_formatter = "doc"
   end
 
   config.profile_examples = 2
