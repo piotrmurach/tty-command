@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'thread'
+require "thread"
 
-require_relative 'child_process'
-require_relative 'result'
-require_relative 'truncator'
+require_relative "child_process"
+require_relative "result"
+require_relative "truncator"
 
 module TTY
   class Command

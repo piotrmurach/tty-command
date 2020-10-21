@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require 'rbconfig'
+require "rbconfig"
 
-require_relative 'command/cmd'
-require_relative 'command/exit_error'
-require_relative 'command/dry_runner'
-require_relative 'command/process_runner'
-require_relative 'command/printers/null'
-require_relative 'command/printers/pretty'
-require_relative 'command/printers/progress'
-require_relative 'command/printers/quiet'
-require_relative 'command/version'
+require_relative "command/cmd"
+require_relative "command/exit_error"
+require_relative "command/dry_runner"
+require_relative "command/process_runner"
+require_relative "command/printers/null"
+require_relative "command/printers/pretty"
+require_relative "command/printers/progress"
+require_relative "command/printers/quiet"
+require_relative "command/version"
 
 module TTY
   class Command
@@ -19,9 +19,9 @@ module TTY
     TimeoutExceeded = Class.new(StandardError)
 
     # Path to the current Ruby
-    RUBY = ENV['RUBY'] || ::File.join(
-      RbConfig::CONFIG['bindir'],
-      RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT']
+    RUBY = ENV["RUBY"] || ::File.join(
+      RbConfig::CONFIG["bindir"],
+      RbConfig::CONFIG["ruby_install_name"] + RbConfig::CONFIG["EXEEXT"]
     )
 
     WIN_PLATFORMS = /cygwin|mswin|mingw|bccwin|wince|emx/.freeze
@@ -35,7 +35,7 @@ module TTY
     end
 
     def self.windows?
-      !!(RbConfig::CONFIG['host_os'] =~ WIN_PLATFORMS)
+      !!(RbConfig::CONFIG["host_os"] =~ WIN_PLATFORMS)
     end
 
     attr_reader :printer
@@ -128,7 +128,7 @@ module TTY
     def wait(*args)
       pattern = args.pop
       unless pattern
-        raise ArgumentError, 'Please provide condition to wait for'
+        raise ArgumentError, "Please provide condition to wait for"
       end
 
       run(*args) do |out, _|
@@ -204,7 +204,7 @@ module TTY
     #
     # @api private
     def find_printer_class(name)
-      const_name = name.to_s.split('_').map(&:capitalize).join.to_sym
+      const_name = name.to_s.split("_").map(&:capitalize).join.to_sym
       if const_name.empty? || !TTY::Command::Printers.const_defined?(const_name)
         raise ArgumentError, %(Unknown printer type "#{name}")
       end

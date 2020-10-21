@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'securerandom'
-require 'shellwords'
+require "securerandom"
+require "shellwords"
 
 module TTY
   class Command
@@ -33,14 +33,14 @@ module TTY
         if env_or_cmd.respond_to?(:to_hash)
           @env = env_or_cmd
           unless command = args.shift
-            raise ArgumentError, 'Cmd requires command argument'
+            raise ArgumentError, "Cmd requires command argument"
           end
         else
           command = env_or_cmd
         end
 
         if args.empty? && cmd = command.to_s
-          raise ArgumentError, 'No command provided' if cmd.empty?
+          raise ArgumentError, "No command provided" if cmd.empty?
           @command = sanitize(cmd)
           @argv = []
         else
@@ -55,7 +55,7 @@ module TTY
         @env ||= {}
         @options = opts
 
-        @uuid = SecureRandom.uuid.split('-')[0]
+        @uuid = SecureRandom.uuid.split("-")[0]
         @only_output_on_error = opts.fetch(:only_output_on_error) { false }
         freeze
       end
@@ -79,7 +79,7 @@ module TTY
           converted_key = key.is_a?(Symbol) ? key.to_s.upcase : key.to_s
           escaped_val = val.to_s.gsub(/"/, '\"')
           %(#{converted_key}="#{escaped_val}")
-        end.join(' ')
+        end.join(" ")
       end
 
       def evars(value, &block)
@@ -99,7 +99,7 @@ module TTY
 
       def user(value)
         return value unless options[:user]
-        vars = environment.any? ? "#{environment_string} " : ''
+        vars = environment.any? ? "#{environment_string} " : ""
         %(sudo -u #{options[:user]} #{vars}-- sh -c '%s') % [value]
       end
 
@@ -123,7 +123,7 @@ module TTY
 
       # @api public
       def to_s
-        [command.to_s, *Array(argv)].join(' ')
+        [command.to_s, *Array(argv)].join(" ")
       end
 
       # @api public

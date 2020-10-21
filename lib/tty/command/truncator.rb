@@ -17,8 +17,8 @@ module TTY
       # @api public
       def initialize(options = {})
         @max_size = options.fetch(:max_size) { DEFAULT_SIZE }
-        @prefix   = ''
-        @suffix   = ''
+        @prefix   = ""
+        @suffix   = ""
         @skipped  = 0
       end
 
@@ -92,7 +92,7 @@ module TTY
       # @api private
       def append(value, dst)
         remain    = @max_size - dst.bytesize
-        remaining = ''
+        remaining = ""
         if remain > 0
           value_bytes = value.to_s.bytesize
           offset = value_bytes < remain ? value_bytes : remain

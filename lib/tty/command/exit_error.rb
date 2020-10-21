@@ -24,7 +24,7 @@ module TTY
       end
 
       def extract_output(value)
-        (value || '').strip.empty? ? 'Nothing written' : value.strip
+        (value || "").strip.empty? ? "Nothing written" : value.strip
       end
     end # ExitError
   end # Command

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'tempfile'
-require 'securerandom'
-require 'io/console'
+require "tempfile"
+require "securerandom"
+require "io/console"
 
 module TTY
   class Command
@@ -27,12 +27,12 @@ module TTY
         verbose = cmd.options[:verbose]
 
         pty = try_loading_pty(verbose) if pty
-        require('pty') if pty # load within this scope
+        require("pty") if pty # load within this scope
 
         # Create pipes
-        in_rd,  in_wr  = pty ? PTY.open : IO.pipe('utf-8') # reading
-        out_rd, out_wr = pty ? PTY.open : IO.pipe('utf-8') # writing
-        err_rd, err_wr = pty ? PTY.open : IO.pipe('utf-8') # error
+        in_rd,  in_wr  = pty ? PTY.open : IO.pipe("utf-8") # reading
+        out_rd, out_wr = pty ? PTY.open : IO.pipe("utf-8") # writing
+        err_rd, err_wr = pty ? PTY.open : IO.pipe("utf-8") # error
         in_wr.sync = true
 
         if binmode
@@ -132,7 +132,7 @@ module TTY
         key   = fd_to_process_key(spawn_key)
         value = spawn_value
 
-        if key.to_s == 'in'
+        if key.to_s == "in"
           value = convert_to_fd(spawn_value)
         end
 
@@ -195,7 +195,7 @@ module TTY
           return object
         end
 
-        tmp = ::Tempfile.new(::SecureRandom.uuid.split('-')[0])
+        tmp = ::Tempfile.new(::SecureRandom.uuid.split("-")[0])
         content = try_reading(object)
         tmp.write(content)
         tmp.rewind
