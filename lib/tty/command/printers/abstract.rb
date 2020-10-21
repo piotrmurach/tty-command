@@ -1,6 +1,4 @@
-# encoding: utf-8
-
-require 'pastel'
+require "pastel"
 
 module TTY
   class Command
@@ -22,11 +20,11 @@ module TTY
         def initialize(output, options = {})
           @output  = output
           @options = options
-          @enabled = options.fetch(:color) { true }
+          @enabled = options.fetch(:color, true)
           @color   = ::Pastel.new(enabled: @enabled)
 
-          @out_data = ''
-          @err_data = ''
+          @out_data = ""
+          @err_data = ""
         end
 
         def print_command_start(cmd, *args)
@@ -34,15 +32,15 @@ module TTY
         end
 
         def print_command_out_data(cmd, *args)
-          write(args.join(' '))
+          write(args.join(" "))
         end
 
         def print_command_err_data(cmd, *args)
-          write(args.join(' '))
+          write(args.join(" "))
         end
 
         def print_command_exit(cmd, *args)
-          write(args.join(' '))
+          write(args.join(" "))
         end
 
         def write(cmd, message)

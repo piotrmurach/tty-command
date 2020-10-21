@@ -1,14 +1,9 @@
-# encoding: utf-8
-# frozen_string_literal: true
-
-require 'pastel'
-require_relative 'abstract'
+require_relative "abstract"
 
 module TTY
   class Command
     module Printers
       class Progress < Abstract
-
         def print_command_exit(cmd, status, runtime, *args)
           output.print(success_or_failure(status))
         end
@@ -21,9 +16,9 @@ module TTY
         # @api private
         def success_or_failure(status)
           if status == 0
-            decorate('.', :green)
+            decorate(".", :green)
           else
-            decorate('F', :red)
+            decorate("F", :red)
           end
         end
       end # Progress
