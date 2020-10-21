@@ -128,20 +128,20 @@ module TTY
         stdout_data = []
         stderr_data = Truncator.new
 
-        out_buffer = ->(line) {
-          stdout_data << line
-          @printer.print_command_out_data(cmd, line)
-          @block.(line, nil) if @block
+        out_handler = ->(data) {
+          stdout_data << data
+          @printer.print_command_out_data(cmd, data)
+          @block.(data, nil) if @block
         }
 
-        err_buffer = ->(line) {
-          stderr_data << line
-          @printer.print_command_err_data(cmd, line)
-          @block.(nil, line) if @block
+        err_handler = ->(data) {
+          stderr_data << data
+          @printer.print_command_err_data(cmd, data)
+          @block.(nil, data) if @block
         }
 
-        stdout_thread = read_stream(stdout, out_buffer)
-        stderr_thread = read_stream(stderr, err_buffer)
+        stdout_thread = read_stream(stdout, out_handler)
+        stderr_thread = read_stream(stderr, err_handler)
 
         stdout_thread.join
         stderr_thread.join
@@ -154,7 +154,15 @@ module TTY
         ]
       end
 
-      def read_stream(stream, buffer)
+      # Read stream and invoke handler when data becomes available
+      #
+      # @param [IO] stream
+      #   the stream to read data from
+      # @param [Proc] handler
+      #   the handler to call when data becomes available
+      #
+      # @api private
+      def read_stream(stream, handler)
         Thread.new do
           if Thread.current.respond_to?(:report_on_exception)
             Thread.current.report_on_exception = false
@@ -168,8 +176,8 @@ module TTY
 
             ready[0].each do |reader|
               begin
-                line = reader.readpartial(BUFSIZE)
-                buffer.(line)
+                chunk = reader.readpartial(BUFSIZE)
+                handler.(chunk)
 
                 # control total time spent reading
                 runtime = Time.now - Thread.current[:cmd_start]
