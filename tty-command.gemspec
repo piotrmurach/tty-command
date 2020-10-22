@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["piotr@piotrmurach.com"]
   spec.summary       = %q{Execute shell commands with pretty output logging and capture their stdout, stderr and exit status.}
   spec.description   = %q{Execute shell commands with pretty output logging and capture their stdout, stderr and exit status. Redirect stdin, stdout and stderr of each command to a file or a string.}
-  spec.homepage      = "https://piotrmurach.github.io/tty"
+  spec.homepage      = "https://ttytoolkit.org"
   spec.license       = "MIT"
   if spec.respond_to?(:metadata=)
     spec.metadata = {
