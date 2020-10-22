@@ -1,11 +1,12 @@
 # Change log
 
-## [v0.10.0] - unreleased
+## [v0.10.0] - 2020-10-22
 
 ### Changed
 * Change :chdir option to escape directory location path
 * Change gemspec to add metadata and remove test artefacts
 * Change to update pastel dependency and restrict version to minor only
+* Remove bundler as a dev dependency and relax rspec's upper boundary
 
 ### Fixed
 * Fix Ruby 2.7 keyword conversion errors
