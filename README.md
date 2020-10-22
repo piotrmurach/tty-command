@@ -36,7 +36,7 @@ Why should we be handcuffed to `sh` or `bash` for these scripts when we could be
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'tty-command'
+gem "tty-command"
 ```
 
 And then execute:
@@ -88,11 +88,11 @@ Or install it yourself as:
 Create a command instance and then run some commands:
 
 ```ruby
-require 'tty-command'
+require "tty-command"
 
 cmd = TTY::Command.new
-cmd.run('ls -la')
-cmd.run('echo Hello!')
+cmd.run("ls -la")
+cmd.run("echo Hello!")
 ```
 
 Note that `run` will throw an exception if the command fails. This is already an improvement over ordinary shell scripts, which just keep on going when things go bad. That usually makes things worse.
@@ -100,7 +100,7 @@ Note that `run` will throw an exception if the command fails. This is already an
 You can use the return value to capture stdout and stderr:
 
 ```ruby
-out, err = cmd.run('cat ~/.bashrc | grep alias')
+out, err = cmd.run("cat ~/.bashrc | grep alias")
 ```
 
 Instead of using a plain old string, you can break up the arguments and they'll get escaped if necessary:
@@ -127,13 +127,13 @@ The `env`, `command` and `options` arguments are described in the following sect
 For example, to display file contents:
 
 ```ruby
-cmd.run('cat file.txt')
+cmd.run("cat file.txt")
 ```
 
 If the command succeeds, a `TTY::Command::Result` is returned that records stdout and stderr:
 
 ```ruby
-out, err = cmd.run('date')
+out, err = cmd.run("date")
 puts "The date is #{out}"
 # => "The date is Tue 10 May 2016 22:30:15 BST\n"
 ```
@@ -141,7 +141,7 @@ puts "The date is #{out}"
 You can also pass a block that gets invoked anytime stdout and/or stderr receive output:
 
 ```ruby
-cmd.run('long running script') do |out, err|
+cmd.run("long running script") do |out, err|
   output << out if out
   errors << err if err
 end
@@ -161,8 +161,8 @@ If the error output is very long, the stderr may contain only a prefix, number o
 If you expect a command to fail occasionally, use `run!` instead. Then you can detect failures and respond appropriately. For example:
 
 ```ruby
-if cmd.run!('which xyzzy').failure?
-  cmd.run('brew install xyzzy')
+if cmd.run!("which xyzzy").failure?
+  cmd.run("brew install xyzzy")
 end
 ```
 
@@ -184,7 +184,7 @@ cmd = TTY::Command.new(printer: :progress)
 By default the printers log to `stdout` but this can be changed by passing an object that responds to `<<` message:
 
 ```ruby
-logger = Logger.new('dev.log')
+logger = Logger.new("dev.log")
 cmd = TTY::Command.new(output: logger)
 ```
 
@@ -206,7 +206,7 @@ By default, when logging is enabled and `pretty` printer is used, each log entry
 
 ```ruby
 cmd = TTY::Command.new(uuid: false)
-cmd.run('rm -R all_my_files')
+cmd.run("rm -R all_my_files")
 # =>
 #  Running rm -r all_my_files
 #  ...
@@ -230,13 +230,13 @@ When using a command that can fail, setting `:only_output_on_error` option to `t
 
 ```ruby
 cmd = TTY::Command.new
-cmd.run('non_failing_command', only_output_on_error: true)
+cmd.run("non_failing_command", only_output_on_error: true)
 ```
 
 This will only print the `Running` and `Finished` lines, while:
 
 ```ruby
-cmd.run('non_failing_command')
+cmd.run("non_failing_command")
 ```
 
 will also print any output that the `non_failing_command` might generate.
@@ -244,13 +244,13 @@ will also print any output that the `non_failing_command` might generate.
 Running either:
 
 ```ruby
-cmd.run('failing_command', only_output_on_error: true)
+cmd.run("failing_command", only_output_on_error: true)
 ```
 
 either:
 
 ```ruby
-cmd.run('failing_command')
+cmd.run("failing_command")
 ```
 
 will also print the output.
@@ -271,7 +271,7 @@ Sometimes it can be useful to put your script into a "dry run" mode that prints 
 
 ```ruby
 cmd = TTY::Command.new(dry_run: true)
-cmd.run(:rm, 'all_my_files')
+cmd.run(:rm, "all_my_files")
 # => [123abc] (dry run) rm all_my_files
 ```
 
@@ -286,7 +286,7 @@ cmd.dry_run? # => true
 If you need to wait for a long running script and stop it when a given pattern has been matched use `wait` like so:
 
 ```ruby
-cmd.wait 'tail -f /var/log/production.log', /something happened/
+cmd.wait "tail -f /var/log/production.log", /something happened/
 ```
 
 ### 2.6 Test
@@ -294,7 +294,7 @@ cmd.wait 'tail -f /var/log/production.log', /something happened/
 To simulate classic bash test command you case use `test` method with expression to check as a first argument:
 
 ```ruby
-if cmd.test '-e /etc/passwd'
+if cmd.test "-e /etc/passwd"
   puts "Sweet..."
 else
   puts "Ohh no! Where is it?"
@@ -317,19 +317,19 @@ cmd.ruby %q{-e "puts 'Hello world'"}
 The environment variables need to be provided as hash entries, that can be set directly as a first argument:
 
 ```ruby
-cmd.run({'RAILS_ENV' => 'PRODUCTION'}, :rails, 'server')
+cmd.run({"RAILS_ENV" => "PRODUCTION"}, :rails, "server")
 ```
 
 or as an option with `:env` key:
 
 ```ruby
-cmd.run(:rails, 'server', env: {rails_env: :production})
+cmd.run(:rails, "server", env: {rails_env: :production})
 ```
 
 When a value in env is nil, the variable is unset in the child process:
 
 ```ruby
-cmd.run(:echo, 'hello', env: {foo: 'bar', baz: nil})
+cmd.run(:echo, "hello", env: {foo: "bar", baz: nil})
 ```
 
 ### 3.2 Options
@@ -367,27 +367,27 @@ The hash key and value specify a file descriptor in the child process (stderr & 
 You can also redirect to a file:
 
 ```ruby
-cmd.run(:cat, :in => 'file')
-cmd.run(:cat, :in => open('/etc/passwd'))
-cmd.run(:ls, :out => 'log')
+cmd.run(:cat, :in => "file")
+cmd.run(:cat, :in => open("/etc/passwd"))
+cmd.run(:ls, :out => "log")
 cmd.run(:ls, :out => "/dev/null")
-cmd.run(:ls, :out => 'out.log', :err => "err.log")
+cmd.run(:ls, :out => "out.log", :err => "err.log")
 cmd.run(:ls, [:out, :err] => "log")
-cmd.run("ls 1>&2", :err => 'log')
+cmd.run("ls 1>&2", :err => "log")
 ```
 
 It is possible to specify flags and permissions of file creation explicitly by passing an array value:
 
 ```ruby
-cmd.run(:ls, :out => ['log', 'w']) # 0664 assumed
-cmd.run(:ls, :out => ['log', 'w', 0600])
-cmd.run(:ls, :out => ['log', File::WRONLY|File::EXCL|File::CREAT, 0600])
+cmd.run(:ls, :out => ["log", "w"]) # 0664 assumed
+cmd.run(:ls, :out => ["log", "w", 0600])
+cmd.run(:ls, :out => ["log", File::WRONLY|File::EXCL|File::CREAT, 0600])
 ```
 
 You can, for example, read data from one source and output to another:
 
 ```ruby
-cmd.run("cat", :in => "Gemfile", :out => 'gemfile.log')
+cmd.run("cat", :in => "Gemfile", :out => "gemfile.log")
 ```
 
 #### 3.2.2 Handling Input
@@ -402,7 +402,7 @@ puts "Your name: #{name}"
 In order to execute `cli` with name input do:
 
 ```ruby
-cmd.run('cli', input: "Piotr\n")
+cmd.run("cli", input: "Piotr\n")
 # => Your name: Piotr
 ```
 
@@ -496,7 +496,7 @@ In addition, when pty device is used, any input to command may be echoed to the 
 To change directory in which the command is run pass the `:chdir` option:
 
 ```ruby
-cmd.run(:echo, 'hello', chdir: '/var/tmp')
+cmd.run(:echo, "hello", chdir: "/var/tmp")
 ```
 
 #### 3.2.8 User
@@ -504,7 +504,7 @@ cmd.run(:echo, 'hello', chdir: '/var/tmp')
 To run command as a given user do:
 
 ```ruby
-cmd.run(:echo, 'hello', user: 'piotr')
+cmd.run(:echo, "hello", user: "piotr")
 ```
 
 #### 3.2.9 Group
@@ -512,7 +512,7 @@ cmd.run(:echo, 'hello', user: 'piotr')
 To run command as part of group do:
 
 ```ruby
-cmd.run(:echo, 'hello', group: 'devs')
+cmd.run(:echo, "hello", group: "devs")
 ```
 
 #### 3.2.10 Umask
@@ -520,7 +520,7 @@ cmd.run(:echo, 'hello', group: 'devs')
 To run command with umask do:
 
 ```ruby
-cmd.run(:echo, 'hello', umask: '007')
+cmd.run(:echo, "hello", umask: "007")
 ```
 
 ### 3.3 Result
@@ -528,13 +528,13 @@ cmd.run(:echo, 'hello', umask: '007')
 Each time you run command the stdout and stderr are captured and return as result. The result can be examined directly by casting it to tuple:
 
 ```ruby
-out, err = cmd.run(:echo, 'Hello')
+out, err = cmd.run(:echo, "Hello")
 ```
 
 However, if you want to you can defer reading:
 
 ```ruby
-result = cmd.run(:echo, 'Hello')
+result = cmd.run(:echo, "Hello")
 result.out
 result.err
 ```
@@ -544,7 +544,7 @@ result.err
 To check if command exited successfully use `success?`:
 
 ```ruby
-result = cmd.run(:echo, 'Hello')
+result = cmd.run(:echo, "Hello")
 result.success? # => true
 ```
 
@@ -553,7 +553,7 @@ result.success? # => true
 To check if command exited unsuccessfully use `failure?` or `failed?`:
 
 ```ruby
-result = cmd.run(:echo, 'Hello')
+result = cmd.run(:echo, "Hello")
 result.failure?  # => false
 result.failed?   # => false
 ```
@@ -563,7 +563,7 @@ result.failed?   # => false
 To check if command ran to completion use `exited?` or `complete?`:
 
 ```ruby
-result = cmd.run(:echo, 'Hello')
+result = cmd.run(:echo, "Hello")
 result.exited?    # => true
 result.complete?  # => true
 ```
@@ -573,7 +573,7 @@ result.complete?  # => true
 The result itself is an enumerable and allows you to iterate over the stdout output:
 
 ```ruby
-result = cmd.run(:ls, '-1')
+result = cmd.run(:ls, "-1")
 result.each { |line| puts line }
 # =>
 #  CHANGELOG.md
@@ -596,7 +596,7 @@ TTY::Command.record_separator = "\n\r"
 or configured per `each` call by passing delimiter as an argument:
 
 ```ruby
-cmd.run(:ls, '-1').each("\t") { ... }
+cmd.run(:ls, "-1").each("\t") { ... }
 ```
 
 ### 3.4 Custom printer
