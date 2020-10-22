@@ -1,1 +1,1 @@
-require 'tty/command'
+require_relative "tty/command"
