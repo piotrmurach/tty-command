@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://piotrmurach.github.io/tty" target="_blank"><img width="130" src="https://cdn.rawgit.com/piotrmurach/tty/master/images/tty.png" alt="tty logo" /></a>
+  <a href="https://ttytoolkit.org"><img width="130" src="https://github.com/piotrmurach/tty/blob/master/images/tty.png" alt="TTY Toolkit logo"/></a>
 </div>
 
 # TTY::Command [![Gitter](https://badges.gitter.im/Join%20Chat.svg)][gitter]
