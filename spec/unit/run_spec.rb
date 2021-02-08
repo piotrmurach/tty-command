@@ -163,12 +163,24 @@ RSpec.describe TTY::Command, "#run" do
 
   it "does not persist environment variables" do
     output = StringIO.new
+    uuid= "xxxx"
+    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output)
 
-    out, _err = command.run("env | grep FOO", env: {foo: 1})
-    expect(out.chomp).to eq("FOO=1")
-    out, _err = command.run!("env | grep FOO")
-    expect(out).to eq("")
+    command.run(:echo, "hello", env: {foo: 1})
+
+    output.rewind
+    lines = output.readlines
+    expect(lines[0]).to eq("[\e[32m#{uuid}\e[0m] Running \e[33;1m( export FOO=\"1\" ; echo hello )\e[0m\n")
+
+    output.reopen
+
+    command.run(:echo, "hello")
+
+    output.rewind
+    lines = output.readlines
+    lines.last.gsub!(/\d+\.\d+/, "x")
+    expect(lines[0]).to eq("[\e[32m#{uuid}\e[0m] Running \e[33;1mecho hello\e[0m\n")
   end
 
 end
