@@ -179,7 +179,6 @@ RSpec.describe TTY::Command, "#run" do
 
     output.rewind
     lines = output.readlines
-    lines.last.gsub!(/\d+\.\d+/, "x")
     expect(lines[0]).to eq("[\e[32m#{uuid}\e[0m] Running \e[33;1mecho hello\e[0m\n")
   end
 
