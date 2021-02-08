@@ -160,4 +160,15 @@ RSpec.describe TTY::Command, "#run" do
       "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
     ])
   end
+
+  it "does not persist environment variables" do
+    output = StringIO.new
+    command = TTY::Command.new(output: output)
+
+    out, _err = command.run("env | grep FOO", env: {foo: 1})
+    expect(out.chomp).to eq("FOO=1")
+    out, _err = command.run!("env | grep FOO")
+    expect(out).to eq("")
+  end
+
 end
