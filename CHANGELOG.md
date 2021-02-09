@@ -1,5 +1,10 @@
 # Change log
 
+## Unreleased
+
+### Fixed
+* Fix undesired persistence of environment variables in Ruby >= 3.0.0
+
 ## [v0.10.0] - 2020-10-22
 
 ### Changed
