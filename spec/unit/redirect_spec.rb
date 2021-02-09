@@ -15,7 +15,7 @@ RSpec.describe TTY::Command, "redirect" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run("echo hello", :out => :err)
+    out, err = cmd.run("echo hello", out: :err)
 
     expect(out).to be_empty
     expect(err.chomp).to eq("hello")
@@ -25,7 +25,7 @@ RSpec.describe TTY::Command, "redirect" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run("echo hello", :stdout => :stderr)
+    out, err = cmd.run("echo hello", stdout: :stderr)
 
     expect(out).to be_empty
     expect(err.chomp).to eq("hello")
@@ -55,7 +55,7 @@ RSpec.describe TTY::Command, "redirect" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, _ = cmd.run("echo hello", :out => IO::NULL)
+    out, = cmd.run("echo hello", out: IO::NULL)
 
     expect(out).to eq("")
   end
@@ -65,7 +65,7 @@ RSpec.describe TTY::Command, "redirect" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run("echo hello", :out => file)
+    out, err = cmd.run("echo hello", out: file)
 
     expect(out).to be_empty
     expect(err).to be_empty
@@ -77,7 +77,7 @@ RSpec.describe TTY::Command, "redirect" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run("echo hello", :out => [file, "w", 0600])
+    out, err = cmd.run("echo hello", out: [file, "w", 0600])
 
     expect(out).to be_empty
     expect(err).to be_empty
@@ -93,7 +93,7 @@ RSpec.describe TTY::Command, "redirect" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run("echo hello", [:out, :err] => file)
+    out, err = cmd.run("echo hello", %i[out err] => file)
 
     expect(out).to be_empty
     expect(err).to be_empty

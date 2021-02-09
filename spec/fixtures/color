@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 out = "colored"
 if $stdout.tty?
   out = "\e[32m#{out}\e[0m"
 end
-puts out + "\n"
+puts "#{out}\n"

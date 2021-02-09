@@ -1,0 +1,74 @@
+---
+name: CI
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "benchmarks/**"
+      - "bin/**"
+      - "examples/**"
+      - "*.md"
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - "benchmarks/**"
+      - "bin/**"
+      - "examples/**"
+      - "*.md"
+jobs:
+  tests:
+    name: Ruby ${{ matrix.ruby }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        ruby:
+          - 2.3
+          - 2.4
+          - 2.5
+          - 2.6
+          - 3.0
+          - ruby-head
+          - jruby-head
+          - truffleruby-head
+        allow_failure: [false]
+        include:
+          - ruby: 2.1
+            os: ubuntu-latest
+            coverage: false
+            bundler: 1
+            allow_failure: false
+          - ruby: 2.2
+            os: ubuntu-latest
+            coverage: false
+            bundler: 1
+            allow_failure: false
+          - ruby: 2.7
+            os: ubuntu-latest
+            coverage: true
+            bundler: latest
+            allow_failure: false
+          - ruby: jruby-9.2.13.0
+            os: ubuntu-latest
+            coverage: false
+            bundler: latest
+            allow_failure: true
+    env:
+      COVERAGE: ${{ matrix.coverage }}
+      COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+    continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.allow_failure }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler: ${{ matrix.bundler }}
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+      - name: Run tests
+        run: bundle exec rake ci

@@ -13,7 +13,7 @@ RSpec.describe TTY::Command, "#run" do
 
   it "runs command successfully with logging" do
     output = StringIO.new
-    uuid= "xxxx"
+    uuid = "xxxx"
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output)
 
@@ -25,13 +25,14 @@ RSpec.describe TTY::Command, "#run" do
     expect(lines).to eq([
       "[\e[32m#{uuid}\e[0m] Running \e[33;1mecho hello\e[0m\n",
       "[\e[32m#{uuid}\e[0m] \thello\n",
-      "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
+      "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 0 " \
+      "(\e[32;1msuccessful\e[0m)\n"
     ])
   end
 
   it "runs command successfully with logging without color" do
     output = StringIO.new
-    uuid= "xxxx"
+    uuid = "xxxx"
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output, color: false)
 
@@ -82,7 +83,7 @@ RSpec.describe TTY::Command, "#run" do
   it "runs command and fails with logging" do
     non_zero_exit = fixtures_path("non_zero_exit")
     output = StringIO.new
-    uuid= "xxxx"
+    uuid = "xxxx"
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output)
 
@@ -94,7 +95,8 @@ RSpec.describe TTY::Command, "#run" do
     expect(lines).to eq([
       "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{non_zero_exit}\e[0m\n",
       "[\e[32m#{uuid}\e[0m] \tnooo\n",
-      "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n"
+      "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 1 " \
+      "(\e[31;1mfailed\e[0m)\n"
     ])
   end
 
@@ -105,12 +107,12 @@ RSpec.describe TTY::Command, "#run" do
 
     expect {
       command.run("ruby #{non_zero_exit}")
-    }.to raise_error(TTY::Command::ExitError,
-      ["Running `ruby #{non_zero_exit}` failed with",
-       "  exit status: 1",
-       "  stdout: nooo",
-       "  stderr: Nothing written\n"].join("\n")
-    )
+    }.to raise_error(TTY::Command::ExitError, [
+      "Running `ruby #{non_zero_exit}` failed with",
+      "  exit status: 1",
+      "  stdout: nooo",
+      "  stderr: Nothing written\n"
+    ].join("\n"))
   end
 
   it "streams output data" do
@@ -121,11 +123,11 @@ RSpec.describe TTY::Command, "#run" do
     error = []
 
     command.run("ruby #{stream}") do |out, err|
-     output << out if out
-     error << err if err
+      output << out if out
+      error << err if err
     end
 
-    expect(output.join.gsub(/\r\n|\n/,"")).to eq("hello 1hello 2hello 3")
+    expect(output.join.gsub(/\r\n|\n/, "")).to eq("hello 1hello 2hello 3")
     expect(error.join).to eq("")
   end
 
@@ -133,7 +135,7 @@ RSpec.describe TTY::Command, "#run" do
     output = StringIO.new
     command = TTY::Command.new(output: output, printer: :quiet)
 
-    out, _ = command.run("echo \e[35mhello\e[0m")
+    out, = command.run("echo \e[35mhello\e[0m")
 
     expect(out.chomp).to eq("\e[35mhello\e[0m")
     expect(output.string.chomp).to eq("\e[35mhello\e[0m")
@@ -141,7 +143,7 @@ RSpec.describe TTY::Command, "#run" do
 
   it "logs phased output in one line" do
     phased_output = fixtures_path("phased_output")
-    uuid= "xxxx"
+    uuid = "xxxx"
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
@@ -157,7 +159,8 @@ RSpec.describe TTY::Command, "#run" do
     expect(lines).to eq([
       "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{phased_output}\e[0m\n",
       "[\e[32m#{uuid}\e[0m] \t..........\n",
-      "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
+      "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 0 " \
+      "(\e[32;1msuccessful\e[0m)\n"
     ])
   end
 

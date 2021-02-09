@@ -1,4 +1,10 @@
 ---
+skip_commits:
+  files:
+    - "benchmarks/**"
+    - "bin/**"
+    - "examples/**"
+    - "*.md"
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
   - ruby --version

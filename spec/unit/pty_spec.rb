@@ -3,7 +3,6 @@
 RSpec.describe TTY::Command, ":pty" do
   it "executes command in pseudo terminal mode as global option",
      unless: RSpec::Support::OS.windows? do
-
     color_cli = fixtures_path("color")
     output = StringIO.new
     cmd = TTY::Command.new(output: output, pty: true)
@@ -16,7 +15,6 @@ RSpec.describe TTY::Command, ":pty" do
 
   it "executes command in pseudo terminal mode as command option",
       unless: RSpec::Support::OS.windows? do
-
     color_cli = fixtures_path("color")
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
@@ -29,9 +27,8 @@ RSpec.describe TTY::Command, ":pty" do
 
   it "logs phased output in pseudo terminal mode",
       unless: RSpec::Support::OS.windows? do
-
     phased_output = fixtures_path("phased_output")
-    uuid= "xxxx"
+    uuid = "xxxx"
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     output = StringIO.new
     cmd = TTY::Command.new(output: output)

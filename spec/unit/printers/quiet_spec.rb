@@ -63,9 +63,9 @@ RSpec.describe TTY::Command::Printers::Quiet do
 
     lines = output.readlines.map(&:chomp)
 
-    expect(lines).to eq([
-      "nooo",
-      "nooo"
+    expect(lines).to eq(%w[
+      nooo
+      nooo
     ])
   end
 end

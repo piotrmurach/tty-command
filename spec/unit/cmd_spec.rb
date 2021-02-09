@@ -51,32 +51,32 @@ RSpec.describe TTY::Command::Cmd, "::new" do
   end
 
   it "accepts command with environment as [cmdname, arg1, ..., opts]" do
-    cmd = TTY::Command::Cmd.new(:echo, "hello", env: {foo: "bar"})
+    cmd = TTY::Command::Cmd.new(:echo, "hello", env: { foo: "bar" })
     expect(cmd.to_command).to eq(%{( export FOO=\"bar\" ; echo hello )})
   end
 
   it "accepts command with multiple environment keys" do
-    cmd = TTY::Command::Cmd.new(:echo, "hello", env: {foo: "a", bar: "b"})
+    cmd = TTY::Command::Cmd.new(:echo, "hello", env: { foo: "a", bar: "b" })
     expect(cmd.to_command).to eq(%{( export FOO=\"a\" BAR=\"b\" ; echo hello )})
   end
 
   it "accepts command with environemnt string keys" do
-    cmd = TTY::Command::Cmd.new(:echo, "hello", env: {"FOO_bar" => "a", bar: "b"})
+    cmd = TTY::Command::Cmd.new(:echo, "hello", env: { "FOO_bar" => "a", bar: "b" })
     expect(cmd.to_command).to eq(%{( export FOO_bar=\"a\" BAR=\"b\" ; echo hello )})
   end
 
   it "escapes environment values" do
-    cmd = TTY::Command::Cmd.new(:echo, "hello", env: {foo: 'abc"def'})
+    cmd = TTY::Command::Cmd.new(:echo, "hello", env: { foo: 'abc"def' })
     expect(cmd.to_command).to eq(%{( export FOO=\"abc\\\"def\" ; echo hello )})
   end
 
   it "accepts environment as first argument" do
-    cmd = TTY::Command::Cmd.new({"FOO" => true, "BAR" => 1}, :echo, "hello")
+    cmd = TTY::Command::Cmd.new({ "FOO" => true, "BAR" => 1 }, :echo, "hello")
     expect(cmd.to_command).to eq(%{( export FOO=\"true\" BAR=\"1\" ; echo hello )})
   end
 
   it "handles environment with fanky characters" do
-    cmd = TTY::Command::Cmd.new(:echo, "hello", env: {foo: "%16"})
+    cmd = TTY::Command::Cmd.new(:echo, "hello", env: { foo: "%16" })
     expect(cmd.to_command).to eq(%{( export FOO=\"%16\" ; echo hello )})
   end
 
@@ -91,7 +91,7 @@ RSpec.describe TTY::Command::Cmd, "::new" do
   end
 
   it "runs command in specified directory with environment" do
-    cmd = TTY::Command::Cmd.new(:echo, "hello", chdir: "/tmp", env: {foo: "bar"})
+    cmd = TTY::Command::Cmd.new(:echo, "hello", chdir: "/tmp", env: { foo: "bar" })
     expect(cmd.to_command).to eq(%{cd /tmp && ( export FOO=\"bar\" ; echo hello )})
   end
 
@@ -126,7 +126,7 @@ RSpec.describe TTY::Command::Cmd, "::new" do
   end
 
   it "runs command with umask, user, chdir and env" do
-    cmd = TTY::Command::Cmd.new(:echo, "hello", umask: "077", chdir: "/tmp", user: "piotrmurach", env: {foo: "bar"})
+    cmd = TTY::Command::Cmd.new(:echo, "hello", umask: "077", chdir: "/tmp", user: "piotrmurach", env: { foo: "bar" })
     expect(cmd.to_command).to eq(%{cd /tmp && umask 077 && ( export FOO=\"bar\" ; sudo -u piotrmurach FOO=\"bar\" -- sh -c 'echo hello' )})
   end
 

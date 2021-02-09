@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 3.times do |i|
-  puts "hello #{i+1}"
+  puts "hello #{i + 1}"
 end

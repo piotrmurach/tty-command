@@ -6,7 +6,7 @@ RSpec.describe TTY::Command, "input" do
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
-    out, _ = command.run("ruby #{cli}", input: "Piotr\n")
+    out, = command.run("ruby #{cli}", input: "Piotr\n")
 
     expect(out.chomp).to eq("Your name: Piotr")
   end

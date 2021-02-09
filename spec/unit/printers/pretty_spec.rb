@@ -12,8 +12,8 @@ RSpec.describe TTY::Command::Printers::Pretty do
     printer.print_command_start(cmd)
     output.rewind
 
-    expect(output.string).
-      to eq("[\e[32maaaaaa\e[0m] Running \e[33;1mecho hello\e[0m\n")
+    expect(output.string)
+      .to eq("[\e[32maaaaaa\e[0m] Running \e[33;1mecho hello\e[0m\n")
   end
 
   it "prints command start without color" do
@@ -57,8 +57,8 @@ RSpec.describe TTY::Command::Printers::Pretty do
     printer.print_command_err_data(cmd, "hello", "world")
     output.rewind
 
-    expect(output.string).
-      to eq("[\e[32maaaaaa\e[0m] \t\e[31mhello world\e[0m\n")
+    expect(output.string)
+      .to eq("[\e[32maaaaaa\e[0m] \t\e[31mhello world\e[0m\n")
   end
 
   it "prints successful command exit in color" do

@@ -27,7 +27,7 @@ RSpec.describe TTY::Command, "#run" do
     cmd = TTY::Command.new(output: output)
 
     range = 1..Float::INFINITY
-    infinite_input = range.lazy.map { |x| "hello" }.first(100).join("\n")
+    infinite_input = range.lazy.map { |_x| "hello" }.first(100).join("\n")
 
     expect {
       cmd.run("ruby #{cli}", input: infinite_input, timeout: 0.1)

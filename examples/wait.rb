@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'logger'
-require_relative '../lib/tty-command'
+require "logger"
+require_relative "../lib/tty-command"
 
-logger = Logger.new('dev.log')
+logger = Logger.new("dev.log")
 cmd = TTY::Command.new
 
 Thread.new do
@@ -17,5 +17,4 @@ Thread.new do
   end
 end
 
-
-cmd.wait('tail -f dev.log', /error/)
+cmd.wait("tail -f dev.log", /error/)

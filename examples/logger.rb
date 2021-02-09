@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'logger'
-require_relative '../lib/tty-command'
+require "logger"
+require_relative "../lib/tty-command"
 
-logger = Logger.new('dev.log')
+logger = Logger.new("dev.log")
 logger.level = Logger::WARN
 logger.warn("Logger captured:")
 
