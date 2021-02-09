@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 10.times do
-  print '.'
+  print "."
   sleep 0.001
 end

@@ -17,7 +17,7 @@ RSpec.describe TTY::Command, ":output", type: :sandbox do
     output = Tee.new(File.open(file, "w"))
 
     command = TTY::Command.new(output: output, printer: :quiet)
-    command = command.run("echo hello")
+    command.run("echo hello")
 
     expect(File.read(file).chomp).to eq("hello")
   end

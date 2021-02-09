@@ -9,7 +9,7 @@ RSpec.describe TTY::Command, "dry run" do
   end
 
   it "runs command in dry run mode" do
-    uuid= "xxxx"
+    uuid = "xxxx"
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output, dry_run: true)
 
@@ -17,11 +17,13 @@ RSpec.describe TTY::Command, "dry run" do
 
     output.rewind
     expect(output.read).to eq(
-      "[\e[32m#{uuid}\e[0m] \e[34m(dry run)\e[0m \e[33;1mecho hello world\e[0m\n")
+      "[\e[32m#{uuid}\e[0m] \e[34m(dry run)\e[0m " \
+      "\e[33;1mecho hello world\e[0m\n"
+    )
   end
 
   it "allows to run command in dry mode" do
-    uuid= "xxxx"
+    uuid = "xxxx"
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output)
 
@@ -29,7 +31,9 @@ RSpec.describe TTY::Command, "dry run" do
 
     output.rewind
     expect(output.read).to eq(
-      "[\e[32m#{uuid}\e[0m] \e[34m(dry run)\e[0m \e[33;1mecho hello world\e[0m\n")
+      "[\e[32m#{uuid}\e[0m] \e[34m(dry run)\e[0m " \
+      "\e[33;1mecho hello world\e[0m\n"
+    )
   end
 
   it "doesn't collect printout to stdin or stderr" do
