@@ -174,8 +174,7 @@ RSpec.describe TTY::Command, "#run" do
 
     output.rewind
     lines = output.readlines
-    expect(lines[0])
-      .to eq("[\e[32m#{uuid}\e[0m] Running \e[33;1m( export FOO=\"1\" ; echo hello )\e[0m\n")
+    expect(lines[0]).to include("Running \e[33;1m( export FOO=\"1\" ; echo hello )\e[0m\n")
 
     output.reopen
 
@@ -183,7 +182,6 @@ RSpec.describe TTY::Command, "#run" do
 
     output.rewind
     lines = output.readlines
-    expect(lines[0])
-      .to eq("[\e[32m#{uuid}\e[0m] Running \e[33;1mecho hello\e[0m\n")
+    expect(lines[0]).to include("Running \e[33;1mecho hello\e[0m\n")
   end
 end
