@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../lib/tty-command'
+require_relative "../lib/tty-command"
 
 cmd = TTY::Command.new
 
