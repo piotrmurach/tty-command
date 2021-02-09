@@ -1,3 +1,9 @@
+AllCops:
+  NewCops: enable
+
+Layout/LineLength:
+  Max: 80
+
 Lint/AssignmentInCondition:
   Enabled: false
 
@@ -7,7 +13,7 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   CountComments: true
   Max: 25
-  ExcludedMethods: []
+  IgnoredMethods: []
   Exclude:
     - "spec/**/*"
 
@@ -17,13 +23,13 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
-Layout/LineLength:
-  Max: 80
-
 Metrics/MethodLength:
   Max: 20
 
 Naming/BinaryOperatorParameterName:
+  Enabled: false
+
+Style/AccessorGrouping:
   Enabled: false
 
 Style/AsciiComments:
@@ -31,6 +37,9 @@ Style/AsciiComments:
 
 Style/LambdaCall:
   EnforcedStyle: braces
+
+Style/FormatString:
+  EnforcedStyle: percent
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
