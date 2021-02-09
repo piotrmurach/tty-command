@@ -166,8 +166,6 @@ RSpec.describe TTY::Command, "#run" do
 
   it "does not persist environment variables" do
     output = StringIO.new
-    uuid = "xxxx"
-    allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output)
 
     command.run(:echo, "hello", env: { foo: 1 })
