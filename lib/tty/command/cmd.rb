@@ -5,6 +5,9 @@ require "shellwords"
 
 module TTY
   class Command
+    # Encapsulates the executed command
+    #
+    # @api private
     class Cmd
       # A string command name, or shell program
       # @api public
@@ -41,6 +44,7 @@ module TTY
 
         if args.empty? && cmd = command.to_s
           raise ArgumentError, "No command provided" if cmd.empty?
+
           @command = sanitize(cmd)
           @argv = []
         else
@@ -84,27 +88,32 @@ module TTY
 
       def evars(value, &block)
         return (value || block) unless environment.any?
+
         "( export #{environment_string} ; #{value || block.call} )"
       end
 
       def umask(value)
         return value unless options[:umask]
+
         %(umask #{options[:umask]} && %s) % [value]
       end
 
       def chdir(value)
         return value unless options[:chdir]
+
         %(cd #{Shellwords.escape(options[:chdir])} && #{value})
       end
 
       def user(value)
         return value unless options[:user]
+
         vars = environment.any? ? "#{environment_string} " : ""
         %(sudo -u #{options[:user]} #{vars}-- sh -c '%s') % [value]
       end
 
       def group(value)
         return value unless options[:group]
+
         %(sg #{options[:group]} -c \\\"%s\\\") % [value]
       end
 
@@ -130,8 +139,8 @@ module TTY
       def to_hash
         {
           command: command,
-          argv:    argv,
-          uuid:    uuid
+          argv: argv,
+          uuid: uuid
         }
       end
 

@@ -34,12 +34,13 @@ module TTY
       # @param [String] separator
       #
       # @api public
-      def each(separator = nil)
+      def each(separator = nil, &block)
         sep = separator || TTY::Command.record_separator
         return unless @out
+
         elements = @out.split(sep)
         if block_given?
-          elements.each { |line| yield(line) }
+          elements.each(&block)
         else
           elements.to_enum
         end
@@ -82,6 +83,7 @@ module TTY
 
       def ==(other)
         return false unless other.is_a?(TTY::Command::Result)
+
         @status == other.to_i && to_ary == other.to_ary
       end
     end # Result

@@ -61,7 +61,7 @@ module TTY
           return @prefix << @suffix
         end
 
-         @prefix + "\n... omitting #{@skipped} bytes ...\n" + @suffix
+        @prefix + "\n... omitting #{@skipped} bytes ...\n" + @suffix
       end
       alias to_s read
 
