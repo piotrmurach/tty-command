@@ -159,4 +159,18 @@ RSpec.describe TTY::Command::Cmd, "::new" do
       argv: ["for-each-ref", "--format\\=\\'\\%\\(refname\\)\\'", "refs/heads/"]
     })
   end
+
+  it "updates command options with global only when not already present" do
+    cmd_options = { env: { foo: "a" }, out: $stdout }
+    cmd = TTY::Command::Cmd.new(:echo, "hello", cmd_options)
+    expect(cmd.options).to eq(cmd_options)
+
+    cmd.update({ verbose: true, env: { bar: "b" } })
+
+    expect(cmd.options).to eq({
+      env: { foo: "a" },
+      out: $stdout,
+      verbose: true
+    })
+  end
 end
