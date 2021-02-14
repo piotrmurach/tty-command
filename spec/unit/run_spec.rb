@@ -164,7 +164,8 @@ RSpec.describe TTY::Command, "#run" do
     ])
   end
 
-  it "does not persist environment variables" do
+  it "does not persist environment variables",
+     unless: RSpec::Support::OS.windows? do
     output = StringIO.new
     command = TTY::Command.new(output: output)
 
@@ -172,7 +173,8 @@ RSpec.describe TTY::Command, "#run" do
 
     output.rewind
     lines = output.readlines
-    expect(lines[0]).to include("Running \e[33;1m( export FOO=\"1\" ; echo hello )\e[0m\n")
+    expect(lines[0])
+      .to include("Running \e[33;1m( export FOO=\"1\" ; echo hello )\e[0m\n")
 
     output.reopen
 
