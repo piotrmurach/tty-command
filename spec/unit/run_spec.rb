@@ -163,4 +163,23 @@ RSpec.describe TTY::Command, "#run" do
       "(\e[32;1msuccessful\e[0m)\n"
     ])
   end
+
+  it "does not persist environment variables" do
+    output = StringIO.new
+    command = TTY::Command.new(output: output)
+
+    command.run(:echo, "hello", env: { foo: 1 })
+
+    output.rewind
+    lines = output.readlines
+    expect(lines[0]).to include("Running \e[33;1m( export FOO=\"1\" ; echo hello )\e[0m\n")
+
+    output.reopen
+
+    command.run(:echo, "hello")
+
+    output.rewind
+    lines = output.readlines
+    expect(lines[0]).to include("Running \e[33;1mecho hello\e[0m\n")
+  end
 end

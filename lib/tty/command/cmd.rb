@@ -64,7 +64,7 @@ module TTY
       #
       # @api public
       def update(options)
-        @options.update(options.update(@options))
+        @options.update(options.merge(@options))
       end
 
       # The shell environment variables
