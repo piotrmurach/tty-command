@@ -1,6 +1,12 @@
 AllCops:
   NewCops: enable
 
+Layout/FirstArrayElementIndentation:
+  Enabled: false
+
+Layout/FirstHashElementIndentation:
+  Enabled: false
+
 Layout/LineLength:
   Max: 80
 
@@ -40,6 +46,9 @@ Style/LambdaCall:
 
 Style/FormatString:
   EnforcedStyle: percent
+
+Style/ParallelAssignment:
+  Enabled: false
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
