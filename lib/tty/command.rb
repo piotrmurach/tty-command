@@ -174,7 +174,7 @@ module TTY
     # @api private
     def command(*args)
       cmd = Cmd.new(*args)
-      cmd.update(**@cmd_options)
+      cmd.update(@cmd_options)
       cmd
     end
 
