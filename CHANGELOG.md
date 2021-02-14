@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased
+## [v0.10.1] - 2021-02-14
 
 ### Fixed
 * Fix undesired persistence of environment variables in Ruby >= 3.0.0
@@ -145,6 +145,7 @@
 
 * Initial implementation and release
 
+[v0.10.1]: https://github.com/piotrmurach/tty-command/compare/v0.10.0...v0.10.1
 [v0.10.0]: https://github.com/piotrmurach/tty-command/compare/v0.9.0...v0.10.0
 [v0.9.0]: https://github.com/piotrmurach/tty-command/compare/v0.8.2...v0.9.0
 [v0.8.2]: https://github.com/piotrmurach/tty-command/compare/v0.8.1...v0.8.2
@@ -159,4 +160,4 @@
 [v0.3.1]: https://github.com/piotrmurach/tty-command/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/piotrmurach/tty-command/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/piotrmurach/tty-command/compare/v0.1.0...v0.2.0
-[v0.1.0]: https://github.com/piotrmurach/tty-command/compare/v0.1.0
+[v0.1.0]: https://github.com/piotrmurach/tty-command/compare/953ccdd...v0.1.0
