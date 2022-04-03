@@ -7,7 +7,7 @@ RSpec.describe TTY::Command, "#run" do
     cmd = TTY::Command.new(output: output)
 
     expect {
-      cmd.run("ruby #{infinite}", timeout: 0.1)
+      cmd.run('ruby', "#{infinite}", timeout: 0.1)
     }.to raise_error(TTY::Command::TimeoutExceeded)
   end
 
@@ -17,7 +17,7 @@ RSpec.describe TTY::Command, "#run" do
     cmd = TTY::Command.new(output: output, timeout: 0.1)
 
     expect {
-      cmd.run("ruby #{infinite}")
+      cmd.run('ruby', "#{infinite}")
     }.to raise_error(TTY::Command::TimeoutExceeded)
   end
 
@@ -30,7 +30,7 @@ RSpec.describe TTY::Command, "#run" do
     infinite_input = range.lazy.map { |_x| "hello" }.first(100).join("\n")
 
     expect {
-      cmd.run("ruby #{cli}", input: infinite_input, timeout: 0.1)
+      cmd.run('ruby', "#{cli}", input: infinite_input, timeout: 0.1)
     }.to raise_error(TTY::Command::TimeoutExceeded)
   end
 end

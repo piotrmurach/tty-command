@@ -109,9 +109,9 @@ RSpec.describe TTY::Command::Printers::Pretty do
     lines.each { |line| line.gsub!(/\d+\.\d+(?= seconds)/, "x") }
 
     expect(lines).to eq([
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(zero_exit)}\e[0m\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n",
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(zero_exit)}\e[0m\n",
       "[\e[32maaaaaa\e[0m] \tyess\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
     ])
@@ -132,10 +132,10 @@ RSpec.describe TTY::Command::Printers::Pretty do
     lines.each { |line| line.gsub!(/\d+\.\d+(?= seconds)/, "x") }
 
     expect(lines).to eq([
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{non_zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(non_zero_exit)}\e[0m\n",
       "[\e[32maaaaaa\e[0m] \tnooo\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n",
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{non_zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(non_zero_exit)}\e[0m\n",
       "[\e[32maaaaaa\e[0m] \tnooo\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n"
     ])
@@ -161,10 +161,10 @@ RSpec.describe TTY::Command::Printers::Pretty do
     lines.each { |line| line.gsub!(/\d+\.\d+(?= seconds)/, "x") }
 
     expect(lines).to eq([
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{non_zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(non_zero_exit)}\e[0m\n",
       "[\e[32maaaaaa\e[0m] \tnooo\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n",
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{non_zero_exit}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(non_zero_exit)}\e[0m\n",
       "[\e[32maaaaaa\e[0m] \tnooo\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n"
     ])

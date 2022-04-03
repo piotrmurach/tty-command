@@ -7,7 +7,7 @@ RSpec.describe TTY::Command, ":pty" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output, pty: true)
 
-    out, err = cmd.run(color_cli)
+    out, err = cmd.run(Shellwords.escape(color_cli))
 
     expect(err).to eq("")
     expect(out).to eq("\e[32mcolored\e[0m\n")
@@ -19,7 +19,7 @@ RSpec.describe TTY::Command, ":pty" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run(color_cli, pty: true)
+    out, err = cmd.run(Shellwords.escape(color_cli), pty: true)
 
     expect(err).to eq("")
     expect(out).to eq("\e[32mcolored\e[0m\n")
@@ -33,7 +33,7 @@ RSpec.describe TTY::Command, ":pty" do
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run("ruby #{phased_output}", pty: true)
+    out, err = cmd.run('ruby', "#{phased_output}", pty: true)
 
     expect(out).to eq("." * 10)
     expect(err).to eq("")
@@ -42,7 +42,7 @@ RSpec.describe TTY::Command, ":pty" do
     lines = output.readlines
     lines.last.gsub!(/\d+\.\d+/, "x")
     expect(lines).to eq([
-      "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{phased_output}\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{Shellwords.escape(phased_output)}\e[0m\n",
       "[\e[32m#{uuid}\e[0m] \t.\n",
       "[\e[32m#{uuid}\e[0m] \t.\n",
       "[\e[32m#{uuid}\e[0m] \t.\n",
