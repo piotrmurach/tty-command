@@ -28,12 +28,13 @@ RSpec.describe TTY::Command, ":pty" do
   it "logs phased output in pseudo terminal mode",
       unless: RSpec::Support::OS.windows? do
     phased_output = fixtures_path("phased_output")
+    escaped_path = Shellwords.escape(phased_output)
     uuid = "xxxx"
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run('ruby', "#{phased_output}", pty: true)
+    out, err = cmd.run(:ruby, phased_output, pty: true)
 
     expect(out).to eq("." * 10)
     expect(err).to eq("")
@@ -42,7 +43,7 @@ RSpec.describe TTY::Command, ":pty" do
     lines = output.readlines
     lines.last.gsub!(/\d+\.\d+/, "x")
     expect(lines).to eq([
-      "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{Shellwords.escape(phased_output)}\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{escaped_path}\e[0m\n",
       "[\e[32m#{uuid}\e[0m] \t.\n",
       "[\e[32m#{uuid}\e[0m] \t.\n",
       "[\e[32m#{uuid}\e[0m] \t.\n",

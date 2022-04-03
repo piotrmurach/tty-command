@@ -96,6 +96,7 @@ RSpec.describe TTY::Command::Printers::Pretty do
 
   it "doesn't print output on success when only_output_on_error is true" do
     zero_exit = fixtures_path("zero_exit")
+    escaped_path = Shellwords.escape(zero_exit)
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty
     cmd = TTY::Command.new(output: output, printer: printer)
@@ -109,9 +110,9 @@ RSpec.describe TTY::Command::Printers::Pretty do
     lines.each { |line| line.gsub!(/\d+\.\d+(?= seconds)/, "x") }
 
     expect(lines).to eq([
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(zero_exit)}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{escaped_path}\e[0m\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n",
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(zero_exit)}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{escaped_path}\e[0m\n",
       "[\e[32maaaaaa\e[0m] \tyess\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 0 (\e[32;1msuccessful\e[0m)\n"
     ])
@@ -119,6 +120,7 @@ RSpec.describe TTY::Command::Printers::Pretty do
 
   it "prints output on error & raises ExitError when only_output_on_error is true" do
     non_zero_exit = fixtures_path("non_zero_exit")
+    escaped_path = Shellwords.escape(non_zero_exit)
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty
     cmd = TTY::Command.new(output: output, printer: printer)
@@ -132,10 +134,10 @@ RSpec.describe TTY::Command::Printers::Pretty do
     lines.each { |line| line.gsub!(/\d+\.\d+(?= seconds)/, "x") }
 
     expect(lines).to eq([
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(non_zero_exit)}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{escaped_path}\e[0m\n",
       "[\e[32maaaaaa\e[0m] \tnooo\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n",
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(non_zero_exit)}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{escaped_path}\e[0m\n",
       "[\e[32maaaaaa\e[0m] \tnooo\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n"
     ])
@@ -143,6 +145,7 @@ RSpec.describe TTY::Command::Printers::Pretty do
 
   it "prints output on error when only_output_on_error is true" do
     non_zero_exit = fixtures_path("non_zero_exit")
+    escaped_path = Shellwords.escape(non_zero_exit)
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     printer = TTY::Command::Printers::Pretty
     cmd = TTY::Command.new(output: output, printer: printer)
@@ -161,10 +164,10 @@ RSpec.describe TTY::Command::Printers::Pretty do
     lines.each { |line| line.gsub!(/\d+\.\d+(?= seconds)/, "x") }
 
     expect(lines).to eq([
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(non_zero_exit)}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{escaped_path}\e[0m\n",
       "[\e[32maaaaaa\e[0m] \tnooo\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n",
-      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{Shellwords.escape(non_zero_exit)}\e[0m\n",
+      "[\e[32maaaaaa\e[0m] Running \e[33;1mruby #{escaped_path}\e[0m\n",
       "[\e[32maaaaaa\e[0m] \tnooo\n",
       "[\e[32maaaaaa\e[0m] Finished in x seconds with exit status 1 (\e[31;1mfailed\e[0m)\n"
     ])

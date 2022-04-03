@@ -82,18 +82,19 @@ RSpec.describe TTY::Command, "#run" do
 
   it "runs command and fails with logging" do
     non_zero_exit = fixtures_path("non_zero_exit")
+    escaped_path = Shellwords.escape(non_zero_exit)
     output = StringIO.new
     uuid = "xxxx"
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     command = TTY::Command.new(output: output)
 
-    command.run!('ruby', "#{non_zero_exit}")
+    command.run!(:ruby, non_zero_exit)
 
     output.rewind
     lines = output.readlines
     lines.last.gsub!(/\d+\.\d+/, "x")
     expect(lines).to eq([
-      "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{Shellwords.escape(non_zero_exit)}\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{escaped_path}\e[0m\n",
       "[\e[32m#{uuid}\e[0m] \tnooo\n",
       "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 1 " \
       "(\e[31;1mfailed\e[0m)\n"
@@ -106,7 +107,7 @@ RSpec.describe TTY::Command, "#run" do
     command = TTY::Command.new(output: output)
 
     expect {
-      command.run('ruby', "#{non_zero_exit}")
+      command.run(:ruby, non_zero_exit)
     }.to raise_error(TTY::Command::ExitError, [
       "Running `ruby #{Shellwords.escape(non_zero_exit)}` failed with",
       "  exit status: 1",
@@ -122,7 +123,7 @@ RSpec.describe TTY::Command, "#run" do
     output = []
     error = []
 
-    command.run('ruby', "#{stream}") do |out, err|
+    command.run(:ruby, stream) do |out, err|
       output << out if out
       error << err if err
     end
@@ -143,12 +144,13 @@ RSpec.describe TTY::Command, "#run" do
 
   it "logs phased output in one line" do
     phased_output = fixtures_path("phased_output")
+    escaped_path = Shellwords.escape(phased_output)
     uuid = "xxxx"
     allow(SecureRandom).to receive(:uuid).and_return(uuid)
     output = StringIO.new
     cmd = TTY::Command.new(output: output)
 
-    out, err = cmd.run('ruby', "#{phased_output}")
+    out, err = cmd.run(:ruby, phased_output)
 
     expect(out).to eq("." * 10)
     expect(err).to eq("")
@@ -157,7 +159,7 @@ RSpec.describe TTY::Command, "#run" do
     lines = output.readlines
     lines.last.gsub!(/\d+\.\d+/, "x")
     expect(lines).to eq([
-      "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{Shellwords.escape(phased_output)}\e[0m\n",
+      "[\e[32m#{uuid}\e[0m] Running \e[33;1mruby #{escaped_path}\e[0m\n",
       "[\e[32m#{uuid}\e[0m] \t..........\n",
       "[\e[32m#{uuid}\e[0m] Finished in x seconds with exit status 0 " \
       "(\e[32;1msuccessful\e[0m)\n"
