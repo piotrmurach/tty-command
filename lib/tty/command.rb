@@ -51,7 +51,7 @@ module TTY
     #   the mode for executing command
     #
     # @api public
-    def initialize(**options)
+    def initialize(options)
       @output = options.fetch(:output) { $stdout }
       @color   = options.fetch(:color) { true }
       @uuid    = options.fetch(:uuid) { true }
