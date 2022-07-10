@@ -32,11 +32,17 @@ jobs:
           - 2.5
           - 2.6
           - 3.0
+          - 3.1
           - ruby-head
           - jruby-head
           - truffleruby-head
         allow_failure: [false]
         include:
+          - ruby: 2.0
+            os: ubuntu-latest
+            coverage: false
+            bundler: 1
+            allow_failure: false
           - ruby: 2.1
             os: ubuntu-latest
             coverage: false
