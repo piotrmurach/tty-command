@@ -343,7 +343,7 @@ There are few ways you can redirect commands output.
 You can directly use shell redirection like so:
 
 ```ruby
-out, err = cmd.run("ls 1&>2")
+out, err = cmd.run("ls 1>&2")
 puts err
 # =>
 # CHANGELOG.md
