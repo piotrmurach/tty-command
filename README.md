@@ -5,13 +5,13 @@
 # TTY::Command
 
 [![Gem Version](https://badge.fury.io/rb/tty-command.svg)][gem]
-[![Actions CI](https://github.com/piotrmurach/tty-command/workflows/CI/badge.svg?branch=master)][gh_actions_ci]
+[![Actions CI](https://github.com/piotrmurach/tty-command/actions/workflows/ci.yml/badge.svg)][gh_actions_ci]
 [![Build status](https://ci.appveyor.com/api/projects/status/0150ync7bdkfhmsv?svg=true)][appveyor]
 [![Code Climate](https://codeclimate.com/github/piotrmurach/tty-command/badges/gpa.svg)][codeclimate]
 [![Coverage Status](https://coveralls.io/repos/github/piotrmurach/tty-command/badge.svg)][coverage]
 
 [gem]: http://badge.fury.io/rb/tty-command
-[gh_actions_ci]: https://github.com/piotrmurach/tty-command/actions?query=workflow%3ACI
+[gh_actions_ci]: https://github.com/piotrmurach/tty-command/actions/workflows/ci.yml
 [appveyor]: https://ci.appveyor.com/project/piotrmurach/tty-command
 [codeclimate]: https://codeclimate.com/github/piotrmurach/tty-command
 [coverage]: https://coveralls.io/github/piotrmurach/tty-command
